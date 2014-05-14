@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -20,6 +19,8 @@ import android.widget.TabHost.TabSpec;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
@@ -27,7 +28,7 @@ import com.parse.ParseObject;
 import com.parse.RefreshCallback;
 import com.parse.SaveCallback;
 
-public class MainActivity extends FragmentActivity  {
+public class MainActivity extends FragmentActivity {
 	private GoogleMap map;
 	private RadioButton genderFemaleButton;
 	private RadioButton genderMaleButton;
@@ -51,7 +52,13 @@ public class MainActivity extends FragmentActivity  {
 		this.ageEditText = (EditText) findViewById(R.id.age_edit_text);
 		this.genderRadioGroup = (RadioGroup) findViewById(R.id.gender_radio_group);
 		// google map
-		map = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+		map = ((SupportMapFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.map)).getMap();
+		// google mark
+		LatLng p1 = new LatLng(22.6298113, 120.3276276);
+		if (map != null) {
+			map.addMarker(new MarkerOptions().position(p1).title("hello"));
+		}
 		setupViewComponent();
 	}
 
@@ -62,33 +69,26 @@ public class MainActivity extends FragmentActivity  {
 
 		TabSpec spec = tabHost.newTabSpec("tab1");
 		spec.setContent(R.id.tab1);
-		spec.setIndicator(
-				"優惠方案",
-				getResources().getDrawable(
-						android.R.drawable.ic_lock_idle_alarm));
+		spec.setIndicator("", getResources().getDrawable(R.drawable.tab1));
 		tabHost.addTab(spec);
 
 		spec = tabHost.newTabSpec("tab2");
-		spec.setIndicator("地理位置",
-				getResources().getDrawable(android.R.drawable.ic_dialog_alert));
+		spec.setIndicator("", getResources().getDrawable(R.drawable.tab2));
 		spec.setContent(R.id.tab2);
 		tabHost.addTab(spec);
-		
+
 		spec = tabHost.newTabSpec("tab3");
-		spec.setIndicator("資料填寫",
-				getResources().getDrawable(android.R.drawable.ic_dialog_alert));
+		spec.setIndicator("", getResources().getDrawable(R.drawable.tab3));
 		spec.setContent(R.id.tab3);
 		tabHost.addTab(spec);
-		
+
 		spec = tabHost.newTabSpec("tab4");
-		spec.setIndicator("表4",
-				getResources().getDrawable(android.R.drawable.ic_dialog_alert));
+		spec.setIndicator("", getResources().getDrawable(R.drawable.tab4));
 		spec.setContent(R.id.tab4);
 		tabHost.addTab(spec);
-		
+
 		spec = tabHost.newTabSpec("tab5");
-		spec.setIndicator("表5",
-				getResources().getDrawable(android.R.drawable.ic_dialog_alert));
+		spec.setIndicator("", getResources().getDrawable(R.drawable.tab5));
 		spec.setContent(R.id.tab5);
 		tabHost.addTab(spec);
 
@@ -100,19 +100,19 @@ public class MainActivity extends FragmentActivity  {
 		View tabView = tabWidget.getChildTabViewAt(0);
 		TextView tab = (TextView) tabView.findViewById(android.R.id.title);
 		tab.setTextSize(10);
-		
+
 		tabView = tabWidget.getChildTabViewAt(1);
 		tab = (TextView) tabView.findViewById(android.R.id.title);
 		tab.setTextSize(10);
-		
+
 		tabView = tabWidget.getChildTabViewAt(2);
 		tab = (TextView) tabView.findViewById(android.R.id.title);
 		tab.setTextSize(10);
-		
+
 		tabView = tabWidget.getChildTabViewAt(3);
 		tab = (TextView) tabView.findViewById(android.R.id.title);
 		tab.setTextSize(10);
-		
+
 		tabView = tabWidget.getChildTabViewAt(4);
 		tab = (TextView) tabView.findViewById(android.R.id.title);
 		tab.setTextSize(10);

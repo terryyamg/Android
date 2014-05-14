@@ -59,6 +59,12 @@ int drawable ic_plusone_medium_off_client 0x7f02001a
 int drawable ic_plusone_small_off_client 0x7f02001b
 int drawable ic_plusone_standard_off_client 0x7f02001c
 int drawable ic_plusone_tall_off_client 0x7f02001d
+int drawable tab1 0x7f02001e
+int drawable tab2 0x7f02001f
+int drawable tab3 0x7f020020
+int drawable tab4 0x7f020021
+int drawable tab5 0x7f020022
+int drawable wallpaper 0x7f020023
 int id action_settings 0x7f050015
 int id age_edit_text 0x7f05000d
 int id age_text_view 0x7f05000c
