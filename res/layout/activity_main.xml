@@ -28,31 +28,30 @@
 
         <TableLayout
             android:id="@+id/tab1"
-            android:layout_width="200dp"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center_horizontal"
             android:paddingTop="70dp" >
 
             <ScrollView
-                android:id="@+id/scrollView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" >
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <ImageView
                         android:id="@+id/imageView1"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="380dp"
                         android:src="@drawable/good" />
 
                     <ImageView
                         android:id="@+id/imageView2"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="380dp"
                         android:src="@drawable/good" />
                 </LinearLayout>
             </ScrollView>
@@ -60,7 +59,7 @@
 
         <RelativeLayout
             android:id="@+id/tab2"
-            android:layout_width="400dp"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center_horizontal"
             android:paddingTop="70dp" >
@@ -72,9 +71,9 @@
                 android:layout_height="match_parent" />
         </RelativeLayout>
 
-        <RelativeLayout
+        <TableLayout
             android:id="@+id/tab3"
-            android:layout_width="400dp"
+            android:layout_width="200dp"
             android:layout_height="fill_parent"
             android:layout_gravity="center_horizontal"
             android:paddingTop="70dp" >
@@ -84,9 +83,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/hello_message" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+            <TableRow>
 
                 <TextView
                     android:id="@+id/age_text_view"
@@ -108,11 +105,9 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="numberSigned" />
-            </LinearLayout>
+            </TableRow>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+            <TableRow>
 
                 <TextView
                     android:id="@+id/gender_text_view"
@@ -137,7 +132,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/gender_male_button" />
                 </RadioGroup>
-            </LinearLayout>
+            </TableRow>
 
             <Button
                 android:id="@+id/save_button"
@@ -145,11 +140,11 @@
                 android:layout_height="wrap_content"
                 android:onClick="saveUserProfile"
                 android:text="@string/save_button" />
-        </RelativeLayout>
+        </TableLayout>
 
         <RelativeLayout
             android:id="@+id/tab4"
-            android:layout_width="400dp"
+            android:layout_width="200dp"
             android:layout_height="fill_parent"
             android:layout_gravity="center_horizontal"
             android:paddingTop="70dp" >
@@ -157,7 +152,7 @@
 
         <RelativeLayout
             android:id="@+id/tab5"
-            android:layout_width="400dp"
+            android:layout_width="200dp"
             android:layout_height="fill_parent"
             android:layout_gravity="center_horizontal"
             android:paddingTop="70dp" >

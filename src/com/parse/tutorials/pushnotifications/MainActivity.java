@@ -50,7 +50,7 @@ public class MainActivity extends FragmentActivity  {
 		this.genderMaleButton = (RadioButton) findViewById(R.id.gender_male_button);
 		this.ageEditText = (EditText) findViewById(R.id.age_edit_text);
 		this.genderRadioGroup = (RadioGroup) findViewById(R.id.gender_radio_group);
-		
+		// google map
 		map = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		setupViewComponent();
 	}
@@ -83,13 +83,13 @@ public class MainActivity extends FragmentActivity  {
 		spec = tabHost.newTabSpec("tab4");
 		spec.setIndicator("ªí4",
 				getResources().getDrawable(android.R.drawable.ic_dialog_alert));
-		spec.setContent(R.id.tab3);
+		spec.setContent(R.id.tab4);
 		tabHost.addTab(spec);
 		
 		spec = tabHost.newTabSpec("tab5");
 		spec.setIndicator("ªí5",
 				getResources().getDrawable(android.R.drawable.ic_dialog_alert));
-		spec.setContent(R.id.tab3);
+		spec.setContent(R.id.tab5);
 		tabHost.addTab(spec);
 
 		tabHost.setCurrentTab(0);
