@@ -1,7 +1,7 @@
 <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tabHost"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:background="@drawable/wallpaper"
     android:orientation="vertical"
@@ -10,8 +10,6 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
-
-    
 
     <HorizontalScrollView
         android:layout_width="wrap_content"
@@ -29,36 +27,34 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
-        <TableLayout
+        <FrameLayout
             android:id="@+id/tab1"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center_horizontal"
             android:paddingTop="70dp" >
 
-            <ScrollView
+            <LinearLayout
+                android:id="@+id/linearLayout_img_display"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent" >
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:gravity="center" >
 
-                <LinearLayout
+                <ImageView
+                    android:id="@+id/img_display"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:layout_height="fill_parent"
+                    android:scaleType="matrix"
+                    android:src="@drawable/advertisement" />
+            </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/imageView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="380dp"
-                        android:src="@drawable/good" />
-
-                    <ImageView
-                        android:id="@+id/imageView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="380dp"
-                        android:src="@drawable/good" />
-                </LinearLayout>
-            </ScrollView>
-        </TableLayout>
+            <RelativeLayout
+                android:id="@+id/relativeLayout1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+            </RelativeLayout>
+        </FrameLayout>
 
         <RelativeLayout
             android:id="@+id/tab2"
@@ -66,6 +62,13 @@
             android:layout_height="fill_parent"
             android:layout_gravity="center_horizontal"
             android:paddingTop="70dp" >
+
+            <Spinner
+                android:id="@+id/spnLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawSelectorOnTop="true"
+                android:prompt="@string/prompt_select_location" />
 
             <fragment
                 android:id="@+id/map"

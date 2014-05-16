@@ -1,20 +1,16 @@
 package com.parse.tutorials.pushnotifications;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.graphics.*;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.FloatMath;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TabHost;
-import android.widget.TabWidget;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import android.widget.TabHost.TabSpec;
 
 import com.google.android.gms.maps.SupportMapFragment;
@@ -29,12 +25,31 @@ import com.parse.RefreshCallback;
 import com.parse.SaveCallback;
 
 public class MainActivity extends FragmentActivity {
+	/* tab1 */
+	public static final String TAG = "ImgDisplayActivity";
+
+	private ImageView imgDisPlay;
+	private LinearLayout lLayoutDisplay;
+	private FrameLayout fLayoutDisplay;
+
+	public static final int NONE = 0;
+	public static final int DRAG = 1;
+	public static final int ZOOM = 2;
+	private int mode = NONE;
+	private Matrix matrix;
+	private Matrix currMatrix;
+	private PointF starPoint;
+	private PointF midPoint;
+	private float startDistance;
+
+	/* tab2 */
 	private GoogleMap map;
+
+	/* tab3 */
 	private RadioButton genderFemaleButton;
 	private RadioButton genderMaleButton;
 	private EditText ageEditText;
 	private RadioGroup genderRadioGroup;
-
 	public static final String GENDER_MALE = "male";
 	public static final String GENDER_FEMALE = "female";
 
@@ -51,18 +66,108 @@ public class MainActivity extends FragmentActivity {
 		this.genderMaleButton = (RadioButton) findViewById(R.id.gender_male_button);
 		this.ageEditText = (EditText) findViewById(R.id.age_edit_text);
 		this.genderRadioGroup = (RadioGroup) findViewById(R.id.gender_radio_group);
+		/* tab1 */
+		fLayoutDisplay = (FrameLayout) findViewById(R.id.tab1);
+		lLayoutDisplay = (LinearLayout) findViewById(R.id.linearLayout_img_display);
+		imgDisPlay = (ImageView) findViewById(R.id.img_display);
+		matrix = new Matrix();
+		currMatrix = new Matrix();
+		starPoint = new PointF();
+		imgDisPlay.setOnTouchListener(new ImageViewOnTouchListener());
+		
+		/* tab2 */
 		// google map
 		map = ((SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map)).getMap();
-		// google mark
-		LatLng p1 = new LatLng(22.6298113, 120.3276276);
+
+		LatLng p1 = new LatLng(22.6297370, 120.3278820);
+		LatLng p2 = new LatLng(22.6271340, 120.3193380);
+		LatLng p3 = new LatLng(22.6736570, 120.3121400);
+		LatLng p4 = new LatLng(22.6609120, 120.3063850);
+		LatLng p5 = new LatLng(23.5648240, 119.5653820);
 		if (map != null) {
-			map.addMarker(new MarkerOptions().position(p1).title("hello"));
+			// google mark
+			map.addMarker(new MarkerOptions().position(p1).title("多那之高雄中正門市")
+					.snippet("咖啡．烘培"));
+			map.addMarker(new MarkerOptions().position(p2).title("多那之高雄文化門市 ")
+					.snippet("咖啡．烘培"));
+			map.addMarker(new MarkerOptions().position(p3).title("多那之高雄自由門市")
+					.snippet("咖啡．烘培"));
+			map.addMarker(new MarkerOptions().position(p4).title("多那之高雄明誠門市")
+					.snippet("咖啡．烘培"));
+			map.addMarker(new MarkerOptions().position(p5).title("多那之澎湖馬公門市")
+					.snippet("咖啡．烘培"));
+			// google location
+			map.setMyLocationEnabled(true);
 		}
 		setupViewComponent();
 	}
 
+	/*tab1*/
+	final class ImageViewOnTouchListener implements OnTouchListener {
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+
+			switch (event.getAction() & MotionEvent.ACTION_MASK) {
+			case MotionEvent.ACTION_DOWN:
+//				Log.i(TAG, "一隻手指");
+				currMatrix.set(matrix);
+				starPoint.set(event.getX(), event.getY());
+				mode = DRAG;
+				break;
+			case MotionEvent.ACTION_POINTER_DOWN:
+//				Log.i(TAG, "兩隻手指");
+				startDistance = distance(event);
+//				Log.i(TAG, startDistance + "");
+				if (startDistance > 5f) {
+					mode = ZOOM;
+					currMatrix.set(matrix);
+					midPoint = getMidPoint(event);
+				}
+				break;
+			case MotionEvent.ACTION_MOVE:
+				if (mode == DRAG) {
+//					Log.i(TAG, "一隻手指拖曳");
+					float dx = event.getX() - starPoint.x;
+					float dy = event.getY() - starPoint.y;
+					matrix.set(currMatrix);
+					matrix.postTranslate(dx, dy);
+				} else if (mode == ZOOM) {
+//					Log.i(TAG, "正在縮放");
+					float distance = distance(event);
+					if (distance > 5f) {
+						matrix.set(currMatrix);
+						float cale = distance / startDistance;
+						matrix.preScale(cale, cale, midPoint.x, midPoint.y);
+					}
+				}
+				break;
+			case MotionEvent.ACTION_UP:
+			case MotionEvent.ACTION_POINTER_UP:
+				mode = NONE;
+				break;
+			default:
+				break;
+			}
+			imgDisPlay.setImageMatrix(matrix);
+			return true;
+		}
+	}
+
+	private float distance(MotionEvent e) {
+		float eX = e.getX(1) - e.getX(0);
+		float eY = e.getY(1) - e.getY(0);
+		return FloatMath.sqrt(eX * eX + eY * eY);
+	}
+
+	private PointF getMidPoint(MotionEvent event) {
+		float x = (event.getX(1) - event.getX(0)) / 2;
+		float y = (event.getY(1) - event.getY(0)) / 2;
+		return new PointF(x, y);
+	}
+	
 	private void setupViewComponent() {
+		/* tabHost */
 		// 從資源類別R中取得介面元件
 		TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
 		tabHost.setup();
@@ -117,7 +222,8 @@ public class MainActivity extends FragmentActivity {
 		tab = (TextView) tabView.findViewById(android.R.id.title);
 		tab.setTextSize(10);
 	}
-
+	
+	/*tab3*/
 	@Override
 	public void onStart() {
 		super.onStart();
