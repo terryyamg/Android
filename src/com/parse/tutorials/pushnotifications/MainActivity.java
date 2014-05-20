@@ -25,6 +25,8 @@ import com.parse.RefreshCallback;
 import com.parse.SaveCallback;
 
 public class MainActivity extends FragmentActivity {
+	private static final int LOAD_DISPLAY_TIME = 1500;
+	
 	/* tab1 */
 	public static final String TAG = "ImgDisplayActivity";
 
