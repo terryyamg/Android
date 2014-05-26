@@ -77,7 +77,8 @@
                 android:layout_height="match_parent" />
         </RelativeLayout>
 
-        <TableLayout
+        <!--
+             <TableLayout
             android:id="@+id/tab3"
             android:layout_width="200dp"
             android:layout_height="fill_parent"
@@ -147,14 +148,66 @@
                 android:onClick="saveUserProfile"
                 android:text="@string/save_button" />
         </TableLayout>
+        -->
 
-        <RelativeLayout
+        <TableLayout
             android:id="@+id/tab4"
             android:layout_width="200dp"
             android:layout_height="fill_parent"
             android:layout_gravity="center_horizontal"
             android:paddingTop="70dp" >
-        </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="緯度(Latitude):" />
+
+            <EditText
+                android:id="@+id/txtLat"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:text="22.6297370" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="經度(Longitude):" />
+
+            <EditText
+                android:id="@+id/txtLong"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:text="120.3278820" />
+
+            <Button
+                android:id="@+id/start_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="saveUserProfile"
+                android:text="啟動警告" />
+
+            <Button
+                android:id="@+id/stop_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="saveUserProfile"
+                android:text="停止警告" />
+
+            <Button
+                android:id="@+id/finish_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="saveUserProfile"
+                android:text="結束" />
+
+            <TextView
+                android:id="@+id/output"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+        </TableLayout>
 
         <RelativeLayout
             android:id="@+id/tab5"
