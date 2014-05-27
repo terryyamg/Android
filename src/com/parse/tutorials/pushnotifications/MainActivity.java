@@ -52,6 +52,12 @@ public class MainActivity extends FragmentActivity {
 
 	/* tab2 */
 	private GoogleMap map;
+	private float coordinate[][] = {
+			{ (float) 22.6297370, (float) 120.3278820 },
+			{ (float) 22.6271340, (float) 120.3193380 },
+			{ (float) 22.6736570, (float) 120.3121400 },
+			{ (float) 22.6609120, (float) 120.3063850 },
+			{ (float) 23.5648240, (float) 119.5653820 } };
 
 	/* tab3 */
 	private RadioButton genderFemaleButton;
@@ -62,15 +68,14 @@ public class MainActivity extends FragmentActivity {
 	public static final String GENDER_FEMALE = "female";
 
 	/* tab4 */
-	private EditText lat, lon;
 	private TextView output;
-	private Button start_button, stop_button, finish_button;
+	private Button start_button, stop_button;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		// Track app opens.
 		ParseAnalytics.trackAppOpened(getIntent());
 
@@ -96,11 +101,11 @@ public class MainActivity extends FragmentActivity {
 		map = ((SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map)).getMap();
 
-		LatLng p1 = new LatLng(22.6297370, 120.3278820);
-		LatLng p2 = new LatLng(22.6271340, 120.3193380);
-		LatLng p3 = new LatLng(22.6736570, 120.3121400);
-		LatLng p4 = new LatLng(22.6609120, 120.3063850);
-		LatLng p5 = new LatLng(23.5648240, 119.5653820);
+		LatLng p1 = new LatLng(coordinate[0][0], coordinate[0][1]);
+		LatLng p2 = new LatLng(coordinate[1][0], coordinate[1][1]);
+		LatLng p3 = new LatLng(coordinate[2][0], coordinate[2][1]);
+		LatLng p4 = new LatLng(coordinate[3][0], coordinate[3][1]);
+		LatLng p5 = new LatLng(coordinate[4][0], coordinate[4][1]);
 		if (map != null) {
 			// google mark
 			map.addMarker(new MarkerOptions().position(p1).title("多那之高雄中正門市")
@@ -117,12 +122,10 @@ public class MainActivity extends FragmentActivity {
 			setUpMap();
 		}
 		/* tab4 */
-		lat = (EditText) findViewById(R.id.txtLat);
-		lon = (EditText) findViewById(R.id.txtLong);
 		output = (TextView) findViewById(R.id.output);
 		start_button = (Button) findViewById(R.id.start_button);
 		stop_button = (Button) findViewById(R.id.stop_button);
-		finish_button = (Button) findViewById(R.id.finish_button);
+		
 		start_button.setOnClickListener(new Button.OnClickListener() {
 
 			@Override
@@ -132,6 +135,7 @@ public class MainActivity extends FragmentActivity {
 			}
 
 		});
+		start_button.performClick(); //自動按按鈕
 		stop_button.setOnClickListener(new Button.OnClickListener() {
 
 			@Override
@@ -141,20 +145,10 @@ public class MainActivity extends FragmentActivity {
 			}
 
 		});
-		finish_button.setOnClickListener(new Button.OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				finish_Click(v);
-			}
-
-		});
-		
 		setupViewComponent();
 	}
 
-	
 	/* tab1 */
 	final class ImageViewOnTouchListener implements OnTouchListener {
 		@Override
@@ -257,10 +251,11 @@ public class MainActivity extends FragmentActivity {
 				.icon(BitmapDescriptorFactory.fromResource(R.drawable.walk))
 				.title("現在位置"));
 	}
+
 	/* tab4 */
 	public void start_Click(View view) {
-		float latitude = Float.parseFloat(lat.getText().toString());
-		float longitude = Float.parseFloat(lon.getText().toString());
+		float latitude = coordinate[0][0];
+		float longitude = coordinate[0][1];
 		Intent intent = new Intent(this, GPSService.class);
 		intent.putExtra("LATITUDE", latitude);
 		intent.putExtra("LONGITUDE", longitude);
@@ -274,12 +269,6 @@ public class MainActivity extends FragmentActivity {
 		output.setText("服務停止中");
 	}
 
-	public void finish_Click(View view) {
-		finish();
-	}
-
-	
-	
 	private void setupViewComponent() {
 		/* tabHost */
 		// 從資源類別R中取得介面元件
