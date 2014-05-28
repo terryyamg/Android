@@ -69,7 +69,7 @@ public class MainActivity extends FragmentActivity {
 
 	/* tab4 */
 	private TextView output;
-	private Button start_button, stop_button;
+	private CheckBox checkBox_service;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -123,28 +123,24 @@ public class MainActivity extends FragmentActivity {
 		}
 		/* tab4 */
 		output = (TextView) findViewById(R.id.output);
-		start_button = (Button) findViewById(R.id.start_button);
-		stop_button = (Button) findViewById(R.id.stop_button);
-		
-		start_button.setOnClickListener(new Button.OnClickListener() {
+		checkBox_service = (CheckBox) findViewById(R.id.checkBox_service);
+		checkBox_service.setChecked(true);
+		checkBox_service
+				.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				start_Click(v);
-			}
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						// TODO Auto-generated method stub
+						if (checkBox_service.isChecked()) {
+							start_Click(buttonView);
+						} else {
+							stop_Click(buttonView);
+						}
+					}
 
-		});
-		start_button.performClick(); //¦Û°Ê«ö«ö¶s
-		stop_button.setOnClickListener(new Button.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				stop_Click(v);
-			}
-
-		});
+				});
+		//checkBox_service.performClick();
 
 		setupViewComponent();
 	}
