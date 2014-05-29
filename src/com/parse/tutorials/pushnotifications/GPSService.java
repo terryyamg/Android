@@ -13,7 +13,7 @@ import android.widget.TextView;
 public class GPSService extends Service implements LocationListener {
 	private LocationManager manager;
 	private boolean isInArea;
-	private double latitude, longitude;
+	private double latitude1, longitude1, latitude2, longitude2;
 	
 	@Override
 	public void onCreate() {
@@ -26,9 +26,12 @@ public class GPSService extends Service implements LocationListener {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		latitude = (double) intent.getFloatExtra("LATITUDE", 22.6297370f);
-		longitude = (double) intent.getFloatExtra("LONGITUDE", 120.3278820f);
-		Log.d("GPSService", "lat/long: " + latitude + ": " + longitude);
+		latitude1 = (double) intent.getFloatExtra("LATITUDE1", 22.6297370f);
+		longitude1 = (double) intent.getFloatExtra("LONGITUDE1", 120.3278820f);
+		latitude2 = (double) intent.getFloatExtra("LATITUDE2", 22.6297370f);
+		longitude2 = (double) intent.getFloatExtra("LONGITUDE2", 120.3278820f);
+		Log.d("GPSService", "lat/long: " + latitude1 + ": " + longitude1);
+		Log.d("GPSService", "lat/long: " + latitude2 + ": " + longitude2);
 		return START_STICKY;
 	}
 
@@ -43,11 +46,14 @@ public class GPSService extends Service implements LocationListener {
 		if (current == null)
 			return;
 		Location dest = new Location(current);
-		dest.setLatitude(latitude);
-		dest.setLongitude(longitude);
-		float distance = current.distanceTo(dest);
-		Log.d("²{¦b¶ZÂ÷", "¶ZÂ÷: " + distance);
-		if (distance < 1000.0) {
+		dest.setLatitude(latitude1);
+		dest.setLongitude(longitude1);
+		dest.setLatitude(latitude2);
+		dest.setLongitude(longitude2);
+		float distance1 = current.distanceTo(dest);
+		float distance2 = current.distanceTo(dest);
+		Log.d("²{¦b¶ZÂ÷", "¶ZÂ÷: " + distance1);
+		if (distance1 < 1000.0 || distance2 < 1000.0) {
 			if (isInArea == false) {
 				Intent intent = new Intent("android.broadcast.LOCATION");
 				sendBroadcast(intent);

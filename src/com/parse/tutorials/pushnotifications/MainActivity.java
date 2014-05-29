@@ -1,6 +1,8 @@
 package com.parse.tutorials.pushnotifications;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.*;
 import android.location.Criteria;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.FloatMath;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -124,7 +127,7 @@ public class MainActivity extends FragmentActivity {
 		/* tab4 */
 		output = (TextView) findViewById(R.id.output);
 		checkBox_service = (CheckBox) findViewById(R.id.checkBox_service);
-		checkBox_service.setChecked(true);
+		//checkBox_service.setChecked(true);
 		checkBox_service
 				.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
 
@@ -140,7 +143,7 @@ public class MainActivity extends FragmentActivity {
 					}
 
 				});
-		//checkBox_service.performClick();
+		checkBox_service.performClick();
 
 		setupViewComponent();
 	}
@@ -250,11 +253,15 @@ public class MainActivity extends FragmentActivity {
 
 	/* tab4 */
 	public void start_Click(View view) {
-		float latitude = coordinate[0][0];
-		float longitude = coordinate[0][1];
+		float latitude1 = coordinate[0][0];
+		float longitude1 = coordinate[0][1];
+		float latitude2 = coordinate[1][0];
+		float longitude2 = coordinate[1][1];
 		Intent intent = new Intent(this, GPSService.class);
-		intent.putExtra("LATITUDE", latitude);
-		intent.putExtra("LONGITUDE", longitude);
+		intent.putExtra("LATITUDE1", latitude1);
+		intent.putExtra("LONGITUDE1", longitude1);
+		intent.putExtra("LATITUDE2", latitude2);
+		intent.putExtra("LONGITUDE2", longitude2);
 		startService(intent);
 		output.setText("服務啟動中");
 	}
@@ -323,7 +330,31 @@ public class MainActivity extends FragmentActivity {
 		tab = (TextView) tabView.findViewById(android.R.id.title);
 		tab.setTextSize(10);
 	}
+	/*離開程式*/
+	@Override
+	public boolean onKeyDown(int keycode, KeyEvent event) {
+		if (keycode == KeyEvent.KEYCODE_BACK) {
+			closeAll();
+			return true;
+		}
+		return super.onKeyDown(keycode, event);
+	}
 
+	public void closeAll() {
+		new AlertDialog.Builder(MainActivity.this)
+				.setTitle("確定離開本程式？")
+				.setMessage("按Home鍵可背景執行")
+				.setNegativeButton("離開", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						android.os.Process.killProcess(android.os.Process
+								.myPid());
+					}
+				})
+				.setPositiveButton("繼續", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+					}
+				}).show();
+	}
 	/* tab3 */
 	/*
 	 * @Override public void onStart() { super.onStart();
