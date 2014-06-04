@@ -9,6 +9,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.util.FloatMath;
 import android.util.Log;
@@ -111,15 +112,35 @@ public class MainActivity extends FragmentActivity {
 		LatLng p5 = new LatLng(coordinate[4][0], coordinate[4][1]);
 		if (map != null) {
 			// google mark
-			map.addMarker(new MarkerOptions().position(p1).title("多那之高雄中正門市")
+			map.addMarker(new MarkerOptions()
+					.position(p1)
+					.title("多那之高雄中正門市")
+					.icon(BitmapDescriptorFactory
+							.fromResource(R.drawable.donutes_logo))
 					.snippet("咖啡．烘培"));
-			map.addMarker(new MarkerOptions().position(p2).title("多那之高雄文化門市 ")
+			map.addMarker(new MarkerOptions()
+					.position(p2)
+					.title("多那之高雄文化門市 ")
+					.icon(BitmapDescriptorFactory
+							.fromResource(R.drawable.donutes_logo))
 					.snippet("咖啡．烘培"));
-			map.addMarker(new MarkerOptions().position(p3).title("多那之高雄自由門市")
+			map.addMarker(new MarkerOptions()
+					.position(p3)
+					.title("多那之高雄自由門市")
+					.icon(BitmapDescriptorFactory
+							.fromResource(R.drawable.donutes_logo))
 					.snippet("咖啡．烘培"));
-			map.addMarker(new MarkerOptions().position(p4).title("多那之高雄明誠門市")
+			map.addMarker(new MarkerOptions()
+					.position(p4)
+					.title("多那之高雄明誠門市")
+					.icon(BitmapDescriptorFactory
+							.fromResource(R.drawable.donutes_logo))
 					.snippet("咖啡．烘培"));
-			map.addMarker(new MarkerOptions().position(p5).title("多那之澎湖馬公門市")
+			map.addMarker(new MarkerOptions()
+					.position(p5)
+					.title("多那之澎湖馬公門市")
+					.icon(BitmapDescriptorFactory
+							.fromResource(R.drawable.donutes_logo))
 					.snippet("咖啡．烘培"));
 			// google location
 			setUpMap();
@@ -127,7 +148,7 @@ public class MainActivity extends FragmentActivity {
 		/* tab4 */
 		output = (TextView) findViewById(R.id.output);
 		checkBox_service = (CheckBox) findViewById(R.id.checkBox_service);
-		//checkBox_service.setChecked(true);
+		// checkBox_service.setChecked(true);
 		checkBox_service
 				.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
 
@@ -245,10 +266,35 @@ public class MainActivity extends FragmentActivity {
 
 		// Zoom in the Google Map
 		map.animateCamera(CameraUpdateFactory.zoomTo(15));
-		map.addMarker(new MarkerOptions()
-				.position(new LatLng(latitude, longitude))
-				.icon(BitmapDescriptorFactory.fromResource(R.drawable.walk))
-				.title("現在位置"));
+		map.addMarker(new MarkerOptions().position(
+				new LatLng(latitude, longitude)).title("現在位置"));
+		/*GPS開啟跳出確認視窗*/
+		if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+			new AlertDialog.Builder(MainActivity.this)
+					.setTitle("GPS設定")
+					.setMessage("您尚未啟動GPS，要啟動嗎?")
+					.setCancelable(false)
+					.setNegativeButton("啟動",
+							new DialogInterface.OnClickListener() {
+
+								public void onClick(DialogInterface dialog,
+										int which) {
+									startActivity(new Intent(
+											Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+								}
+							})
+					.setPositiveButton("不啟動",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									Toast.makeText(MainActivity.this,
+											"不啟動GPS將無法定位", Toast.LENGTH_SHORT)
+											.show();
+								}
+							}).show();
+
+		}
 	}
 
 	/* tab4 */
@@ -330,7 +376,8 @@ public class MainActivity extends FragmentActivity {
 		tab = (TextView) tabView.findViewById(android.R.id.title);
 		tab.setTextSize(10);
 	}
-	/*離開程式*/
+
+	/* 離開程式 */
 	@Override
 	public boolean onKeyDown(int keycode, KeyEvent event) {
 		if (keycode == KeyEvent.KEYCODE_BACK) {

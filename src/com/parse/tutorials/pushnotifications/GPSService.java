@@ -14,11 +14,13 @@ public class GPSService extends Service implements LocationListener {
 	private LocationManager manager;
 	private boolean isInArea;
 	private double latitude1, longitude1, latitude2, longitude2;
-	
+
 	@Override
 	public void onCreate() {
-		
+
 		manager = (LocationManager) getSystemService(LOCATION_SERVICE);
+		manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 1,
+				this);
 		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 1,
 				this);
 		isInArea = false;
@@ -26,10 +28,18 @@ public class GPSService extends Service implements LocationListener {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		latitude1 = (double) intent.getFloatExtra("LATITUDE1", 22.6297370f);
-		longitude1 = (double) intent.getFloatExtra("LONGITUDE1", 120.3278820f);
-		latitude2 = (double) intent.getFloatExtra("LATITUDE2", 22.6297370f);
-		longitude2 = (double) intent.getFloatExtra("LONGITUDE2", 120.3278820f);
+		try {
+
+			latitude1 = (double) intent.getFloatExtra("LATITUDE1", 22.6297370f);
+			longitude1 = (double) intent.getFloatExtra("LONGITUDE1",
+					120.3278820f);
+			latitude2 = (double) intent.getFloatExtra("LATITUDE2", 22.6297370f);
+			longitude2 = (double) intent.getFloatExtra("LONGITUDE2",
+					120.3278820f);
+
+		} catch (NullPointerException e) {
+			Log.i("GPSService","NullPointException");
+		}
 		Log.d("GPSService", "lat/long: " + latitude1 + ": " + longitude1);
 		Log.d("GPSService", "lat/long: " + latitude2 + ": " + longitude2);
 		return START_STICKY;
@@ -52,7 +62,6 @@ public class GPSService extends Service implements LocationListener {
 		dest.setLongitude(longitude2);
 		float distance1 = current.distanceTo(dest);
 		float distance2 = current.distanceTo(dest);
-		Log.d("²{¦b¶ZÂ÷", "¶ZÂ÷: " + distance1);
 		if (distance1 < 1000.0 || distance2 < 1000.0) {
 			if (isInArea == false) {
 				Intent intent = new Intent("android.broadcast.LOCATION");
@@ -65,7 +74,6 @@ public class GPSService extends Service implements LocationListener {
 
 	}
 
-	
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// TODO Auto-generated method stub
