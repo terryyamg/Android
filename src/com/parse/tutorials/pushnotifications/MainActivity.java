@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,6 +46,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -79,9 +81,11 @@ public class MainActivity extends FragmentActivity {
 	protected static final int CHECK_UPDATE = 1;
 	protected static final int DOWN_ERROR = 0;
 	/** Called when the activity is first created. */
-	private int serverVersion =1 ; // 現在版本
+	private int serverVersion = 1; // 現在版本
 	private int newServerVersion; // 最新版本
 	private String downLoadApkUrl = "https://dl.dropbox.com/s/vahfdayyluk151z/Android.apk"; // 放置最新檔案網址
+
+	/* 建立桌面捷徑 */
 
 	/* tab1 */
 	public static final String TAG = "ImgDisplayActivity";
@@ -110,6 +114,9 @@ public class MainActivity extends FragmentActivity {
 			{ (float) 23.5648240, (float) 119.5653820 } };
 
 	/* tab3 */
+	private TextView info;
+	private Button scanner;
+
 	private RadioButton genderFemaleButton;
 	private RadioButton genderMaleButton;
 	private EditText ageEditText;
@@ -130,16 +137,18 @@ public class MainActivity extends FragmentActivity {
 		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 				.detectDiskReads().detectDiskWrites().detectNetwork()
 				.penaltyLog().build());
-		/*StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-				.detectLeakedSqlLiteObjects().detectLeakedClosableObjects()
-				.penaltyLog().penaltyDeath().build());*/
+		/*
+		 * StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+		 * .detectLeakedSqlLiteObjects().detectLeakedClosableObjects()
+		 * .penaltyLog().penaltyDeath().build());
+		 */
 
-		JSONArray obj = getJson("http://terryyamg.github.io/myweb/update_verson.json"); //更新版本文件檔位置
+		JSONArray obj = getJson("http://terryyamg.github.io/myweb/update_verson.json"); // 更新版本文件檔位置
 		Log.i("obj:", obj + "");
 		try {
 			for (int i = 0; i < obj.length(); i++) {
 				JSONObject data = obj.getJSONObject(i);
-				newServerVersion = Integer.parseInt(data.getString("code")); //code為名稱，抓出來newServerVersion為值
+				newServerVersion = Integer.parseInt(data.getString("code")); // code為名稱，抓出來newServerVersion為值
 			}
 		} catch (JSONException e) {
 
@@ -165,6 +174,8 @@ public class MainActivity extends FragmentActivity {
 			}
 		}).start();
 
+		/* 建立桌面捷徑 */
+		addShortcut();
 		// Track app opens.
 		ParseAnalytics.trackAppOpened(getIntent());
 
@@ -231,10 +242,33 @@ public class MainActivity extends FragmentActivity {
 			// google location
 			setUpMap();
 		}
+		/* tab3 */
+		info = (TextView) findViewById(R.id.info);
+		scanner = (Button) findViewById(R.id.scanner);
+		scanner.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				// TODO Auto-generated method stub
+				Intent iScaner = new Intent("la.droid.qr.scan"); // 使用QRDroid的掃描功能
+				iScaner.putExtra("la.droid.qr.complete", true); // 完整回傳，不截掉scheme
+				try {
+					// 開啟 QRDroid App 的掃描功能，等待 call back onActivityResult()
+					startActivityForResult(iScaner, 0);
+				} catch (ActivityNotFoundException ex) {
+					// 若沒安裝 QRDroid，則開啟 Google Play商店，並顯示 QRDroid App
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri
+							.parse("market://details?id=la.droid.qr"));
+					startActivity(intent);
+				}
+			}
+		});
+
 		/* tab4 */
 		output = (TextView) findViewById(R.id.output);
 		checkBox_service = (CheckBox) findViewById(R.id.checkBox_service);
 		checkBox_service.setChecked(getFromSP("checkBox1")); // checkBox儲存設定
+
 		if (checkBox_service.isChecked()) {
 			start_Click();
 		} else {
@@ -250,6 +284,7 @@ public class MainActivity extends FragmentActivity {
 						if (checkBox_service.isChecked()) {
 							start_Click();
 							saveInSp("checkBox1", isChecked); // 執行定位並儲存設定
+
 						} else {
 							stop_Click();
 							saveInSp("checkBox1", isChecked);// 不執行定位並儲存設定
@@ -273,9 +308,11 @@ public class MainActivity extends FragmentActivity {
 		// 透過HTTP連線取得回應
 		try {
 			HttpClient httpclient = new DefaultHttpClient(); // for port 80
-			HttpGet httppost = new HttpGet(url); //要用Get，用Post會出現 java.lang.string cannot be converted to jsonarray
-			HttpResponse response = httpclient.execute(httppost); 
-			Log.i("response:", response + ""); //沒有值會catch錯誤，加入前面StrictMode就可以
+			HttpGet httppost = new HttpGet(url); // 要用Get，用Post會出現
+													// java.lang.string cannot
+													// be converted to jsonarray
+			HttpResponse response = httpclient.execute(httppost);
+			Log.i("response:", response + ""); // 沒有值會catch錯誤，加入前面StrictMode就可以
 			HttpEntity entity = response.getEntity();
 			Log.i("entity:", entity + "");
 			is = entity.getContent();
@@ -286,7 +323,7 @@ public class MainActivity extends FragmentActivity {
 		// 讀取回應
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					is, "utf8"), 9999999);	// 99999為傳流大小，若資料很大，可自行調整
+					is, "utf8"), 9999999); // 99999為傳流大小，若資料很大，可自行調整
 			StringBuilder sb = new StringBuilder();
 			String line = null;
 			while ((line = reader.readLine()) != null) {
@@ -295,7 +332,7 @@ public class MainActivity extends FragmentActivity {
 			}
 			is.close();
 			result = sb.toString();
-			Log.i("result:", result + ""); //LogCat會印出json ex:[{"code":"1"}]
+			Log.i("result:", result + ""); // LogCat會印出json ex:[{"code":"1"}]
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -409,14 +446,32 @@ public class MainActivity extends FragmentActivity {
 				}
 
 				if (serverVersion != newServerVersion) {
-					Log.i("serverVersion:", serverVersion + ""); //顯示現在版本
-					Log.i("newServerVersion:", newServerVersion + ""); //顯示最新版本
-					showUpdateDialog(); //執行更新
+					Log.i("serverVersion:", serverVersion + ""); // 顯示現在版本
+					Log.i("newServerVersion:", newServerVersion + ""); // 顯示最新版本
+					showUpdateDialog(); // 執行更新
 				}
 				break;
 			}
 		}
 	};
+
+	/* 建立桌面捷徑 */
+	private void addShortcut() {
+		Intent shortcutIntent = new Intent(getApplicationContext(),
+				SplashScreen.class); // 啟動捷徑入口，一般用MainActivity，有使用其他入口則填入相對名稱，ex:有使用SplashScreen
+		shortcutIntent.setAction(Intent.ACTION_MAIN);
+		Intent addIntent = new Intent();
+		addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent); // shortcutIntent送入
+		addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
+				getString(R.string.app_name)); // 捷徑app名稱
+		addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+				Intent.ShortcutIconResource.fromContext(
+						getApplicationContext(),// 捷徑app圖
+						R.drawable.ic_launcher));
+		addIntent.putExtra("duplicate", false); // 指創建一次
+		addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT"); // 安裝
+		getApplicationContext().sendBroadcast(addIntent); // 送出廣播
+	}
 
 	/* tab1 */
 	final class ImageViewOnTouchListener implements OnTouchListener {
@@ -518,31 +573,53 @@ public class MainActivity extends FragmentActivity {
 		map.addMarker(new MarkerOptions().position(
 				new LatLng(latitude, longitude)).title("現在位置"));
 		/* GPS開啟跳出確認視窗 */
-		if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+		try {
+			if (!locationManager
+					.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+				Log.i("GPSOpen:",
+						locationManager
+								.isProviderEnabled(LocationManager.GPS_PROVIDER)
+								+ "");
+				new AlertDialog.Builder(MainActivity.this)
+						.setTitle("GPS設定")
+						.setMessage("您尚未啟動GPS，要啟動嗎?")
+						.setCancelable(false)
+						.setNegativeButton("啟動",
+								new DialogInterface.OnClickListener() {
 
-			new AlertDialog.Builder(MainActivity.this)
-					.setTitle("GPS設定")
-					.setMessage("您尚未啟動GPS，要啟動嗎?")
-					.setCancelable(false)
-					.setNegativeButton("啟動",
-							new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										startActivity(new Intent(
+												Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+									}
+								})
+						.setPositiveButton("不啟動",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										Toast.makeText(MainActivity.this,
+												"不啟動GPS將使用網路定位",
+												Toast.LENGTH_SHORT).show();
+									}
+								}).show();
 
-								public void onClick(DialogInterface dialog,
-										int which) {
-									startActivity(new Intent(
-											Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-								}
-							})
-					.setPositiveButton("不啟動",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									Toast.makeText(MainActivity.this,
-											"不啟動GPS將無法定位", Toast.LENGTH_SHORT)
-											.show();
-								}
-							}).show();
+			}
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/* tab3 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (0 == requestCode && null != data && data.getExtras() != null) {
+			// 掃描結果存放在 key 為 la.droid.qr.result 的值中
+			String result = data.getExtras().getString("la.droid.qr.result");
+
+			info.setText(result); // 將結果顯示在 TextVeiw 中
 		}
 	}
 
@@ -600,11 +677,10 @@ public class MainActivity extends FragmentActivity {
 		spec.setContent(R.id.tab2);
 		tabHost.addTab(spec);
 
-		/*
-		 * spec = tabHost.newTabSpec("tab3"); spec.setIndicator("",
-		 * getResources().getDrawable(R.drawable.tab3));
-		 * spec.setContent(R.id.tab3); tabHost.addTab(spec);
-		 */
+		spec = tabHost.newTabSpec("tab3");
+		spec.setIndicator("", getResources().getDrawable(R.drawable.tab3));
+		spec.setContent(R.id.tab3);
+		tabHost.addTab(spec);
 
 		spec = tabHost.newTabSpec("tab4");
 		spec.setIndicator("", getResources().getDrawable(R.drawable.tab4));
@@ -628,10 +704,10 @@ public class MainActivity extends FragmentActivity {
 		tab = (TextView) tabView.findViewById(android.R.id.title);
 		tab.setTextSize(10);
 
-		/*
-		 * tabView = tabWidget.getChildTabViewAt(3); tab = (TextView)
-		 * tabView.findViewById(android.R.id.title); tab.setTextSize(10);
-		 */
+		tabView = tabWidget.getChildTabViewAt(3);
+		tab = (TextView) tabView.findViewById(android.R.id.title);
+		tab.setTextSize(10);
+
 	}
 
 	/* 離開程式 */
@@ -645,19 +721,24 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	public void closeAll() {
-		new AlertDialog.Builder(MainActivity.this)
-				.setTitle("確定離開本程式？")
+		new AlertDialog.Builder(MainActivity.this).setTitle("確定離開本程式？")
 				.setMessage("按Home鍵可背景執行")
 				.setNegativeButton("離開", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						android.os.Process.killProcess(android.os.Process
-								.myPid());
+						finish();
 					}
 				})
 				.setPositiveButton("繼續", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 					}
 				}).show();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		// Kill myself
+		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
 	/* tab3 */
