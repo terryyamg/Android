@@ -117,16 +117,17 @@ public class MainActivity extends FragmentActivity {
 	private TextView info;
 	private Button scanner;
 
-	private RadioButton genderFemaleButton;
-	private RadioButton genderMaleButton;
-	private EditText ageEditText;
-	private RadioGroup genderRadioGroup;
-	public static final String GENDER_MALE = "male";
-	public static final String GENDER_FEMALE = "female";
-
 	/* tab4 */
 	private TextView output;
 	private CheckBox checkBox_service;
+
+	/* tab5 */
+	private RadioButton genderFemaleButton;
+	private RadioButton genderMaleButton;
+	private EditText ageEditText, myNumber;
+	private RadioGroup genderRadioGroup;
+	public static final String GENDER_MALE = "male";
+	public static final String GENDER_FEMALE = "female";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -180,13 +181,6 @@ public class MainActivity extends FragmentActivity {
 		ParseAnalytics.trackAppOpened(getIntent());
 
 		// Set up our UI member properties.
-		// this.genderFemaleButton = (RadioButton)
-		// findViewById(R.id.gender_female_button);
-		// this.genderMaleButton = (RadioButton)
-		// findViewById(R.id.gender_male_button);
-		// this.ageEditText = (EditText) findViewById(R.id.age_edit_text);
-		// this.genderRadioGroup = (RadioGroup)
-		// findViewById(R.id.gender_radio_group);
 
 		/* tab1 */
 		fLayoutDisplay = (FrameLayout) findViewById(R.id.tab1);
@@ -293,6 +287,13 @@ public class MainActivity extends FragmentActivity {
 
 				});
 		// checkBox_service.performClick(); //自動按checkBox
+
+		/* tab5 */
+//		this.genderFemaleButton = (RadioButton) findViewById(R.id.gender_female_button);
+//		this.genderMaleButton = (RadioButton) findViewById(R.id.gender_male_button);
+//		this.ageEditText = (EditText) findViewById(R.id.age_edit_text);
+//		this.myNumber = (EditText) findViewById(R.id.my_number);
+//		this.genderRadioGroup = (RadioGroup) findViewById(R.id.gender_radio_group);
 
 		setupViewComponent();
 	}
@@ -618,9 +619,64 @@ public class MainActivity extends FragmentActivity {
 		if (0 == requestCode && null != data && data.getExtras() != null) {
 			// 掃描結果存放在 key 為 la.droid.qr.result 的值中
 			String result = data.getExtras().getString("la.droid.qr.result");
+			String setResult = "manlen";
+			if (setResult.equals(result)) {
+				String messsenger = "歡迎使用本公司優惠方案";
+				int scannerNumber = ParseInstallation.getCurrentInstallation().getInt("scannerNumber");
+			//	int scannerNumber = getScannerNumber("ScannerNumber"); // 取的儲存的廣播次數
+				scannerNumber++;
+				ParseInstallation.getCurrentInstallation().put("scannerNumber",
+						scannerNumber);
+				ParseInstallation.getCurrentInstallation().saveInBackground(
+						new SaveCallback() {
+							@Override
+							public void done(ParseException e) {
+								if (e == null) {
+									Toast toast = Toast.makeText(
+											getApplicationContext(),
+											R.string.scanner_success,
+											Toast.LENGTH_SHORT);
+									toast.show();
+								} else {
+									e.printStackTrace();
 
-			info.setText(result); // 將結果顯示在 TextVeiw 中
+									Toast toast = Toast.makeText(
+											getApplicationContext(),
+											R.string.scanner_failed,
+											Toast.LENGTH_SHORT);
+									toast.show();
+								}
+							}
+						});
+				
+			//	saveScannerNumber("ScannerNumber", scannerNumber);
+				info.setTextSize(30);
+				info.setText(messsenger); // 將結果顯示在 TextVeiw 中
+			} else {
+				String messsenger = "抱歉，您掃描的非本公司優惠";
+				info.setTextSize(30);
+				info.setText(messsenger); // 將結果顯示在 TextVeiw 中
+			}
+
 		}
+	}
+
+	/* 儲存掃描次數 */
+	private int getScannerNumber(String key) {
+
+		SharedPreferences settings = getApplicationContext()
+				.getSharedPreferences("ScannerNumber", 0);
+		return settings.getInt(key, 0);
+	}
+
+	private void saveScannerNumber(String key, int value) {
+		SharedPreferences settings = getApplicationContext()
+				.getSharedPreferences("ScannerNumber", 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putInt(key, value);
+
+		// Apply the edits!
+		editor.apply();
 	}
 
 	/* tab4 */
@@ -687,6 +743,11 @@ public class MainActivity extends FragmentActivity {
 		spec.setContent(R.id.tab4);
 		tabHost.addTab(spec);
 
+//		spec = tabHost.newTabSpec("tab5");
+//		spec.setIndicator("", getResources().getDrawable(R.drawable.tab5));
+//		spec.setContent(R.id.tab5);
+//		tabHost.addTab(spec);
+
 		tabHost.setCurrentTab(0);
 
 		// 設定tab標籤的字體大小
@@ -707,6 +768,10 @@ public class MainActivity extends FragmentActivity {
 		tabView = tabWidget.getChildTabViewAt(3);
 		tab = (TextView) tabView.findViewById(android.R.id.title);
 		tab.setTextSize(10);
+
+//		tabView = tabWidget.getChildTabViewAt(4);
+//		tab = (TextView) tabView.findViewById(android.R.id.title);
+//		tab.setTextSize(10);
 
 	}
 
@@ -749,17 +814,23 @@ public class MainActivity extends FragmentActivity {
 
 		// Display the current values for this user, such as their age and
 		// gender.
-		// displayUserProfile();
-		refreshUserProfile();
+//		displayUserProfile();
+//		refreshUserProfile();
 	}
 
+	/*tab5*/
 	// Save the user's profile to their installation.
 	public void saveUserProfile(View view) {
 		String ageTextString = ageEditText.getText().toString();
+		String myNumberTextString = myNumber.getText().toString();
 
 		if (ageTextString.length() > 0) {
 			ParseInstallation.getCurrentInstallation().put("age",
 					Integer.valueOf(ageTextString));
+		}
+		if (myNumberTextString.length() > 0) {
+			ParseInstallation.getCurrentInstallation().put("mynumber",
+					Integer.valueOf(myNumberTextString));
 		}
 
 		if (genderRadioGroup.getCheckedRadioButtonId() == genderFemaleButton
@@ -776,6 +847,7 @@ public class MainActivity extends FragmentActivity {
 
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(ageEditText.getWindowToken(), 0);
+		imm.hideSoftInputFromWindow(myNumber.getWindowToken(), 0);
 
 		ParseInstallation.getCurrentInstallation().saveInBackground(
 				new SaveCallback() {
@@ -802,25 +874,25 @@ public class MainActivity extends FragmentActivity {
 
 	// Refresh the UI with the data obtained from the current ParseInstallation
 	// object.
-	// private void displayUserProfile() {
-	// String gender = ParseInstallation.getCurrentInstallation().getString(
-	// "gender");
-	// int age = ParseInstallation.getCurrentInstallation().getInt("age");
-	//
-	// if (gender != null) {
-	// genderMaleButton.setChecked(gender.equalsIgnoreCase(GENDER_MALE));
-	// genderFemaleButton.setChecked(gender
-	// .equalsIgnoreCase(GENDER_FEMALE));
-	// } else {
-	// genderMaleButton.setChecked(false);
-	// genderFemaleButton.setChecked(false);
-	// }
-	//
-	// if (age > 0) {
-	// ageEditText.setText(Integer.valueOf(age).toString());
-	// }
-	//
-	// }
+	private void displayUserProfile() {
+		String gender = ParseInstallation.getCurrentInstallation().getString(
+				"gender");
+		int age = ParseInstallation.getCurrentInstallation().getInt("age");
+
+		if (gender != null) {
+			genderMaleButton.setChecked(gender.equalsIgnoreCase(GENDER_MALE));
+			genderFemaleButton.setChecked(gender
+					.equalsIgnoreCase(GENDER_FEMALE));
+		} else {
+			genderMaleButton.setChecked(false);
+			genderFemaleButton.setChecked(false);
+		}
+
+		if (age > 0) {
+			ageEditText.setText(Integer.valueOf(age).toString());
+		}
+
+	}
 
 	// Get the latest values from the ParseInstallation object.
 	private void refreshUserProfile() {
