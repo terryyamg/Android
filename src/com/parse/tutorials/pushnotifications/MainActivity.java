@@ -63,9 +63,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
@@ -74,7 +76,7 @@ import com.parse.ParseObject;
 import com.parse.RefreshCallback;
 import com.parse.SaveCallback;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements OnMarkerClickListener{
 	private static final int LOAD_DISPLAY_TIME = 1500;
 	/* update */
 	protected static final int UPDATA_CLIENT = 0;
@@ -108,14 +110,11 @@ public class MainActivity extends FragmentActivity {
 	private GoogleMap map;
 	private float coordinate[][] = {
 			{ (float) 22.6297370, (float) 120.3278820 },
-			{ (float) 22.6271340, (float) 120.3193380 },
-			{ (float) 22.6736570, (float) 120.3121400 },
-			{ (float) 22.6609120, (float) 120.3063850 },
-			{ (float) 23.5648240, (float) 119.5653820 } };
+			{ (float) 22.6271340, (float) 120.3193380 }};
 
 	/* tab3 */
-	private TextView info;
-	private Button scanner;
+	private TextView info,info2;
+	private Button scanner,scanner2;
 
 	/* tab4 */
 	private TextView output;
@@ -195,13 +194,11 @@ public class MainActivity extends FragmentActivity {
 		// google map
 		map = ((SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map)).getMap();
-
+		
 		LatLng p1 = new LatLng(coordinate[0][0], coordinate[0][1]);
 		LatLng p2 = new LatLng(coordinate[1][0], coordinate[1][1]);
-		LatLng p3 = new LatLng(coordinate[2][0], coordinate[2][1]);
-		LatLng p4 = new LatLng(coordinate[3][0], coordinate[3][1]);
-		LatLng p5 = new LatLng(coordinate[4][0], coordinate[4][1]);
 		if (map != null) {
+			map.setOnMarkerClickListener(this);
 			// google mark
 			map.addMarker(new MarkerOptions()
 					.position(p1)
@@ -211,25 +208,7 @@ public class MainActivity extends FragmentActivity {
 					.snippet("咖啡．烘培"));
 			map.addMarker(new MarkerOptions()
 					.position(p2)
-					.title("多那之高雄文化門市 ")
-					.icon(BitmapDescriptorFactory
-							.fromResource(R.drawable.donutes_logo))
-					.snippet("咖啡．烘培"));
-			map.addMarker(new MarkerOptions()
-					.position(p3)
-					.title("多那之高雄自由門市")
-					.icon(BitmapDescriptorFactory
-							.fromResource(R.drawable.donutes_logo))
-					.snippet("咖啡．烘培"));
-			map.addMarker(new MarkerOptions()
-					.position(p4)
-					.title("多那之高雄明誠門市")
-					.icon(BitmapDescriptorFactory
-							.fromResource(R.drawable.donutes_logo))
-					.snippet("咖啡．烘培"));
-			map.addMarker(new MarkerOptions()
-					.position(p5)
-					.title("多那之澎湖馬公門市")
+					.title("多那之高雄文化門市")
 					.icon(BitmapDescriptorFactory
 							.fromResource(R.drawable.donutes_logo))
 					.snippet("咖啡．烘培"));
@@ -238,7 +217,18 @@ public class MainActivity extends FragmentActivity {
 		}
 		/* tab3 */
 		info = (TextView) findViewById(R.id.info);
+		info2 = (TextView) findViewById(R.id.info2);
 		scanner = (Button) findViewById(R.id.scanner);
+		scanner2 = (Button) findViewById(R.id.scanner2);
+		scanner2.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				// TODO Auto-generated method stub
+				int scannerNumberInfo = ParseInstallation.getCurrentInstallation().getInt("scannerNumber");
+				info2.setText("您已經使用"+Integer.valueOf(scannerNumberInfo).toString()+"次優惠方案");
+			}
+		});
 		scanner.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -551,6 +541,8 @@ public class MainActivity extends FragmentActivity {
 		// Get the name of the best provider
 		String provider = locationManager.getBestProvider(criteria, true);
 
+		try {
+		
 		// Get Current Location
 		Location myLocation = locationManager.getLastKnownLocation(provider);
 
@@ -571,8 +563,12 @@ public class MainActivity extends FragmentActivity {
 
 		// Zoom in the Google Map
 		map.animateCamera(CameraUpdateFactory.zoomTo(15));
-		map.addMarker(new MarkerOptions().position(
-				new LatLng(latitude, longitude)).title("現在位置"));
+		//map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("現在位置"));
+		
+		} catch (NullPointerException e) {
+			Log.i("myLocation", "NullPointException");
+		}
+		
 		/* GPS開啟跳出確認視窗 */
 		try {
 			if (!locationManager
@@ -611,6 +607,15 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 
+	/* 點選marker顯示 */
+	@Override
+	  public boolean onMarkerClick(Marker marker) {
+		Intent intent = new Intent(this, ShowMarkerInfo.class);
+		intent.putExtra("MarkTitle", marker.getTitle());
+		startActivity(intent);
+	    return false;
+	  }
+	
 	/* tab3 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -623,7 +628,6 @@ public class MainActivity extends FragmentActivity {
 			if (setResult.equals(result)) {
 				String messsenger = "歡迎使用本公司優惠方案";
 				int scannerNumber = ParseInstallation.getCurrentInstallation().getInt("scannerNumber");
-			//	int scannerNumber = getScannerNumber("ScannerNumber"); // 取的儲存的廣播次數
 				scannerNumber++;
 				ParseInstallation.getCurrentInstallation().put("scannerNumber",
 						scannerNumber);
@@ -648,8 +652,7 @@ public class MainActivity extends FragmentActivity {
 								}
 							}
 						});
-				
-			//	saveScannerNumber("ScannerNumber", scannerNumber);
+				info2.setText("您已經使用"+Integer.valueOf(scannerNumber).toString()+"次優惠方案");
 				info.setTextSize(30);
 				info.setText(messsenger); // 將結果顯示在 TextVeiw 中
 			} else {
@@ -659,24 +662,6 @@ public class MainActivity extends FragmentActivity {
 			}
 
 		}
-	}
-
-	/* 儲存掃描次數 */
-	private int getScannerNumber(String key) {
-
-		SharedPreferences settings = getApplicationContext()
-				.getSharedPreferences("ScannerNumber", 0);
-		return settings.getInt(key, 0);
-	}
-
-	private void saveScannerNumber(String key, int value) {
-		SharedPreferences settings = getApplicationContext()
-				.getSharedPreferences("ScannerNumber", 0);
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putInt(key, value);
-
-		// Apply the edits!
-		editor.apply();
 	}
 
 	/* tab4 */

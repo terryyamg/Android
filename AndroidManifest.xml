@@ -75,6 +75,10 @@
         <service android:name=".GPSService" />
         <service android:name="com.parse.PushService" />
 
+        <!-- ShowMarkerInfo -->
+        <activity android:name=".ShowMarkerInfo" >
+        </activity>
+
         <receiver android:name="com.parse.ParseBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
