@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">曼聯實業</string>
-	<string name="service">偵測景點</string>
+	<string name="service">特約商店主動通知</string>
 	<string name="saveButton">儲存設定</string>
 
 	<string name="scanner">QRcode掃描</string>

@@ -11,7 +11,7 @@
         android:layout_centerInParent="true"
         android:src="@drawable/load" />
  
-    <TextView
+   <!--  <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
@@ -19,6 +19,6 @@
         android:textColor="#454545"
         android:gravity="center_horizontal"
         android:layout_alignParentBottom="true"
-        android:text="www.we-manlen.com" />
+        android:text="www.we-manlen.com" /> -->
  
 </RelativeLayout>

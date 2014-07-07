@@ -13,7 +13,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,6 +45,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -55,6 +57,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
@@ -69,6 +72,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
@@ -76,7 +80,8 @@ import com.parse.ParseObject;
 import com.parse.RefreshCallback;
 import com.parse.SaveCallback;
 
-public class MainActivity extends FragmentActivity implements OnMarkerClickListener{
+public class MainActivity extends FragmentActivity implements
+		OnMarkerClickListener {
 	private static final int LOAD_DISPLAY_TIME = 1500;
 	/* update */
 	protected static final int UPDATA_CLIENT = 0;
@@ -108,13 +113,25 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 
 	/* tab2 */
 	private GoogleMap map;
-	private float coordinate[][] = {
-			{ (float) 22.6297370, (float) 120.3278820 },
-			{ (float) 22.6271340, (float) 120.3193380 }};
+	private float coordinate[][][] = {
+			{ { 0, (float) 22.6297370, (float) 120.3278820 },
+					{ 0, (float) 22.6271340, (float) 120.3193380 } },
+			{ { 1, (float) 24.1260010, (float) 120.6628070 } } };
+	private String[] type = new String[] { "高雄市", "台中市" };
+	private String[] locationName = new String[] { "多那之高雄中正門市", "多那之高雄文化門市" };
+	private String[][] type2 = new String[][] { { "多那之高雄中正門市", "多那之高雄文化門市" },
+			{ "曼聯實業有限公司" } };
+	private Spinner sp1;// 第一個下拉選單
+	private Spinner sp2;// 第二個下拉選單
+	private Context context;
+
+	ArrayAdapter<String> adapter;
+
+	ArrayAdapter<String> adapter2;
 
 	/* tab3 */
-	private TextView info,info2;
-	private Button scanner,scanner2;
+	private TextView info, info2;
+	private Button scanner, scanner2;
 
 	/* tab4 */
 	private TextView output;
@@ -192,29 +209,67 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 
 		/* tab2 */
 		// google map
-		map = ((SupportMapFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.map)).getMap();
-		
-		LatLng p1 = new LatLng(coordinate[0][0], coordinate[0][1]);
-		LatLng p2 = new LatLng(coordinate[1][0], coordinate[1][1]);
-		if (map != null) {
-			map.setOnMarkerClickListener(this);
-			// google mark
-			map.addMarker(new MarkerOptions()
-					.position(p1)
-					.title("多那之高雄中正門市")
-					.icon(BitmapDescriptorFactory
-							.fromResource(R.drawable.donutes_logo))
-					.snippet("咖啡．烘培"));
-			map.addMarker(new MarkerOptions()
-					.position(p2)
-					.title("多那之高雄文化門市")
-					.icon(BitmapDescriptorFactory
-							.fromResource(R.drawable.donutes_logo))
-					.snippet("咖啡．烘培"));
-			// google location
-			setUpMap();
+		try {
+			map = ((SupportMapFragment) getSupportFragmentManager()
+					.findFragmentById(R.id.map)).getMap();
+
+			LatLng p0_1 = new LatLng(coordinate[0][0][1], coordinate[0][0][2]);
+			LatLng p0_2 = new LatLng(coordinate[0][1][1], coordinate[0][1][2]);
+			LatLng p1_1 = new LatLng(coordinate[1][0][1], coordinate[1][0][2]);
+			
+			if (map != null) {
+				map.setOnMarkerClickListener(this);
+				// google mark
+				map.addMarker(new MarkerOptions()
+						.position(p0_1)
+						.title("多那之高雄中正門市")
+						.icon(BitmapDescriptorFactory
+								.fromResource(R.drawable.donutes_logo))
+						.snippet("咖啡．烘培"));
+				map.addMarker(new MarkerOptions()
+						.position(p0_2)
+						.title("多那之高雄文化門市")
+						.icon(BitmapDescriptorFactory
+								.fromResource(R.drawable.donutes_logo))
+						.snippet("咖啡．烘培"));
+				map.addMarker(new MarkerOptions()
+						.position(p1_1)
+						.title("曼聯實業有限公司")
+						.icon(BitmapDescriptorFactory
+								.fromResource(R.drawable.ic_launcher))
+						.snippet("顧問諮詢"));
+				// map.addMarker(new MarkerOptions()
+				// .position(p4)
+				// .title("建驊科技")
+				// .icon(BitmapDescriptorFactory
+				// .fromResource(R.drawable.donutes_logo))
+				// .snippet("高雄市大寮區大寮路870-12號"));
+				// google location
+				setUpMap();
+			}
+
+		} catch (NullPointerException e) {
+			Log.i("myLocation", "NullPointException");
 		}
+
+		context = this;
+
+		// 程式剛啟始時載入第一個下拉選單
+		adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, type);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		sp1 = (Spinner) findViewById(R.id.type);
+		sp1.setAdapter(adapter);
+		sp1.setOnItemSelectedListener(selectListener);
+
+		// 因為下拉選單第一個為茶類，所以先載入茶類群組進第二個下拉選單
+		adapter2 = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, locationName);
+		adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		sp2 = (Spinner) findViewById(R.id.type2);
+		sp2.setAdapter(adapter2);
+		sp2.setOnItemSelectedListener(selectListener2);
+
 		/* tab3 */
 		info = (TextView) findViewById(R.id.info);
 		info2 = (TextView) findViewById(R.id.info2);
@@ -225,8 +280,11 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 			public void onClick(View v) {
 
 				// TODO Auto-generated method stub
-				int scannerNumberInfo = ParseInstallation.getCurrentInstallation().getInt("scannerNumber");
-				info2.setText("您已經使用"+Integer.valueOf(scannerNumberInfo).toString()+"次優惠方案");
+				int scannerNumberInfo = ParseInstallation
+						.getCurrentInstallation().getInt("scannerNumber");
+				info2.setText("您已經使用"
+						+ Integer.valueOf(scannerNumberInfo).toString()
+						+ "次優惠方案");
 			}
 		});
 		scanner.setOnClickListener(new Button.OnClickListener() {
@@ -279,11 +337,14 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 		// checkBox_service.performClick(); //自動按checkBox
 
 		/* tab5 */
-//		this.genderFemaleButton = (RadioButton) findViewById(R.id.gender_female_button);
-//		this.genderMaleButton = (RadioButton) findViewById(R.id.gender_male_button);
-//		this.ageEditText = (EditText) findViewById(R.id.age_edit_text);
-//		this.myNumber = (EditText) findViewById(R.id.my_number);
-//		this.genderRadioGroup = (RadioGroup) findViewById(R.id.gender_radio_group);
+		// this.genderFemaleButton = (RadioButton)
+		// findViewById(R.id.gender_female_button);
+		// this.genderMaleButton = (RadioButton)
+		// findViewById(R.id.gender_male_button);
+		// this.ageEditText = (EditText) findViewById(R.id.age_edit_text);
+		// this.myNumber = (EditText) findViewById(R.id.my_number);
+		// this.genderRadioGroup = (RadioGroup)
+		// findViewById(R.id.gender_radio_group);
 
 		setupViewComponent();
 	}
@@ -542,33 +603,35 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 		String provider = locationManager.getBestProvider(criteria, true);
 
 		try {
-		
-		// Get Current Location
-		Location myLocation = locationManager.getLastKnownLocation(provider);
 
-		// set map type
-		map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+			// Get Current Location
+			Location myLocation = locationManager
+					.getLastKnownLocation(provider);
 
-		// Get latitude of the current location
-		double latitude = myLocation.getLatitude();
+			// set map type
+			map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-		// Get longitude of the current location
-		double longitude = myLocation.getLongitude();
+			// Get latitude of the current location
+			double latitude = myLocation.getLatitude();
 
-		// Create a LatLng object for the current location
-		LatLng latLng = new LatLng(latitude, longitude);
+			// Get longitude of the current location
+			double longitude = myLocation.getLongitude();
 
-		// Show the current location in Google Map
-		map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+			// Create a LatLng object for the current location
+			LatLng latLng = new LatLng(latitude, longitude);
 
-		// Zoom in the Google Map
-		map.animateCamera(CameraUpdateFactory.zoomTo(15));
-		//map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("現在位置"));
-		
+			// Show the current location in Google Map
+			map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+			// Zoom in the Google Map
+			map.animateCamera(CameraUpdateFactory.zoomTo(15));
+			// map.addMarker(new MarkerOptions().position(new LatLng(latitude,
+			// longitude)).title("現在位置"));
+
 		} catch (NullPointerException e) {
 			Log.i("myLocation", "NullPointException");
 		}
-		
+
 		/* GPS開啟跳出確認視窗 */
 		try {
 			if (!locationManager
@@ -609,13 +672,61 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 
 	/* 點選marker顯示 */
 	@Override
-	  public boolean onMarkerClick(Marker marker) {
+	public boolean onMarkerClick(Marker marker) {
 		Intent intent = new Intent(this, ShowMarkerInfo.class);
 		intent.putExtra("MarkTitle", marker.getTitle());
 		startActivity(intent);
-	    return false;
-	  }
-	
+		return false;
+	}
+
+	// 第一個下拉類別的監看式
+	private OnItemSelectedListener selectListener = new OnItemSelectedListener() {
+		public void onItemSelected(AdapterView<?> parent, View v, int position,
+				long id) {
+			// 讀取第一個下拉選單是選擇第幾個
+			int pos = sp1.getSelectedItemPosition();
+			// 重新產生新的Adapter，用的是二維陣列type2[pos]
+			adapter2 = new ArrayAdapter<String>(context,
+					android.R.layout.simple_spinner_item, type2[pos]);
+			// 載入第二個下拉選單Spinner
+			sp2.setAdapter(adapter2);
+
+		}
+
+		public void onNothingSelected(AdapterView<?> arg0) {
+
+		}
+
+	};
+
+	// 第二個下拉類別的監看式
+	private OnItemSelectedListener selectListener2 = new OnItemSelectedListener() {
+		public void onItemSelected(AdapterView<?> parent, View v, int position,
+				long id) {
+			setMapLocation();
+		}
+
+		public void onNothingSelected(AdapterView<?> arg0) {
+
+		}
+
+	};
+
+	public void setMapLocation() {
+		try {
+			int iSelect1 = sp1.getSelectedItemPosition();
+			int iSelect2 = sp2.getSelectedItemPosition();
+			double dLat = coordinate[iSelect1][iSelect2][1]; // 南北緯
+			double dLon = coordinate[iSelect1][iSelect2][2]; // 東西經
+			// GeoPoint gp = new GeoPoint((int)(dLat * 1e6), (int)(dLon * 1e6));
+			LatLng gg = new LatLng(dLat, dLon);
+			map.moveCamera(CameraUpdateFactory.newLatLng(gg));
+			map.animateCamera(CameraUpdateFactory.zoomTo(15));
+		} catch (NullPointerException e) {
+			Log.i("myLocation", "NullPointException");
+		}
+	}
+
 	/* tab3 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -627,7 +738,8 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 			String setResult = "manlen";
 			if (setResult.equals(result)) {
 				String messsenger = "歡迎使用本公司優惠方案";
-				int scannerNumber = ParseInstallation.getCurrentInstallation().getInt("scannerNumber");
+				int scannerNumber = ParseInstallation.getCurrentInstallation()
+						.getInt("scannerNumber");
 				scannerNumber++;
 				ParseInstallation.getCurrentInstallation().put("scannerNumber",
 						scannerNumber);
@@ -652,7 +764,8 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 								}
 							}
 						});
-				info2.setText("您已經使用"+Integer.valueOf(scannerNumber).toString()+"次優惠方案");
+				info2.setText("您已經使用"
+						+ Integer.valueOf(scannerNumber).toString() + "次優惠方案");
 				info.setTextSize(30);
 				info.setText(messsenger); // 將結果顯示在 TextVeiw 中
 			} else {
@@ -666,10 +779,10 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 
 	/* tab4 */
 	public void start_Click() {
-		float latitude1 = coordinate[0][0];
-		float longitude1 = coordinate[0][1];
-		float latitude2 = coordinate[1][0];
-		float longitude2 = coordinate[1][1];
+		float latitude1 = coordinate[0][0][1];
+		float longitude1 = coordinate[0][0][2];
+		float latitude2 = coordinate[0][1][1];
+		float longitude2 = coordinate[0][1][2];
 		Intent intent = new Intent(this, GPSService.class);
 		intent.putExtra("LATITUDE1", latitude1);
 		intent.putExtra("LONGITUDE1", longitude1);
@@ -728,10 +841,10 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 		spec.setContent(R.id.tab4);
 		tabHost.addTab(spec);
 
-//		spec = tabHost.newTabSpec("tab5");
-//		spec.setIndicator("", getResources().getDrawable(R.drawable.tab5));
-//		spec.setContent(R.id.tab5);
-//		tabHost.addTab(spec);
+		// spec = tabHost.newTabSpec("tab5");
+		// spec.setIndicator("", getResources().getDrawable(R.drawable.tab5));
+		// spec.setContent(R.id.tab5);
+		// tabHost.addTab(spec);
 
 		tabHost.setCurrentTab(0);
 
@@ -754,9 +867,9 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 		tab = (TextView) tabView.findViewById(android.R.id.title);
 		tab.setTextSize(10);
 
-//		tabView = tabWidget.getChildTabViewAt(4);
-//		tab = (TextView) tabView.findViewById(android.R.id.title);
-//		tab.setTextSize(10);
+		// tabView = tabWidget.getChildTabViewAt(4);
+		// tab = (TextView) tabView.findViewById(android.R.id.title);
+		// tab.setTextSize(10);
 
 	}
 
@@ -799,11 +912,11 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 
 		// Display the current values for this user, such as their age and
 		// gender.
-//		displayUserProfile();
-//		refreshUserProfile();
+		// displayUserProfile();
+		// refreshUserProfile();
 	}
 
-	/*tab5*/
+	/* tab5 */
 	// Save the user's profile to their installation.
 	public void saveUserProfile(View view) {
 		String ageTextString = ageEditText.getText().toString();

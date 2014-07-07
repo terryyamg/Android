@@ -74,7 +74,7 @@ public class GPSService extends Service implements LocationListener {
 		float distance1 = current.distanceTo(dest);
 		float distance2 = current.distanceTo(dest);
 		if (distance1 < 1000.0 || distance2 < 1000.0) {
-			if (isInArea == false && Frequency <= 30) {
+			if (isInArea == false && Frequency <= 999) {
 				Intent intent = new Intent("android.broadcast.LOCATION");
 				sendBroadcast(intent);
 				isInArea = true;

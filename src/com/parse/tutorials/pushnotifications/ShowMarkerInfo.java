@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 public class ShowMarkerInfo extends FragmentActivity {
-	private String markerTitle, market1, market2;
+	private String markerTitle, market1, market2, market3, market4;
 	private Button close;
 
 	public static final String TAG = "ImgDisplayActivity";
@@ -43,8 +43,10 @@ public class ShowMarkerInfo extends FragmentActivity {
 		markerTitle = intent.getStringExtra("MarkTitle");
 		market1 = "多那之高雄中正門市";
 		market2 = "多那之高雄文化門市";
+//		market3 = "鳳新電腦";
+//		market4 = "建驊科技";
 
-		if (markerTitle.equals(market1)) {
+		if (markerTitle.equals(market1) || markerTitle.equals(market3) || markerTitle.equals(market4)) {
 			setContentView(R.layout.marker_info);
 		}
 		if (markerTitle.equals(market2)) {
