@@ -18,11 +18,11 @@ public class GPSReceiver extends BroadcastReceiver {
 				.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
 
 		Notification notification = new Notification(R.drawable.ic_launcher,
-				"您已經接近景點", System.currentTimeMillis());
+				"您已經接近特約商店", System.currentTimeMillis());
 		Intent newintent = new Intent(context, MainActivity.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				newintent, 0);
-		notification.setLatestEventInfo(context, "您好，歡迎進入景點參觀。", null, contentIntent);
+		notification.setLatestEventInfo(context, "您已經進入曼聯通優惠商店區", null, contentIntent);
 
 		notificationManager.notify(id++, notification);
 		

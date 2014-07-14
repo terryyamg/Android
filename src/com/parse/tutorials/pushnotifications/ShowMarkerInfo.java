@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 public class ShowMarkerInfo extends FragmentActivity {
-	private String markerTitle, market1, market2, market3, market4;
+	private String markerTitle,market1, market2, market3;
 	private Button close;
 
 	public static final String TAG = "ImgDisplayActivity";
@@ -34,28 +34,28 @@ public class ShowMarkerInfo extends FragmentActivity {
 	private PointF starPoint;
 	private PointF midPoint;
 	private float startDistance;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		Intent intent = getIntent();
 		markerTitle = intent.getStringExtra("MarkTitle");
-		market1 = "多那之高雄中正門市";
-		market2 = "多那之高雄文化門市";
-//		market3 = "鳳新電腦";
-//		market4 = "建驊科技";
-
-		if (markerTitle.equals(market1) || markerTitle.equals(market3) || markerTitle.equals(market4)) {
+		market1 =  "85度c";
+		market2 =  "多那之";
+		market3 =  "通霄";
+		if (markerTitle.equals(market1)) {
 			setContentView(R.layout.marker_info);
 		}
 		if (markerTitle.equals(market2)) {
 			setContentView(R.layout.marker2_info);
 		}
-
+		if (markerTitle.equals(market3)) {
+			setContentView(R.layout.marker3_info);
+		}
 		close = (Button) findViewById(R.id.close);
 		close.setOnClickListener(back);
-		
+
 		fLayoutDisplay = (FrameLayout) findViewById(R.id.tab1);
 		lLayoutDisplay = (LinearLayout) findViewById(R.id.linearLayout_img_display);
 		imgDisPlay = (ImageView) findViewById(R.id.img_display);
@@ -127,7 +127,6 @@ public class ShowMarkerInfo extends FragmentActivity {
 		return new PointF(x, y);
 	}
 
-	
 	private OnClickListener back = new OnClickListener() {
 		public void onClick(View v) {
 			finish();
