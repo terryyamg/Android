@@ -8,6 +8,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -25,8 +28,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Matrix;
-import android.graphics.PointF;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -38,12 +39,9 @@ import android.os.Message;
 import android.os.StrictMode;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
-import android.util.FloatMath;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -52,9 +50,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -539,7 +534,8 @@ public class MainActivity extends FragmentActivity implements
 					{ { 14, 3, (float) 24.1260010, (float) 120.6628070 } },
 					{ { 14, 4, (float) 24.1260010, (float) 120.6628070 } },
 					{ { 14, 5, (float) 24.1260010, (float) 120.6628070 } } },
-			{ { { 15, 0, (float) 22.7536810, (float) 121.1526210 } },// 台東食
+			{
+					{ { 15, 0, (float) 22.7536810, (float) 121.1526210 } },// 台東食
 					{ { 15, 1, (float) 24.1260010, (float) 120.6628070 } },
 					{ { 15, 2, (float) 24.1260010, (float) 120.6628070 } },
 					{ { 15, 3, (float) 24.1260010, (float) 120.6628070 } },
@@ -799,7 +795,7 @@ public class MainActivity extends FragmentActivity implements
 	ArrayAdapter<String> adapter3;
 
 	/* tab3 */
-	private TextView info, info2;
+	private TextView info, info2, info3;
 	private Button scanner, scanner2;
 
 	/* tab5 */
@@ -1252,6 +1248,7 @@ public class MainActivity extends FragmentActivity implements
 		/* tab3 */
 		info = (TextView) findViewById(R.id.info);
 		info2 = (TextView) findViewById(R.id.info2);
+		info3 = (TextView) findViewById(R.id.info3);
 		scanner = (Button) findViewById(R.id.scanner);
 		scanner2 = (Button) findViewById(R.id.scanner2);
 		scanner2.setOnClickListener(new Button.OnClickListener() {
@@ -1264,6 +1261,9 @@ public class MainActivity extends FragmentActivity implements
 				info2.setText("您已經使用"
 						+ Integer.valueOf(scannerNumberInfo).toString()
 						+ "次優惠方案");
+				String scannerNextTime = ParseInstallation
+						.getCurrentInstallation().getString("scannerTime");
+				info3.setText("您下次可以使用優惠的時間為" + scannerNextTime );
 			}
 		});
 		scanner.setOnClickListener(new Button.OnClickListener() {
@@ -1742,37 +1742,125 @@ public class MainActivity extends FragmentActivity implements
 			String result = data.getExtras().getString("la.droid.qr.result");
 			String setResult = "manlen";
 			if (setResult.equals(result)) {
-				String messsenger = "歡迎使用本公司優惠方案";
+				String messsenger = "歡迎使用 \n"+"本公司優惠方案";
 				int scannerNumber = ParseInstallation.getCurrentInstallation()
 						.getInt("scannerNumber");
-				scannerNumber++;
-				ParseInstallation.getCurrentInstallation().put("scannerNumber",
-						scannerNumber);
-				ParseInstallation.getCurrentInstallation().saveInBackground(
-						new SaveCallback() {
-							@Override
-							public void done(ParseException e) {
-								if (e == null) {
-									Toast toast = Toast.makeText(
-											getApplicationContext(),
-											R.string.scanner_success,
-											Toast.LENGTH_SHORT);
-									toast.show();
-								} else {
-									e.printStackTrace();
+				String scannerNextTime = ParseInstallation
+						.getCurrentInstallation().getString("scannerTime"); // 取出下次可以掃描時間
 
-									Toast toast = Toast.makeText(
-											getApplicationContext(),
-											R.string.scanner_failed,
-											Toast.LENGTH_SHORT);
-									toast.show();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); // 取得小時
+				String scannerTime = sdf.format(new java.util.Date()); // 取得現在時間
+				int waitTime = 3; // 冷卻時間
+
+				
+				Date dt = null; // 現在時間date初始化
+
+				try {
+					
+					dt = sdf.parse(scannerTime);// 現在時間
+
+				} catch (java.text.ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(dt);
+				calendar.add(Calendar.HOUR, waitTime);// +冷卻時間
+				Date tdt = calendar.getTime();// 取得加減過後的Date
+				String sumTime = sdf.format(tdt);// 依照設定格式取得字串
+
+				if (scannerNextTime == null) { // 初次掃描，scannerNextTime為空值
+					
+					ParseInstallation.getCurrentInstallation().put(
+							"scannerTime", sumTime);
+					scannerNumber++;
+					ParseInstallation.getCurrentInstallation().put(
+							"scannerNumber", scannerNumber);
+					ParseInstallation.getCurrentInstallation()
+							.saveInBackground(new SaveCallback() {
+								@Override
+								public void done(ParseException e) {
+									if (e == null) {
+										Toast toast = Toast.makeText(
+												getApplicationContext(),
+												R.string.scanner_success,
+												Toast.LENGTH_SHORT);
+										toast.show();
+									} else {
+										e.printStackTrace();
+
+										Toast toast = Toast.makeText(
+												getApplicationContext(),
+												R.string.scanner_failed,
+												Toast.LENGTH_SHORT);
+										toast.show();
+									}
 								}
-							}
-						});
-				info2.setText("您已經使用"
-						+ Integer.valueOf(scannerNumber).toString() + "次優惠方案");
-				info.setTextSize(30);
-				info.setText(messsenger); // 將結果顯示在 TextVeiw 中
+							});
+					info2.setText("您已經使用"
+							+ Integer.valueOf(scannerNumber).toString()
+							+ "次優惠方案");
+
+					info3.setText("您下次可以使用優惠的時間為" + sumTime);
+					info.setTextSize(30);
+					info.setText(messsenger); // 將結果顯示在 TextVeiw 中
+				} else { // scannerNextTime有值
+					Date snt = null;// 取出時間
+					try {
+						snt = sdf.parse(scannerNextTime);
+					} catch (java.text.ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					Log.i("snt:", snt + "");
+					Log.i("dt:", dt + "");
+					Log.i("snt.before(dt):", snt.before(dt) + "");
+					if (snt.before(dt)) { // 抓取出來可掃描時間(過去)snt before 現在時間dt，可記錄
+						Log.i("tdt:", tdt + "");
+						Log.i("dt:", dt + "");
+						ParseInstallation.getCurrentInstallation().put(
+								"scannerTime", sumTime);
+						scannerNumber++;
+						ParseInstallation.getCurrentInstallation().put(
+								"scannerNumber", scannerNumber);
+						ParseInstallation.getCurrentInstallation()
+								.saveInBackground(new SaveCallback() {
+									@Override
+									public void done(ParseException e) {
+										if (e == null) {
+											Toast toast = Toast.makeText(
+													getApplicationContext(),
+													R.string.scanner_success,
+													Toast.LENGTH_SHORT);
+											toast.show();
+										} else {
+											e.printStackTrace();
+
+											Toast toast = Toast.makeText(
+													getApplicationContext(),
+													R.string.scanner_failed,
+													Toast.LENGTH_SHORT);
+											toast.show();
+										}
+									}
+								});
+						info2.setText("您已經使用"
+								+ Integer.valueOf(scannerNumber).toString()
+								+ "次優惠方案");
+
+						info3.setText("您下次可以使用優惠的時間為" + sumTime );
+						info.setTextSize(30);
+						info.setText(messsenger); // 將結果顯示在 TextVeiw 中
+					} else { // 冷卻時間尚未結束，不記錄
+						info2.setText("您已經使用"
+								+ Integer.valueOf(scannerNumber).toString()
+								+ "次優惠方案");
+						info3.setText("您下次可以使用優惠的時間為" + scannerNextTime );
+						info.setTextSize(30);
+						info.setText(messsenger); // 將結果顯示在 TextVeiw 中
+					}
+				}
+
 			} else {
 				String messsenger = "抱歉，您掃描的非本公司優惠";
 				info.setTextSize(30);

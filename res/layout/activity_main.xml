@@ -176,6 +176,13 @@
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textColor="#FFF" />
+            
+            <TextView
+                android:id="@+id/info3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#FFF" />
         </TableLayout>
 
         <!--
