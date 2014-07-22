@@ -78,7 +78,18 @@
         <!-- ShowMarkerInfo -->
         <activity android:name=".ShowMarkerInfo" >
         </activity>
+        <!-- KeyInRecommendNumber -->
+        <activity android:name=".KeyInRecommendNumber" >
+        </activity>
+        
+        <!-- ShareApp -->
 
+        <intent-filter>
+			<action android:name="android.intent.action.SEND" />
+			<category android:name="android.intent.category.DEFAULT" />
+			<data android:mimeType="image/*" />
+		</intent-filter>
+        
         <receiver android:name="com.parse.ParseBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

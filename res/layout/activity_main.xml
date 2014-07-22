@@ -294,6 +294,30 @@
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textColor="#FFF" />
+            
+            <Button
+                android:id="@+id/shareButton"
+                style="@style/ButtonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_black"
+                android:text="@string/shareButton" />
+             <TextView
+                android:id="@+id/myRecommend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#FFF" />
+
+           <Button
+               android:id="@+id/keyRecommend"
+               style="@style/ButtonText"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:background="@drawable/btn_black"
+               android:text="@string/keyRecommedn"
+               android:visibility="visible" />
+            
         </TableLayout>
     </FrameLayout>
 

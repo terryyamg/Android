@@ -41,6 +41,7 @@ import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -799,9 +800,12 @@ public class MainActivity extends FragmentActivity implements
 	private Button scanner, scanner2;
 
 	/* tab5 */
-	private TextView output;
+	private TextView output,myRecommend;
 	private CheckBox checkBox_service;
-
+	private Button shareButton,keyRecommedn;
+	private int recommendFrequency;
+	private String objectId;
+	private Boolean recommendBoolean;
 	/* tab6 */
 	private RadioButton genderFemaleButton;
 	private RadioButton genderMaleButton;
@@ -1256,14 +1260,25 @@ public class MainActivity extends FragmentActivity implements
 			public void onClick(View v) {
 
 				// TODO Auto-generated method stub
-				int scannerNumberInfo = ParseInstallation
-						.getCurrentInstallation().getInt("scannerNumber");
+				int scannerNumberInfo0 = ParseInstallation
+						.getCurrentInstallation().getInt("scannerNumber" + 0);
+				int scannerNumberInfo1 = ParseInstallation
+						.getCurrentInstallation().getInt("scannerNumber" + 1);
+				String setResult[] = { "85度c", "donutes" };
 				info2.setText("您已經使用"
-						+ Integer.valueOf(scannerNumberInfo).toString()
-						+ "次優惠方案");
-				String scannerNextTime = ParseInstallation
-						.getCurrentInstallation().getString("scannerTime");
-				info3.setText("您下次可以使用優惠的時間為" + scannerNextTime );
+						+ Integer.valueOf(scannerNumberInfo0).toString() + "次"
+						+ setResult[0] + "優惠方案 \n" + "您已經使用"
+						+ Integer.valueOf(scannerNumberInfo1).toString() + "次"
+						+ setResult[1] + "優惠方案 \n");
+
+				String scannerNextTime0 = ParseInstallation
+						.getCurrentInstallation().getString("scannerTime" + 0);
+				String scannerNextTime1 = ParseInstallation
+						.getCurrentInstallation().getString("scannerTime" + 1);
+
+				info3.setText("您下次可以使用" + setResult[0] + "優惠的時間為"
+						+ scannerNextTime0 + "\n" + "您下次可以使用" + setResult[1]
+						+ "優惠的時間為" + scannerNextTime1);
 			}
 		});
 		scanner.setOnClickListener(new Button.OnClickListener() {
@@ -1289,7 +1304,9 @@ public class MainActivity extends FragmentActivity implements
 		output = (TextView) findViewById(R.id.output);
 		checkBox_service = (CheckBox) findViewById(R.id.checkBox_service);
 		checkBox_service.setChecked(getFromSP("checkBox1")); // checkBox儲存設定
-
+		shareButton = (Button) findViewById(R.id.shareButton);
+		myRecommend = (TextView) findViewById(R.id.myRecommend);
+		keyRecommedn= (Button) findViewById(R.id.keyRecommend);
 		if (checkBox_service.isChecked()) {
 			start_Click();
 		} else {
@@ -1313,6 +1330,31 @@ public class MainActivity extends FragmentActivity implements
 					}
 
 				});
+
+		// 分享app
+		recommendFrequency = ParseInstallation.getCurrentInstallation().getInt("recommendFrequency");
+		objectId = ParseInstallation.getCurrentInstallation().getObjectId();
+		myRecommend.setText("我的推薦碼: \n"+objectId+"\n我推薦成功次數:"+recommendFrequency);
+		myRecommend.setTextSize(20);
+		shareButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				shareDialog();
+			}
+		});
+		//輸入推薦碼 keyRecommendNumber
+		recommendBoolean = ParseInstallation.getCurrentInstallation().getBoolean("recommendBoolean");
+		if(recommendBoolean==true){
+			keyRecommedn.setVisibility(View.INVISIBLE); //隱藏推薦按鈕
+		}else{	
+			keyRecommedn.setVisibility(View.VISIBLE); //顯示推薦按鈕
+		}
+		
+		keyRecommedn.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				keyRecommendNumber();
+			}
+		});
+		
 		// checkBox_service.performClick(); //自動按checkBox
 
 		/* tab5 */
@@ -1740,89 +1782,50 @@ public class MainActivity extends FragmentActivity implements
 		if (0 == requestCode && null != data && data.getExtras() != null) {
 			// 掃描結果存放在 key 為 la.droid.qr.result 的值中
 			String result = data.getExtras().getString("la.droid.qr.result");
-			String setResult = "manlen";
-			if (setResult.equals(result)) {
-				String messsenger = "歡迎使用 \n"+"本公司優惠方案";
-				int scannerNumber = ParseInstallation.getCurrentInstallation()
-						.getInt("scannerNumber");
-				String scannerNextTime = ParseInstallation
-						.getCurrentInstallation().getString("scannerTime"); // 取出下次可以掃描時間
+			String setResult[] = { "85度c", "donutes" };
+			int scannerNumber[] = new int[setResult.length];
+			String scannerNextTime[] = new String[setResult.length];
+			for (int i = 0; i <= setResult.length; i++) {
 
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); // 取得小時
-				String scannerTime = sdf.format(new java.util.Date()); // 取得現在時間
-				int waitTime = 3; // 冷卻時間
+				if (setResult[i].equals(result)) {
+					String messsenger = "歡迎使用 \n" + "本公司優惠方案";
 
-				
-				Date dt = null; // 現在時間date初始化
+					scannerNumber[i] = ParseInstallation
+							.getCurrentInstallation().getInt(
+									"scannerNumber" + i); // 取出第i間掃描次數
 
-				try {
-					
-					dt = sdf.parse(scannerTime);// 現在時間
+					scannerNextTime[i] = ParseInstallation
+							.getCurrentInstallation().getString(
+									"scannerTime" + i); // 取出第i間下次可以掃描時間
 
-				} catch (java.text.ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(dt);
-				calendar.add(Calendar.HOUR, waitTime);// +冷卻時間
-				Date tdt = calendar.getTime();// 取得加減過後的Date
-				String sumTime = sdf.format(tdt);// 依照設定格式取得字串
+					SimpleDateFormat sdf = new SimpleDateFormat(
+							"yyyy/MM/dd HH:mm:ss"); // 取得小時
+					String scannerTime = sdf.format(new java.util.Date()); // 取得現在時間
+					int waitTime = 3; // 冷卻時間
 
-				if (scannerNextTime == null) { // 初次掃描，scannerNextTime為空值
-					
-					ParseInstallation.getCurrentInstallation().put(
-							"scannerTime", sumTime);
-					scannerNumber++;
-					ParseInstallation.getCurrentInstallation().put(
-							"scannerNumber", scannerNumber);
-					ParseInstallation.getCurrentInstallation()
-							.saveInBackground(new SaveCallback() {
-								@Override
-								public void done(ParseException e) {
-									if (e == null) {
-										Toast toast = Toast.makeText(
-												getApplicationContext(),
-												R.string.scanner_success,
-												Toast.LENGTH_SHORT);
-										toast.show();
-									} else {
-										e.printStackTrace();
+					Date dt = null; // 現在時間date初始化
 
-										Toast toast = Toast.makeText(
-												getApplicationContext(),
-												R.string.scanner_failed,
-												Toast.LENGTH_SHORT);
-										toast.show();
-									}
-								}
-							});
-					info2.setText("您已經使用"
-							+ Integer.valueOf(scannerNumber).toString()
-							+ "次優惠方案");
-
-					info3.setText("您下次可以使用優惠的時間為" + sumTime);
-					info.setTextSize(30);
-					info.setText(messsenger); // 將結果顯示在 TextVeiw 中
-				} else { // scannerNextTime有值
-					Date snt = null;// 取出時間
 					try {
-						snt = sdf.parse(scannerNextTime);
+
+						dt = sdf.parse(scannerTime);// 現在時間
+
 					} catch (java.text.ParseException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					Log.i("snt:", snt + "");
-					Log.i("dt:", dt + "");
-					Log.i("snt.before(dt):", snt.before(dt) + "");
-					if (snt.before(dt)) { // 抓取出來可掃描時間(過去)snt before 現在時間dt，可記錄
-						Log.i("tdt:", tdt + "");
-						Log.i("dt:", dt + "");
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(dt);
+					calendar.add(Calendar.HOUR, waitTime);// +冷卻時間
+					Date tdt = calendar.getTime();// 取得加減過後的Date
+					String sumTime = sdf.format(tdt);// 依照設定格式取得字串
+
+					if (scannerNextTime[i] == null) { // 初次掃描，scannerNextTime為空值
+
 						ParseInstallation.getCurrentInstallation().put(
-								"scannerTime", sumTime);
-						scannerNumber++;
+								"scannerTime" + i, sumTime);
+						scannerNumber[i]++;
 						ParseInstallation.getCurrentInstallation().put(
-								"scannerNumber", scannerNumber);
+								"scannerNumber" + i, scannerNumber[i]);
 						ParseInstallation.getCurrentInstallation()
 								.saveInBackground(new SaveCallback() {
 									@Override
@@ -1845,26 +1848,80 @@ public class MainActivity extends FragmentActivity implements
 									}
 								});
 						info2.setText("您已經使用"
-								+ Integer.valueOf(scannerNumber).toString()
-								+ "次優惠方案");
+								+ Integer.valueOf(scannerNumber[i]).toString()
+								+ "次" + setResult[i] + "優惠方案");
 
-						info3.setText("您下次可以使用優惠的時間為" + sumTime );
-						info.setTextSize(30);
+						info3.setText("您下次可以使用" + setResult[i] + "優惠的時間為"
+								+ sumTime);
+						info.setTextSize(20);
 						info.setText(messsenger); // 將結果顯示在 TextVeiw 中
-					} else { // 冷卻時間尚未結束，不記錄
-						info2.setText("您已經使用"
-								+ Integer.valueOf(scannerNumber).toString()
-								+ "次優惠方案");
-						info3.setText("您下次可以使用優惠的時間為" + scannerNextTime );
-						info.setTextSize(30);
-						info.setText(messsenger); // 將結果顯示在 TextVeiw 中
+					} else { // scannerNextTime有值
+						Date snt = null;// 取出時間
+						try {
+							snt = sdf.parse(scannerNextTime[i]);
+						} catch (java.text.ParseException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+						if (snt.before(dt)) { // 抓取出來可掃描時間(過去)snt before 現在時間dt，可記錄
+
+							ParseInstallation.getCurrentInstallation().put(
+									"scannerTime" + i, sumTime);
+							scannerNumber[i]++;
+							ParseInstallation.getCurrentInstallation().put(
+									"scannerNumber" + i, scannerNumber[i]);
+							ParseInstallation.getCurrentInstallation()
+									.saveInBackground(new SaveCallback() {
+										@Override
+										public void done(ParseException e) {
+											if (e == null) {
+												Toast toast = Toast
+														.makeText(
+																getApplicationContext(),
+																R.string.scanner_success,
+																Toast.LENGTH_SHORT);
+												toast.show();
+											} else {
+												e.printStackTrace();
+
+												Toast toast = Toast
+														.makeText(
+																getApplicationContext(),
+																R.string.scanner_failed,
+																Toast.LENGTH_SHORT);
+												toast.show();
+											}
+										}
+									});
+							info2.setText("您已經使用"
+									+ Integer.valueOf(scannerNumber[i])
+											.toString() + "次" + setResult[i]
+									+ "優惠方案");
+
+							info3.setText("您下次可以使用" + setResult[i] + "優惠的時間為"
+									+ sumTime);
+							info.setTextSize(20);
+							info.setText(messsenger); // 將結果顯示在 TextVeiw 中
+						} else { // 冷卻時間尚未結束，不記錄
+							info2.setText("您已經使用"
+									+ Integer.valueOf(scannerNumber[i])
+											.toString() + "次" + setResult[i]
+									+ "優惠方案");
+
+							info3.setText("您下次可以使用" + setResult[i] + "優惠的時間為"
+									+ scannerNextTime[i]);
+
+							info.setTextSize(20);
+							info.setText(messsenger); // 將結果顯示在 TextVeiw 中
+						}
 					}
+					break;
+				} else {
+					String messsenger = "抱歉，您掃描的非本公司優惠";
+					info.setTextSize(20);
+					info.setText(messsenger); // 將結果顯示在 TextVeiw 中
 				}
-
-			} else {
-				String messsenger = "抱歉，您掃描的非本公司優惠";
-				info.setTextSize(30);
-				info.setText(messsenger); // 將結果顯示在 TextVeiw 中
 			}
 
 		}
@@ -2127,6 +2184,27 @@ public class MainActivity extends FragmentActivity implements
 		Intent intent = new Intent(this, GPSService.class);
 		stopService(intent);
 		output.setText("服務停止中");
+		output.setTextSize(20);
+	}
+
+	// 分享app
+	void shareDialog() {
+		
+		String shareText = "曼聯通優惠，讓您食衣住行育樂都省錢  http://goo.gl/ssJJRu"+"\n輸入我的推薦碼"+objectId+"\n 將可獲得優惠";
+		//Uri imageUri = Uri.parse("android.resource://" + getPackageName() + "/drawable/" + "android");
+		//Log.i("imageUri:", imageUri + "");
+		 Intent shareIntent = new Intent();
+		 shareIntent.setAction(Intent.ACTION_SEND);
+		 shareIntent.setType("text/plain");
+		 shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+		 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+		 //shareIntent.setType("image/png");
+		// shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+		 startActivity(Intent.createChooser(shareIntent, "分享"));
+	}
+	void keyRecommendNumber(){
+		Intent intent = new Intent(this, KeyInRecommendNumber.class);
+		startActivity(intent);
 	}
 
 	/* 儲存設定 */
