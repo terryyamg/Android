@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/wallpaper" >
+
+    <ScrollView
+        android:id="@+id/vertical_scroll_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical" >
+
+        <TableLayout
+            android:id="@+id/tableLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_column="0"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="商品圖片"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_column="1"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="商品介紹"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_column="2"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="價格"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_column="3"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="購買"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ImageButton
+                    android:id="@+id/imageButton1"
+                    android:layout_column="0"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:src="@drawable/store1c1" />
+
+                <TextView
+                    android:id="@+id/cd1"
+                    style="@style/BuyText"
+                    android:layout_column="1"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="" />
+
+                <TextView
+                    android:layout_column="2"
+                    style="@style/BuyText"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="NT.330" />
+
+                <Button
+                    android:id="@+id/bc1"
+                    style="@style/ButtonText"
+                    android:layout_column="3"
+                    android:background="@drawable/btn_black"
+                    android:text="@string/buyCommodity" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ImageButton
+                    android:id="@+id/imageButton2"
+                    android:layout_column="0"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:src="@drawable/store1c2" />
+
+                <TextView
+                    android:id="@+id/cd2"
+                    style="@style/BuyText"
+                    android:layout_column="1"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="" />
+
+                <TextView
+                    android:layout_column="2"
+                    style="@style/BuyText"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="NT.380" />
+
+                <Button
+                    android:id="@+id/bc2"
+                    style="@style/ButtonText"
+                    android:layout_column="3"
+                    android:background="@drawable/btn_black"
+                    android:text="@string/buyCommodity" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow99"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/close"
+                    style="@style/ButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_black"
+                    android:text="@string/back" />
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
+
+</HorizontalScrollView>

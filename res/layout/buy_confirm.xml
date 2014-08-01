@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/wallpaper" >
+
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_column="0"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="商品名稱:"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_column="1"
+            android:layout_span="3"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text=""
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_column="0"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="數量:"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/plus"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:src="@drawable/plus" />
+
+        <EditText
+            android:id="@+id/number"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:ems="10"
+            android:inputType="number" >
+        </EditText>
+
+        <ImageButton
+            android:id="@+id/minus"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:src="@drawable/minus" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_column="0"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="總價:"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/money"
+            android:layout_column="1"
+            android:layout_span="3"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text=""
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_column="0"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="取貨日期:"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <DatePicker
+            android:id="@+id/DatePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_span="3" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_column="0"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="時段:"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+        
+        <RadioGroup
+            android:id="@+id/timeChose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/morning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上午" />
+
+            <RadioButton
+                android:id="@+id/afternoon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下午" />
+
+            <RadioButton
+                android:id="@+id/night"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="晚上" />
+        </RadioGroup>
+    </TableRow>
+
+    <Button
+        android:id="@+id/close"
+        style="@style/ButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_black"
+        android:text="@string/back" />
+
+</TableLayout>

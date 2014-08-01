@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.parse.tutorials.pushnotifications"
-    android:versionCode="1"
+    package="com.manlen.tutorials.pushnotifications"
+    android:versionCode="2"
     android:versionName="1.0" >
 
     <uses-sdk
@@ -31,17 +31,17 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!--
 	  IMPORTANT: If you change the package name of this sample app, change
-	  "com.parse.tutorials.pushnotifications.permission.C2D_MESSAGE" in the
+	  "com.manlen.tutorials.pushnotifications.permission.C2D_MESSAGE" in the
 	  lines below to match the new package name.
     -->
     <permission
-        android:name="com.parse.tutorials.pushnotifications.permission.C2D_MESSAGE"
+        android:name="com.manlen.tutorials.pushnotifications.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.parse.tutorials.pushnotifications.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.manlen.tutorials.pushnotifications.permission.C2D_MESSAGE" />
 
     <application
-        android:name="com.parse.tutorials.pushnotifications.Application"
+        android:name="com.manlen.tutorials.pushnotifications.Application"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -49,12 +49,12 @@
 
         <!-- main -->
         <activity
-            android:name="com.parse.tutorials.pushnotifications.MainActivity"
+            android:name="com.manlen.tutorials.pushnotifications.MainActivity"
             android:label="@string/app_name" >
         </activity>
         <!-- Splash screen -->
         <activity
-            android:name="com.parse.tutorials.pushnotifications.SplashScreen"
+            android:name="com.manlen.tutorials.pushnotifications.SplashScreen"
             android:exported="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
@@ -77,6 +77,12 @@
 
         <!-- ShowMarkerInfo -->
         <activity android:name=".ShowMarkerInfo" >
+        </activity>
+        <!-- ListCommodity -->
+        <activity android:name=".ListCommodity" >
+        </activity>
+        <!-- BuyConfirm -->
+        <activity android:name=".BuyConfirm" >
         </activity>
         <!-- KeyInRecommendNumber -->
         <activity android:name=".KeyInRecommendNumber" >
@@ -108,7 +114,7 @@
 				  change "com.parse.tutorials.pushnotifications" in the lines
 				  below to match the new package name.
                 -->
-                <category android:name="com.parse.tutorials.pushnotifications" />
+                <category android:name="com.manlen.tutorials.pushnotifications" />
             </intent-filter>
         </receiver>
 
