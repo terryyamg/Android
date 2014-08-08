@@ -1,146 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tabHost"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/wallpaper" >
 
-    <ScrollView
-        android:id="@+id/vertical_scroll_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical" >
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
 
-        <TableLayout
-            android:id="@+id/tableLayout1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+        <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal" />
 
-            <TableRow
-                android:id="@+id/tableRow1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@android:id/tabs" >
 
-                <TextView
-                    android:layout_column="0"
-                    android:gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:text="商品圖片"
-                    android:textColor="#000000"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+            <FrameLayout
+                android:id="@+id/tab1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_horizontal" >
 
-                <TextView
-                    android:layout_column="1"
-                    android:gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:text="商品介紹"
-                    android:textColor="#000000"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                <HorizontalScrollView
+                    android:id="@+id/hs1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
 
-                <TextView
-                    android:layout_column="2"
-                    android:gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:text="價格"
-                    android:textColor="#000000"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    <ScrollView
+                        android:id="@+id/vertical_scroll_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="vertical" >
 
-                <TextView
-                    android:layout_column="3"
-                    android:gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:text="購買"
-                    android:textColor="#000000"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-            </TableRow>
+                        <TableLayout
+                            android:id="@+id/tableLayout1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
 
-            <TableRow
-                android:id="@+id/tableRow2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                            <TableRow
+                                android:id="@+id/tableRow1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" >
 
-                <ImageButton
-                    android:id="@+id/imageButton1"
-                    android:layout_column="0"
-                    android:gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:src="@drawable/store1c1" />
+                                <TextView
+                                    android:layout_column="0"
+                                    android:gravity="center_horizontal"
+                                    android:padding="10dp"
+                                    android:text="商品圖片"
+                                    android:textColor="#000000"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/cd1"
-                    style="@style/BuyText"
-                    android:layout_column="1"
-                    android:gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:text="" />
+                                <TextView
+                                    android:layout_column="1"
+                                    android:gravity="center_horizontal"
+                                    android:padding="10dp"
+                                    android:text="商品介紹"
+                                    android:textColor="#000000"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
 
-                <TextView
-                    android:layout_column="2"
-                    style="@style/BuyText"
-                    android:gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:text="NT.330" />
+                                <TextView
+                                    android:layout_column="2"
+                                    android:gravity="center_horizontal"
+                                    android:padding="10dp"
+                                    android:text="價格"
+                                    android:textColor="#000000"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/bc1"
-                    style="@style/ButtonText"
-                    android:layout_column="3"
-                    android:background="@drawable/btn_black"
-                    android:text="@string/buyCommodity" />
-            </TableRow>
+                                <TextView
+                                    android:layout_column="3"
+                                    android:gravity="center_horizontal"
+                                    android:padding="10dp"
+                                    android:text="購買"
+                                    android:textColor="#000000"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+                            </TableRow>
 
-            <TableRow
-                android:id="@+id/tableRow3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                            <TableRow
+                                android:id="@+id/tableRow2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" >
 
-                <ImageButton
-                    android:id="@+id/imageButton2"
-                    android:layout_column="0"
-                    android:gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:src="@drawable/store1c2" />
+                                <ImageButton
+                                    android:id="@+id/imageButton1"
+                                    android:layout_column="0"
+                                    android:gravity="center_horizontal"
+                                    android:padding="10dp"
+                                    android:src="@drawable/store1c1" />
 
-                <TextView
-                    android:id="@+id/cd2"
-                    style="@style/BuyText"
-                    android:layout_column="1"
-                    android:gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:text="" />
+                                <TextView
+                                    android:id="@+id/cd1"
+                                    style="@style/BuyText"
+                                    android:layout_column="1"
+                                    android:gravity="center_horizontal"
+                                    android:padding="10dp"
+                                    android:text="" />
 
-                <TextView
-                    android:layout_column="2"
-                    style="@style/BuyText"
-                    android:gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:text="NT.380" />
+                                <TextView
+                                    style="@style/BuyText"
+                                    android:layout_column="2"
+                                    android:gravity="center_horizontal"
+                                    android:padding="10dp"
+                                    android:text="NT.890" />
 
-                <Button
-                    android:id="@+id/bc2"
-                    style="@style/ButtonText"
-                    android:layout_column="3"
-                    android:background="@drawable/btn_black"
-                    android:text="@string/buyCommodity" />
-            </TableRow>
+                                <Button
+                                    android:id="@+id/bc1"
+                                    style="@style/ButtonText"
+                                    android:layout_column="3"
+                                    android:background="@drawable/btn_black"
+                                    android:text="@string/buyCommodity" />
+                            </TableRow>
 
-            <TableRow
-                android:id="@+id/tableRow99"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                            <TableRow
+                                android:id="@+id/tableRow3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" >
 
-                <Button
-                    android:id="@+id/close"
-                    style="@style/ButtonText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/btn_black"
-                    android:text="@string/back" />
-            </TableRow>
-        </TableLayout>
-    </ScrollView>
+                                <ImageButton
+                                    android:id="@+id/imageButton2"
+                                    android:layout_column="0"
+                                    android:gravity="center_horizontal"
+                                    android:padding="10dp"
+                                    android:src="@drawable/store1c2" />
 
-</HorizontalScrollView>
+                                <TextView
+                                    android:id="@+id/cd2"
+                                    style="@style/BuyText"
+                                    android:layout_column="1"
+                                    android:gravity="center_horizontal"
+                                    android:padding="10dp"
+                                    android:text="" />
+
+                                <TextView
+                                    style="@style/BuyText"
+                                    android:layout_column="2"
+                                    android:gravity="center_horizontal"
+                                    android:padding="10dp"
+                                    android:text="NT.1960" />
+
+                                <Button
+                                    android:id="@+id/bc2"
+                                    style="@style/ButtonText"
+                                    android:layout_column="3"
+                                    android:background="@drawable/btn_black"
+                                    android:text="@string/buyCommodity" />
+                            </TableRow>
+
+                            <TableRow
+                                android:id="@+id/tableRow99"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" >
+
+                                <Button
+                                    android:id="@+id/close"
+                                    style="@style/ButtonText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/btn_black"
+                                    android:text="@string/back" />
+                            </TableRow>
+                        </TableLayout>
+                    </ScrollView>
+                </HorizontalScrollView>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/tab2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" >
+
+                <HorizontalScrollView
+                    android:id="@+id/hs2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <ScrollView
+                        android:id="@+id/vs2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="vertical" >
+
+                        <TableLayout
+                            android:id="@+id/tablay2"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="center_horizontal" >
+                        </TableLayout>
+                    </ScrollView>
+                </HorizontalScrollView>
+            </FrameLayout>
+        </FrameLayout>
+    </RelativeLayout>
+
+</TabHost>

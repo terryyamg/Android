@@ -13,38 +13,36 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class BuyConfirm extends FragmentActivity {
-	private Button close;
+	private Button close, confirm;
 	private ImageButton plus, minus;
 	private EditText number;
 	private TextView name, money;
 	private DatePicker DatePicker;
-	private String Year, Mon, Day, commodityName;
-	private RadioButton morning, afternoon, night;
+	private String Year, Mon, Day, arrivalTime, commodityName, store;
 	private RadioGroup timeChose;
-	private int price, numberIndex, totalPrice;
+	private int price, numberIndex, totalPrice, nowDate, choseDate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.buy_confirm);
 		close = (Button) findViewById(R.id.close);
+		confirm = (Button) findViewById(R.id.confirm);
 		plus = (ImageButton) findViewById(R.id.plus);
 		minus = (ImageButton) findViewById(R.id.minus);
 		number = (EditText) findViewById(R.id.number);
 		name = (TextView) findViewById(R.id.name);
 		money = (TextView) findViewById(R.id.money);
-		morning = (RadioButton) findViewById(R.id.morning);
-		afternoon = (RadioButton) findViewById(R.id.afternoon);
-		night = (RadioButton) findViewById(R.id.night);
 		timeChose = (RadioGroup) findViewById(R.id.timeChose);
 
 		/* 取得商品名稱與價格 */
 		Intent intent = getIntent();
+		store = intent.getStringExtra("store"); // 取得商店名稱
 		commodityName = intent.getStringExtra("commodityName"); // 取得商品名稱
 		price = intent.getIntExtra("price", 1); // 取得單一價格
 		name.setText(commodityName); // 商品名稱
@@ -66,7 +64,7 @@ public class BuyConfirm extends FragmentActivity {
 					int count) {
 				// TODO Auto-generated method stub
 				/* 計算總價 */
-				try{
+				try {
 					if (numberIndex < 0) {
 						numberIndex = Integer.parseInt(number.getText()
 								.toString());
@@ -78,8 +76,8 @@ public class BuyConfirm extends FragmentActivity {
 						totalPrice = numberIndex * price; // 總價=數量*單一價格
 						money.setText(String.valueOf(totalPrice));
 					}
-				}catch(Exception e){
-					
+				} catch (Exception e) {
+
 				}
 
 			}
@@ -100,7 +98,7 @@ public class BuyConfirm extends FragmentActivity {
 		minus.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				numberIndex--;
-				if (numberIndex < 0) { // 不能為負
+				if (numberIndex < 0) { // 數量值不能為負
 					numberIndex = 0;
 					number.setText(String.valueOf(numberIndex));
 				}
@@ -121,6 +119,8 @@ public class BuyConfirm extends FragmentActivity {
 		Year = DateFix(sYear);
 		Mon = DateFix(sMon);
 		Day = DateFix(sDay);
+		nowDate = Integer.parseInt(Year + Mon + Day);// 現在日期
+		choseDate = nowDate;
 		DatePicker = (DatePicker) findViewById(R.id.DatePicker);
 		DatePicker.init(TodayDate.get(Calendar.YEAR),
 				TodayDate.get(Calendar.MONTH),
@@ -133,10 +133,21 @@ public class BuyConfirm extends FragmentActivity {
 						Year = DateFix(year);
 						Mon = DateFix(monthOfYear + 1); // 月的初始是0，所以先加 1。
 						Day = DateFix(dayOfMonth);
+						choseDate = Integer.parseInt(Year + Mon + Day);
 					}
 				});
 
-		close.setOnClickListener(back); // 返回
+		// 選擇時段
+		timeChose.setOnCheckedChangeListener(listener);
+
+		// 確認
+		confirm.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				sentToLogin();
+			}
+		});
+		// 返回
+		close.setOnClickListener(back);
 	}
 
 	// 方法DateFix:將傳送進來的年月日轉成String，在判斷是否前面需要加0。
@@ -145,6 +156,54 @@ public class BuyConfirm extends FragmentActivity {
 			return String.valueOf(c);
 		else
 			return "0" + String.valueOf(c);
+	}
+
+	// 選擇時段
+	private RadioGroup.OnCheckedChangeListener listener = new RadioGroup.OnCheckedChangeListener() {
+
+		@Override
+		public void onCheckedChanged(RadioGroup group, int checkedId) {
+			// TODO Auto-generated method stub
+			switch (checkedId) {
+			case R.id.morning:
+				arrivalTime = "早上";
+				break;
+			case R.id.afternoon:
+				arrivalTime = "下午";
+				break;
+			case R.id.night:
+				arrivalTime = "晚上";
+				break;
+
+			}
+
+		}
+
+	};
+
+	// 送出
+	void sentToLogin() {
+
+		if (numberIndex == 0) { // 數量判斷
+			Toast.makeText(getBaseContext(), "數量不可為0", Toast.LENGTH_SHORT)
+					.show();
+		} else if (nowDate > choseDate) { // 現在時間 比 選擇時間 早
+			Toast.makeText(getBaseContext(), "日期不可為今天以前", Toast.LENGTH_SHORT)
+					.show();
+		} else if (arrivalTime == null) { // 時段判斷
+			Toast.makeText(getBaseContext(), "時段尚未選擇", Toast.LENGTH_SHORT)
+					.show();
+		} else {
+			Intent intent = new Intent(this, LoginGeneral.class);
+			intent.putExtra("store", store); // 商店名稱
+			intent.putExtra("commodityName", commodityName); // 商品名稱
+			intent.putExtra("numberIndex", numberIndex); // 數量
+			intent.putExtra("totalPrice", totalPrice); // 總價
+			intent.putExtra("arrivalDate", Year + Mon + Day); // 取貨日期
+			intent.putExtra("arrivalTime", arrivalTime); // 取貨日期
+			startActivity(intent);
+		}
+
 	}
 
 	// 返回

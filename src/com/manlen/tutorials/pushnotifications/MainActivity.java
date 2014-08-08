@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -786,7 +787,7 @@ public class MainActivity extends FragmentActivity implements
 	private int scannerError = 0;
 	/* tab4 */
 	private ImageButton store1, store2;
-
+	public ProgressDialog dialog = null;
 	/* tab5 */
 	private TextView output, myRecommend;
 	private CheckBox checkBox_service;
@@ -1233,7 +1234,7 @@ public class MainActivity extends FragmentActivity implements
 						.getCurrentInstallation().getInt("scannerNumber" + 0);
 				int scannerNumberInfo1 = ParseInstallation
 						.getCurrentInstallation().getInt("scannerNumber" + 1);
-				String setResult[] = { "99度a", "donutes" };
+				String setResult[] = { "99度a", "少那之" };
 				info2.setText("您已經使用"
 						+ Integer.valueOf(scannerNumberInfo0).toString() + "次"
 						+ setResult[0] + "優惠方案 \n" + "您已經使用"
@@ -1412,18 +1413,18 @@ public class MainActivity extends FragmentActivity implements
 
 	public void showUpdateDialog() {
 
-//		@SuppressWarnings("unused")
-//		AlertDialog alert = new AlertDialog.Builder(MainActivity.this)
-//				.setTitle("更新提示").setIcon(android.R.drawable.ic_dialog_info)
-//				.setMessage("最新優惠出來啦，快來下載更新")
-//				.setPositiveButton("下載", new DialogInterface.OnClickListener() {
-//
-//					public void onClick(DialogInterface dialog, int which) {
-//						dialog.dismiss(); // 關閉對話框
-//						downLoadApk();
-//					}
-//
-//				}).show();
+		// @SuppressWarnings("unused")
+		// AlertDialog alert = new AlertDialog.Builder(MainActivity.this)
+		// .setTitle("更新提示").setIcon(android.R.drawable.ic_dialog_info)
+		// .setMessage("最新優惠出來啦，快來下載更新")
+		// .setPositiveButton("下載", new DialogInterface.OnClickListener() {
+		//
+		// public void onClick(DialogInterface dialog, int which) {
+		// dialog.dismiss(); // 關閉對話框
+		// downLoadApk();
+		// }
+		//
+		// }).show();
 
 	}
 
@@ -1576,37 +1577,37 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 		/* GPS開啟跳出確認視窗 */
-		try {
-			if (!locationManager
-					.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-				new AlertDialog.Builder(MainActivity.this)
-						.setTitle("GPS設定")
-						.setMessage("您尚未啟動GPS，要啟動嗎?")
-						.setCancelable(false)
-						.setNegativeButton("啟動",
-								new DialogInterface.OnClickListener() {
-
-									public void onClick(DialogInterface dialog,
-											int which) {
-										startActivity(new Intent(
-												Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-									}
-								})
-						.setPositiveButton("不啟動",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int which) {
-										Toast.makeText(MainActivity.this,
-												"不啟動GPS將使用網路定位",
-												Toast.LENGTH_SHORT).show();
-									}
-								}).show();
-
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// try {
+		// if (!locationManager
+		// .isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+		// new AlertDialog.Builder(MainActivity.this)
+		// .setTitle("GPS設定")
+		// .setMessage("您尚未啟動GPS，要啟動嗎?")
+		// .setCancelable(false)
+		// .setNegativeButton("啟動",
+		// new DialogInterface.OnClickListener() {
+		//
+		// public void onClick(DialogInterface dialog,
+		// int which) {
+		// startActivity(new Intent(
+		// Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+		// }
+		// })
+		// .setPositiveButton("不啟動",
+		// new DialogInterface.OnClickListener() {
+		// public void onClick(DialogInterface dialog,
+		// int which) {
+		// Toast.makeText(MainActivity.this,
+		// "不啟動GPS將使用網路定位",
+		// Toast.LENGTH_SHORT).show();
+		// }
+		// }).show();
+		//
+		// }
+		//
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
 	}
 
 	/* 點選marker顯示 */
@@ -1853,13 +1854,31 @@ public class MainActivity extends FragmentActivity implements
 
 	/* tab4 */
 	void store_list1() {
+		progress();
 		Intent intent = new Intent(this, ListCommodity.class);
 		startActivity(intent);
 	}
 
 	void store_list2() {
+		progress();
 		Intent intent = new Intent(this, ListCommodity.class);
 		startActivity(intent);
+	}
+
+	void progress() {
+		dialog = ProgressDialog.show(this, "讀取中", "請稍後...", true);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(5000);
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					dialog.dismiss();
+				}
+			}
+		}).start();
 	}
 
 	/* tab5 */
@@ -2125,7 +2144,8 @@ public class MainActivity extends FragmentActivity implements
 	// 分享app
 	void shareDialog() {
 
-		String shareText = "曼聯通優惠，讓您食衣住行育樂都省錢  "+"\n https://play.google.com/store/apps/details?id=com.manlen.tutorials.pushnotifications"
+		String shareText = "曼聯通優惠，讓您食衣住行育樂都省錢  "
+				+ "\n https://play.google.com/store/apps/details?id=com.manlen.tutorials.pushnotifications"
 				+ "\n輸入我的推薦碼" + objectId + "\n 將可獲得優惠";
 		// Uri imageUri = Uri.parse("android.resource://" + getPackageName() +
 		// "/drawable/" + "android");
@@ -2170,26 +2190,26 @@ public class MainActivity extends FragmentActivity implements
 
 		TabSpec spec = tabHost.newTabSpec("tab1");
 		spec.setContent(R.id.tab1);
-		spec.setIndicator("", getResources().getDrawable(R.drawable.tab1));
+		spec.setIndicator("說明", getResources().getDrawable(R.drawable.tab1));
 		tabHost.addTab(spec);
 
 		spec = tabHost.newTabSpec("tab2");
-		spec.setIndicator("", getResources().getDrawable(R.drawable.tab2));
+		spec.setIndicator("地圖", getResources().getDrawable(R.drawable.tab2));
 		spec.setContent(R.id.tab2);
 		tabHost.addTab(spec);
 
 		spec = tabHost.newTabSpec("tab3");
-		spec.setIndicator("", getResources().getDrawable(R.drawable.tab3));
+		spec.setIndicator("掃描", getResources().getDrawable(R.drawable.tab3));
 		spec.setContent(R.id.tab3);
 		tabHost.addTab(spec);
 
 		spec = tabHost.newTabSpec("tab4");
-		spec.setIndicator("", getResources().getDrawable(R.drawable.tab4));
+		spec.setIndicator("團購", getResources().getDrawable(R.drawable.tab4));
 		spec.setContent(R.id.tab4);
 		tabHost.addTab(spec);
 
 		spec = tabHost.newTabSpec("tab5");
-		spec.setIndicator("", getResources().getDrawable(R.drawable.tab5));
+		spec.setIndicator("設定", getResources().getDrawable(R.drawable.tab5));
 		spec.setContent(R.id.tab5);
 		tabHost.addTab(spec);
 
@@ -2205,23 +2225,28 @@ public class MainActivity extends FragmentActivity implements
 				.findViewById(android.R.id.tabs);
 		View tabView = tabWidget.getChildTabViewAt(0);
 		TextView tab = (TextView) tabView.findViewById(android.R.id.title);
-		tab.setTextSize(10);
+		tab.setTextSize(15);
+		tab.setTextColor(Color.LTGRAY);
 
 		tabView = tabWidget.getChildTabViewAt(1);
 		tab = (TextView) tabView.findViewById(android.R.id.title);
-		tab.setTextSize(10);
+		tab.setTextSize(15);
+		tab.setTextColor(Color.LTGRAY);
 
 		tabView = tabWidget.getChildTabViewAt(2);
 		tab = (TextView) tabView.findViewById(android.R.id.title);
-		tab.setTextSize(10);
+		tab.setTextSize(15);
+		tab.setTextColor(Color.LTGRAY);
 
 		tabView = tabWidget.getChildTabViewAt(3);
 		tab = (TextView) tabView.findViewById(android.R.id.title);
-		tab.setTextSize(10);
+		tab.setTextSize(15);
+		tab.setTextColor(Color.LTGRAY);
 
 		tabView = tabWidget.getChildTabViewAt(4);
 		tab = (TextView) tabView.findViewById(android.R.id.title);
-		tab.setTextSize(10);
+		tab.setTextSize(15);
+		tab.setTextColor(Color.LTGRAY);
 
 		// tabView = tabWidget.getChildTabViewAt(4);
 		// tab = (TextView) tabView.findViewById(android.R.id.title);
