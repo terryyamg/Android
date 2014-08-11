@@ -21,7 +21,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -29,32 +28,51 @@ import com.parse.ParseQuery;
 public class ListCommodity extends FragmentActivity {
 	private Button close, bc1, bc2;
 	private Button cancel[];
-	private TextView cd1, cd2;
-	private String[] s1 = new String[] { "條紋比基尼泳裝", "蘋果牌比基尼泳裝" };
-	private int price, id;
-	private String store, userTel, myTel;
+	private TextView cd1, cd2, price11, price12;
+	private int pr1[], id;
+	private String store, userTel, myTel, storeName, s1[], tableData[][];
 	public ProgressDialog dialog = null;
-	private String tableData[][];
+	List<ParseObject> searchObject;
 	List<ParseObject> ob;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_commodity);
+		// tab1 取得商品資料
+		Intent intent = getIntent();
+		storeName = intent.getStringExtra("storeName"); // 取得商店名稱
 		try {
+			ParseQuery<ParseObject> queryCommodity = new ParseQuery<ParseObject>(
+					"Commodity"); // 哪個table
+			queryCommodity.whereEqualTo("store", storeName); // 條件
+			queryCommodity.orderByAscending("index");// 排序
+			searchObject = queryCommodity.find();// 搜尋物件
+			int sizeob = searchObject.size(); // 幾筆資料
+			s1 = new String[sizeob]; // 商品名稱陣列
+			pr1 = new int[sizeob]; // 商品價格陣列
+			int i = 0;
+			for (ParseObject search : searchObject) {
+				// 取得資料
+				s1[i] = (String) search.get("commodity");
+				pr1[i] = (int) search.getInt("price");
+				i++;
+			}
+
+			// tab2 抓手機號碼
 			SharedPreferences preferences = getApplicationContext()
 					.getSharedPreferences("Android",
 							android.content.Context.MODE_PRIVATE);
 
 			myTel = preferences.getString("myTel", userTel);
-			Log.i("userTel", myTel);
 		} catch (Exception e) {
-			myTel ="0"; //抓不到手機號碼
+			myTel = "0"; // 抓不到手機號碼
 		}
-		/*tab2*/
+		/* tab2 */
 		// 搜尋BuyerInfo 使用者的所有購買資訊
 		try {
-			ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("BuyerInfo");
+			ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(
+					"BuyerInfo");
 			query.whereEqualTo("userTel", myTel);
 			query.orderByDescending("arrivalDate");
 			ob = query.find();
@@ -100,7 +118,6 @@ public class ListCommodity extends FragmentActivity {
 				i++;
 			}
 		} catch (ParseException e) {
-			Log.e("Error", e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -112,19 +129,26 @@ public class ListCommodity extends FragmentActivity {
 		cd1 = (TextView) findViewById(R.id.cd1);
 		cd2 = (TextView) findViewById(R.id.cd2);
 
+		price11 = (TextView) findViewById(R.id.price11);
+		price12 = (TextView) findViewById(R.id.price12);
+		// 商品說明
 		cd1.setText(s1[0] + "\n四件式比基尼泳裝:定價3980元特價890元 \n");
 		cd2.setText(s1[1] + "\n蘋果牌三件式比基尼泳裝定價2280元特價1690元 \n");
+		// 商品價格
+		price11.setText("NT." + pr1[0]);
+		price12.setText("NT." + pr1[1]);
 		// 第一件商品
+
 		bc1.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				progress();
-				search(s1[0]);
+				buy(s1[0]);
 			}
 		});
 		bc2.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				progress();
-				search(s1[1]);
+				buy(s1[1]);
 			}
 		});
 
@@ -138,33 +162,15 @@ public class ListCommodity extends FragmentActivity {
 	}
 
 	/* tab1 */
-	// 搜尋商品價格
-	void search(final String s) {
-
-		ParseQuery<ParseObject> query = ParseQuery.getQuery("Commodity");
-		query.whereEqualTo("commodity", s);
-		query.getFirstInBackground(new GetCallback<ParseObject>() {
-			public void done(ParseObject object, ParseException e) {
-				if (e == null) {
-					price = object.getInt("price");
-					store = object.getString("store");
-					buy(s);
-				} else {
-				}
-			}
-		});
-
-	}
-
 	// 第一件
 	void buy(String name) {
 		Intent intent = new Intent(this, BuyConfirm.class);
 		if (name.equals(s1[0])) {
 			intent.putExtra("commodityName", s1[0]);
-			intent.putExtra("price", price);
+			intent.putExtra("price", pr1[0]);
 		} else if (name.equals(s1[1])) {
 			intent.putExtra("commodityName", s1[1]);
-			intent.putExtra("price", price);
+			intent.putExtra("price", pr1[1]);
 		}
 		intent.putExtra("store", store);
 		startActivity(intent);
@@ -187,19 +193,19 @@ public class ListCommodity extends FragmentActivity {
 			TableRow row = new TableRow(this);
 			for (int j = 0; j < tableData[i].length - 1; j++) { // 行
 				if (i == 0) {
-					TextView tv = new TextView(this); //設定第一排文字
+					TextView tv = new TextView(this); // 設定第一排文字
 					tv.setTextSize(20);
 					tv.setTextColor(Color.BLACK);
 					tv.setText(tableData[i][j] + " ");
 					row.addView(tv, j);
 				} else {
-					if (j < tableData[i].length - 2) { //設定 其他搜尋到的文字
+					if (j < tableData[i].length - 2) { // 設定 其他搜尋到的文字
 						TextView tv = new TextView(this);
 						tv.setTextSize(20);
 						tv.setTextColor(Color.BLACK);
 						tv.setText(tableData[i][j] + " ");
 						row.addView(tv, j);
-					} else if (j == tableData[i].length - 2) { //設定按鈕
+					} else if (j == tableData[i].length - 2) { // 設定按鈕
 
 						cancel[i] = new Button(this);
 						cancel[i].setTextColor(Color.WHITE);
@@ -221,7 +227,7 @@ public class ListCommodity extends FragmentActivity {
 	private OnClickListener cc = new OnClickListener() {
 		public void onClick(View v) {
 			id = v.getId();
-			//跳出確認視窗
+			// 跳出確認視窗
 			new AlertDialog.Builder(ListCommodity.this)
 					.setTitle("確定刪除?")
 					.setMessage("刪除第" + id + "比資料")
@@ -231,7 +237,8 @@ public class ListCommodity extends FragmentActivity {
 										int which) {
 									ParseObject.createWithoutData("BuyerInfo",
 											tableData[id][7])
-											.deleteEventually(); //Parse指令 刪除指定的 row
+											.deleteEventually(); // Parse指令
+																	// 刪除指定的 row
 								}
 							})
 					.setPositiveButton("不刪除",
@@ -244,9 +251,8 @@ public class ListCommodity extends FragmentActivity {
 		}
 	};
 
-	void progress(){
-		dialog = ProgressDialog.show(ListCommodity.this, "讀取中",
-				"請稍後...", true);
+	void progress() {
+		dialog = ProgressDialog.show(ListCommodity.this, "讀取中", "請稍後...", true);
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -260,7 +266,7 @@ public class ListCommodity extends FragmentActivity {
 			}
 		}).start();
 	}
-	
+
 	private void setupViewComponent() {
 		/* tabHost */
 		// 從資源類別R中取得介面元件

@@ -108,11 +108,12 @@
                                     android:text="" />
 
                                 <TextView
+                                    android:id="@+id/price11"
                                     style="@style/BuyText"
                                     android:layout_column="2"
                                     android:gravity="center_horizontal"
                                     android:padding="10dp"
-                                    android:text="NT.890" />
+                                    android:text="" />
 
                                 <Button
                                     android:id="@+id/bc1"
@@ -143,11 +144,12 @@
                                     android:text="" />
 
                                 <TextView
+                                    android:id="@+id/price12"
                                     style="@style/BuyText"
                                     android:layout_column="2"
                                     android:gravity="center_horizontal"
                                     android:padding="10dp"
-                                    android:text="NT.1960" />
+                                    android:text="" />
 
                                 <Button
                                     android:id="@+id/bc2"

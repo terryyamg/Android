@@ -13,6 +13,7 @@
 	<string name="scanner_failed">掃描失敗</string>
 	
 	<string name="buyText">團購</string>
+	<string name="sendSearch">搜尋商品</string>
 	<string name="buyCommodity">購買</string>
 	<string name="loginGeneral">一般登入</string>
 	<string name="loginStore">特約商店登入</string>

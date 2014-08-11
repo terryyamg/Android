@@ -42,6 +42,8 @@ import android.os.Message;
 import android.os.StrictMode;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -787,6 +789,10 @@ public class MainActivity extends FragmentActivity implements
 	private int scannerError = 0;
 	/* tab4 */
 	private ImageButton store1, store2;
+	private TextView storeInfo1, storeInfo2;
+	private EditText searchName;
+	private String searchObject;
+	private Button searchButton;
 	public ProgressDialog dialog = null;
 	/* tab5 */
 	private TextView output, myRecommend;
@@ -1273,6 +1279,45 @@ public class MainActivity extends FragmentActivity implements
 		/* tab4 */
 		store1 = (ImageButton) findViewById(R.id.list_store1);
 		store2 = (ImageButton) findViewById(R.id.list_store2);
+		storeInfo1 = (TextView) findViewById(R.id.store1_info);
+		storeInfo2 = (TextView) findViewById(R.id.store2_info);
+		searchName = (EditText) findViewById(R.id.searchName);
+		searchButton = (Button) findViewById(R.id.searchButton);
+
+		searchName.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				/* 計算總價 */
+				try {
+					searchObject = searchName.getText().toString(); // 取得輸入文字
+				} catch (Exception e) {
+
+				}
+
+			}
+		});
+		searchButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				goSearch();
+			}
+		});
+		storeInfo1.setText("店家名稱:小薇的店 \n" + "聯絡電話:\n" + "0938065905;0970978949 \n"
+				+ "Skype:olive8688 \n" + "Line ID:olive88888 \n");
+		storeInfo2.setText("");
+
 		store1.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				store_list1();
@@ -1853,9 +1898,21 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	/* tab4 */
+	void goSearch() {
+		if (searchObject == null) {
+
+		} else {
+			progress();
+			Intent intent = new Intent(this, SearchCommodity.class);
+			intent.putExtra("searchName", searchObject);
+			startActivity(intent);
+		}
+	}
+
 	void store_list1() {
 		progress();
 		Intent intent = new Intent(this, ListCommodity.class);
+		intent.putExtra("storeName", "小薇的店");
 		startActivity(intent);
 	}
 
