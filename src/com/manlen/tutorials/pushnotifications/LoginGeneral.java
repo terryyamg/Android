@@ -269,7 +269,6 @@ public class LoginGeneral extends FragmentActivity {
 			}
 		}).start();
 	}
-
 	// back
 	private OnClickListener back = new OnClickListener() {
 		public void onClick(View v) {

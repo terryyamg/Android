@@ -75,7 +75,9 @@
 
         <service android:name=".GPSService" />
         <service android:name="com.parse.PushService" />
-
+        <!-- Leading -->
+        <activity android:name=".Leading" >
+        </activity>
         <!-- ShowMarkerInfo -->
         <activity android:name=".ShowMarkerInfo" >
         </activity>

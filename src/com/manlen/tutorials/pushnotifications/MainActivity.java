@@ -9,8 +9,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -39,13 +41,19 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.os.StrictMode;
-import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -93,7 +101,7 @@ public class MainActivity extends FragmentActivity implements
 	/* 建立桌面捷徑 */
 
 	/* tab1 */
-
+	
 	/* tab2 */
 	private GoogleMap map;
 	int spinnerNumber = 0; // 初次進map不使用下拉選單
@@ -862,7 +870,7 @@ public class MainActivity extends FragmentActivity implements
 		// Set up our UI member properties.
 
 		/* tab1 */
-
+		
 		/* tab2 */
 		// google map
 		// try {
@@ -1206,7 +1214,11 @@ public class MainActivity extends FragmentActivity implements
 				android.R.layout.simple_spinner_item, type);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sp1 = (Spinner) findViewById(R.id.type);
-		sp1.setAdapter(adapter);
+		sp1.setAdapter(new NothingSelectedSpinnerAdapter(adapter,
+				R.layout.contact_spinner_row_nothing_selected,
+				// R.layout.contact_spinner_nothing_selected_dropdown, //
+				// Optional
+				this));
 		sp1.setOnItemSelectedListener(selectListener);
 
 		// 程式剛啟動時載入第二個下拉選單
@@ -1214,7 +1226,11 @@ public class MainActivity extends FragmentActivity implements
 				android.R.layout.simple_spinner_item, locationName1);
 		adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sp2 = (Spinner) findViewById(R.id.type2);
-		sp2.setAdapter(adapter2);
+		sp2.setAdapter(new NothingSelectedSpinnerAdapter(adapter2,
+				R.layout.contact_spinner_row_nothing_selected2,
+				// R.layout.contact_spinner_nothing_selected_dropdown, //
+				// Optional
+				this));
 		sp2.setOnItemSelectedListener(selectListener2);
 
 		// 程式剛啟動時載入第二個下拉選單，所以第三選單要載入第二個選單的子項目
@@ -1222,7 +1238,11 @@ public class MainActivity extends FragmentActivity implements
 				android.R.layout.simple_spinner_item, locationName2);
 		adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sp3 = (Spinner) findViewById(R.id.type3);
-		sp3.setAdapter(adapter3);
+		sp3.setAdapter(new NothingSelectedSpinnerAdapter(adapter3,
+				R.layout.contact_spinner_row_nothing_selected3,
+				// R.layout.contact_spinner_nothing_selected_dropdown, //
+				// Optional
+				this));
 		sp3.setOnItemSelectedListener(selectListener3);
 
 		/* tab3 */
@@ -1314,8 +1334,9 @@ public class MainActivity extends FragmentActivity implements
 				goSearch();
 			}
 		});
-		storeInfo1.setText("店家名稱:小薇的店 \n" + "聯絡電話:\n" + "0938065905;0970978949 \n"
-				+ "Skype:olive8688 \n" + "Line ID:olive88888 \n");
+		storeInfo1.setText("店家名稱:小薇的店 \n" + "聯絡電話:\n"
+				+ "0938065905;0970978949 \n" + "Skype:olive8688 \n"
+				+ "Line ID:olive88888 \n");
 		storeInfo2.setText("");
 
 		store1.setOnClickListener(new Button.OnClickListener() {
@@ -1583,7 +1604,8 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	/* tab1 */
-
+	
+	
 	/* tab2 */
 	private void setUpMap() {
 		// Enable MyLocation Layer of Google Map

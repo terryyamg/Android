@@ -97,7 +97,7 @@
                                     android:layout_column="0"
                                     android:gravity="center_horizontal"
                                     android:padding="10dp"
-                                    android:src="@drawable/store1c1" />
+                                    android:src="@drawable/store11" />
 
                                 <TextView
                                     android:id="@+id/cd1"
@@ -133,7 +133,7 @@
                                     android:layout_column="0"
                                     android:gravity="center_horizontal"
                                     android:padding="10dp"
-                                    android:src="@drawable/store1c2" />
+                                    android:src="@drawable/store12" />
 
                                 <TextView
                                     android:id="@+id/cd2"

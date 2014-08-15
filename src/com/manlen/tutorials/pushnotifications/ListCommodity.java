@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -138,9 +137,10 @@ public class ListCommodity extends FragmentActivity {
 		price11.setText("NT." + pr1[0]);
 		price12.setText("NT." + pr1[1]);
 		// 第一件商品
-
+ 
 		bc1.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
+				
 				progress();
 				buy(s1[0]);
 			}
@@ -175,7 +175,21 @@ public class ListCommodity extends FragmentActivity {
 		intent.putExtra("store", store);
 		startActivity(intent);
 	}
-
+	void progress() {
+		dialog = ProgressDialog.show(this, "讀取中", "請稍後...", true);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(5000);
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					dialog.dismiss();
+				}
+			}
+		}).start();
+	}
 	// 返回
 	private OnClickListener back = new OnClickListener() {
 		public void onClick(View v) {
@@ -251,21 +265,7 @@ public class ListCommodity extends FragmentActivity {
 		}
 	};
 
-	void progress() {
-		dialog = ProgressDialog.show(ListCommodity.this, "讀取中", "請稍後...", true);
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(5000);
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					dialog.dismiss();
-				}
-			}
-		}).start();
-	}
+	
 
 	private void setupViewComponent() {
 		/* tabHost */
