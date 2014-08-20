@@ -6,7 +6,7 @@
     android:background="@drawable/wallpaper"
     android:orientation="vertical"
     tools:context=".MainActivity" >
-    
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -40,75 +40,38 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical" >
-
-                        <ImageView
-                            android:id="@+id/imageView1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/use1" />
-
-                        <ImageView
-                            android:id="@+id/imageView2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/use2" />
-
-                        <ImageView
-                            android:id="@+id/imageView3"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/use3" />
-
-                        <ImageView
-                            android:id="@+id/imageView4"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/use4" />
-
-                        <ImageView
-                            android:id="@+id/imageView5"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/use5" />
                     </LinearLayout>
                 </ScrollView>
             </FrameLayout>
 
-            <RelativeLayout
+            <TableLayout
                 android:id="@+id/tab2"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center_horizontal" >
 
-                <fragment
-                    android:id="@+id/map"
-                    android:name="com.google.android.gms.maps.SupportMapFragment"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent" />
-
-                <Spinner
-                    android:id="@+id/type"
+                <TableRow
+                    android:id="@+id/table2Row0"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawSelectorOnTop="true"
-                    android:gravity="center_horizontal" />
+                    android:layout_height="wrap_content" >
 
-                <Spinner
-                    android:id="@+id/type2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/type"
-                    android:drawSelectorOnTop="true"
-                    android:gravity="center_horizontal" />
+                    <Button
+                        android:id="@+id/wheelWidget"
+                        style="@style/ButtonText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_black"
+                        android:text="@string/wheelWidget" />
 
-                <Spinner
-                    android:id="@+id/type3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/type2"
-                    android:drawSelectorOnTop="true"
-                    android:gravity="center_horizontal" />
-            </RelativeLayout>
+                    <Button
+                        android:id="@+id/openMap"
+                        style="@style/ButtonText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_black"
+                        android:text="@string/openMap" />
+                </TableRow>
+            </TableLayout>
 
             <TableLayout
                 android:id="@+id/tab3"
@@ -168,18 +131,18 @@
 
                     <EditText
                         android:id="@+id/searchName"
-                        android:layout_column="1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_column="1"
                         android:ems="10"
                         android:inputType="none" />
 
                     <Button
                         android:id="@+id/searchButton"
-                        android:layout_column="1"
                         style="@style/ButtonText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_column="1"
                         android:background="@drawable/btn_black"
                         android:text="@string/sendSearch" />
                 </TableRow>
@@ -208,9 +171,9 @@
 
                             <TextView
                                 android:id="@+id/store1_info"
+                                style="@style/BuyText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                style="@style/BuyText"
                                 android:layout_column="1"
                                 android:gravity="left"
                                 android:text="" />
@@ -230,9 +193,9 @@
 
                             <TextView
                                 android:id="@+id/store2_info"
+                                style="@style/BuyText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                style="@style/BuyText"
                                 android:layout_column="1"
                                 android:gravity="left"
                                 android:text="" />
@@ -287,4 +250,5 @@
             </TableLayout>
         </FrameLayout>
     </RelativeLayout>
+
 </TabHost>

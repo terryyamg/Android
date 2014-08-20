@@ -22,7 +22,7 @@ import android.widget.TextView;
 public class Leading extends Activity {
 	private ViewPager myViewPager; // ず甧
 	private List<View> list; // 
-	private TextView dot1, dot2, dot3; // 硂ㄇ翴常琌ゅ
+	private TextView dot1, dot2, dot3, dot4, dot5; // 硂ㄇ翴常琌ゅ
 	private Button startButton; // 秙秨﹍砰喷
 	private int first;
 	@Override
@@ -38,6 +38,8 @@ public class Leading extends Activity {
 		dot1 = (TextView) this.findViewById(R.id.textView1); // 硂ㄇ翴常琌ゅ
 		dot2 = (TextView) this.findViewById(R.id.textView2);
 		dot3 = (TextView) this.findViewById(R.id.textView3);
+		dot4 = (TextView) this.findViewById(R.id.textView4);
+		dot5 = (TextView) this.findViewById(R.id.textView5);
 	}
 
 	private void initViewPager() {
@@ -46,10 +48,12 @@ public class Leading extends Activity {
 
 		LayoutInflater inflater = getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.lay3, null); // 琌单findviewbuidτ縒ミㄓ结倒view
+		View view = inflater.inflate(R.layout.lay5, null); // 琌单findviewbuidτ縒ミㄓ结倒view
 
 		list.add(inflater.inflate(R.layout.lay1, null));
 		list.add(inflater.inflate(R.layout.lay2, null));
+		list.add(inflater.inflate(R.layout.lay3, null));
+		list.add(inflater.inflate(R.layout.lay4, null));
 		list.add(view);
 		try {
 			myViewPager.setAdapter(new MyPagerAdapter(list));
@@ -134,18 +138,40 @@ public class Leading extends Activity {
 				dot1.setTextColor(Color.WHITE);
 				dot2.setTextColor(Color.BLACK);
 				dot3.setTextColor(Color.BLACK);
+				dot4.setTextColor(Color.BLACK);
+				dot5.setTextColor(Color.BLACK);
 				break;
 
 			case 1:
 				dot1.setTextColor(Color.BLACK);
 				dot2.setTextColor(Color.WHITE);
 				dot3.setTextColor(Color.BLACK);
+				dot4.setTextColor(Color.BLACK);
+				dot5.setTextColor(Color.BLACK);
 				break;
 
 			case 2:
 				dot1.setTextColor(Color.BLACK);
 				dot2.setTextColor(Color.BLACK);
 				dot3.setTextColor(Color.WHITE);
+				dot4.setTextColor(Color.BLACK);
+				dot5.setTextColor(Color.BLACK);
+				break;
+				
+			case 3:
+				dot1.setTextColor(Color.BLACK);
+				dot2.setTextColor(Color.BLACK);
+				dot3.setTextColor(Color.BLACK);
+				dot4.setTextColor(Color.WHITE);
+				dot5.setTextColor(Color.BLACK);
+				break;
+				
+			case 4:
+				dot1.setTextColor(Color.BLACK);
+				dot2.setTextColor(Color.BLACK);
+				dot3.setTextColor(Color.BLACK);
+				dot4.setTextColor(Color.BLACK);
+				dot5.setTextColor(Color.WHITE);
 				break;
 
 			}

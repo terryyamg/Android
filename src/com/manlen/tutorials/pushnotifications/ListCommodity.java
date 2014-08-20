@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -64,17 +65,22 @@ public class ListCommodity extends FragmentActivity {
 							android.content.Context.MODE_PRIVATE);
 
 			myTel = preferences.getString("myTel", userTel);
+			if(myTel == null){
+				myTel = "0"; // 抓不到手機號碼
+			}
 		} catch (Exception e) {
 			myTel = "0"; // 抓不到手機號碼
 		}
 		/* tab2 */
 		// 搜尋BuyerInfo 使用者的所有購買資訊
 		try {
+			Log.i("myTel2", myTel + "");
 			ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(
 					"BuyerInfo");
 			query.whereEqualTo("userTel", myTel);
 			query.orderByDescending("arrivalDate");
 			ob = query.find();
+			Log.i("myTel3", myTel + "");
 			int size = ob.size(); // 幾筆資料
 
 			String[] store = new String[size];
@@ -137,10 +143,10 @@ public class ListCommodity extends FragmentActivity {
 		price11.setText("NT." + pr1[0]);
 		price12.setText("NT." + pr1[1]);
 		// 第一件商品
- 
+
 		bc1.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
-				
+
 				progress();
 				buy(s1[0]);
 			}
@@ -175,6 +181,7 @@ public class ListCommodity extends FragmentActivity {
 		intent.putExtra("store", store);
 		startActivity(intent);
 	}
+
 	void progress() {
 		dialog = ProgressDialog.show(this, "讀取中", "請稍後...", true);
 		new Thread(new Runnable() {
@@ -190,6 +197,7 @@ public class ListCommodity extends FragmentActivity {
 			}
 		}).start();
 	}
+
 	// 返回
 	private OnClickListener back = new OnClickListener() {
 		public void onClick(View v) {
@@ -265,8 +273,6 @@ public class ListCommodity extends FragmentActivity {
 		}
 	};
 
-	
-
 	private void setupViewComponent() {
 		/* tabHost */
 		// 從資源類別R中取得介面元件
@@ -275,12 +281,12 @@ public class ListCommodity extends FragmentActivity {
 
 		TabSpec spec = tabHost.newTabSpec("tab1");
 		spec.setContent(R.id.tab1);
-		spec.setIndicator("商品列表",
+		spec.setIndicator("",
 				getResources().getDrawable(R.drawable.commoditylist));
 		tabHost.addTab(spec);
 
 		spec = tabHost.newTabSpec("tab2");
-		spec.setIndicator("我的清單", getResources().getDrawable(R.drawable.mylist));
+		spec.setIndicator("", getResources().getDrawable(R.drawable.mylist));
 		spec.setContent(R.id.tab2);
 		tabHost.addTab(spec);
 

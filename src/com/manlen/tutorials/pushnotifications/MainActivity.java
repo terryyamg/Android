@@ -9,10 +9,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,9 +29,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -41,23 +36,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Parcelable;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -65,21 +50,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
@@ -87,8 +64,7 @@ import com.parse.ParseObject;
 import com.parse.RefreshCallback;
 import com.parse.SaveCallback;
 
-public class MainActivity extends FragmentActivity implements
-		OnMarkerClickListener {
+public class MainActivity extends FragmentActivity{
 	/* update */
 	protected static final int UPDATA_CLIENT = 0;
 	protected static final int CHECK_UPDATE = 1;
@@ -103,7 +79,7 @@ public class MainActivity extends FragmentActivity implements
 	/* tab1 */
 	
 	/* tab2 */
-	private GoogleMap map;
+	private Button wheelWidget,openMap;
 	int spinnerNumber = 0; // 初次進map不使用下拉選單
 	private float coordinate[][][][] = { // [縣市][食衣住行育樂][店家][座標]
 			{
@@ -579,217 +555,6 @@ public class MainActivity extends FragmentActivity implements
 					{ { 20, 3, (float) 24.1260010, (float) 120.6628070 } },
 					{ { 20, 4, (float) 24.1260010, (float) 120.6628070 } },
 					{ { 20, 5, (float) 24.1260010, (float) 120.6628070 } } } };
-	private String[] type = new String[] { "基隆市", "台北市", "新北市", "桃園縣市", "新竹市",
-			"新竹縣", "苗栗縣", "台中市", "南投縣市", "彰化縣市", "雲林縣市", "嘉義縣市", "台南市", "高雄市",
-			"屏東縣市", "台東縣市", "花蓮縣市", "宜蘭縣市", "澎湖縣", "金門縣", "連江縣" };
-	private String[] locationName1 = new String[] { "食", "衣", "住", "行", "育",
-			"樂" };
-	private String[] locationName2 = new String[] { "99度a基隆孝一店", "99度a基隆東信店",
-			"99度a七堵明德店", "99度a基隆義二店", "99度a基隆樂一店", "99度a基隆長庚店", "99度a七堵百福店",
-			"99度a基隆新豐店" };
-	private String[][] type2 = new String[][] {
-			// 0基隆
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 1台北
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 2新北
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 3桃園
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 4新竹市
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 5新竹縣
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 6苗栗
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 7台中
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 8南投
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 9彰化
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 10雲林
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 11嘉義
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 12台南
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 13高雄
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 14屏東
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 15台東
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 16花蓮
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 17宜蘭
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 18澎湖
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 19金門
-			{ "食", "衣", "住", "行", "育", "樂" },
-			// 20連江
-			{ "食", "衣", "住", "行", "育", "樂" }, };
-	private String[][][] type3 = new String[][][] {
-			// 0基隆
-			{
-					{ "99度a基隆孝一店", "99度a基隆東信店", "99度a七堵明德店", "99度a基隆義二店",
-							"99度a基隆樂一店", "99度a基隆長庚店", "99度a七堵百福店", "99度a基隆新豐店" },
-					{ "基隆衣" }, { "基隆住" }, { "基隆行" }, { "基隆育" }, { "基隆樂" } },
-			// 1台北
-			{
-					{ "99度a台北光復北店", "99度a木柵木新店", "99度a台北安和店", "99度a東湖康樂店",
-							"99度a台北京華店", "99度a台北景美店", "99度a台北莊敬店", "99度a內湖文德店",
-							"99度a台北永吉店", "99度a木柵秀明店", "99度a萬華萬大店", "99度a台北龍江店",
-							"99度a台北中研店", "99度a台北榮星店", "99度a台北民族店", "99度a台北民生店",
-							"99度a台北吉林店", "99度a台北錦州店", "99度a台北長安店", "99度a台北中華店",
-							"99度a台北長安東店", "99度a內湖康寧店", "99度a台北汀洲店",
-							"99度a台北漢中店", "99度a萬華廣州店", "99度a士林劍潭店", "99度a台北雨聲店",
-							"99度a北投育仁店", "99度a台北延平店", "99度a天母德行店", "99度a台北同德店",
-							"99度a台北和平東店", "99度a台北寶興店", "99度a台北永春店",
-							"99度a台北三民店", "99度a北投中和店", "99度a士林文林店", "99度a大安微風店",
-							"99度a台北寧波東店", "99度a台北微風南京店", "99度a士林基河店" },
-					{ "台北衣" }, { "台北住" }, { "台北行" }, { "台北育" }, { "台北樂" } },
-			// 2新北
-			{
-					{ "99度a永和保平店", "99度a永和永貞店", "99度a永和頂溪店", "99度a永和得和店",
-							"99度a中和圓通店", "99度a中和南華店", "99度a中和環球店", "99度a中和員山店",
-							"99度a中和興南店", "99度a新店碧潭店", "99度a板橋民德店", "99度a永和中正店",
-							"99度a三重集美店", "99度a三重中華店", "99度a三重仁政店", "99度a板橋國光店",
-							"99度a三重重新店", "99度a三重中正店", "99度a三重重陽店", "99度a新店民權店",
-							"99度a樹林中山店", "99度a新店中正店", "99度a新莊昌平店", "99度a蘆洲中興店",
-							"99度a新店安康店", "99度a新店七張店", "99度a新莊龍安店", "99度a新莊新泰店",
-							"99度a新莊富國店", "99度a新莊化成店", "99度a林口竹林店", "99度a新莊幸福店",
-							"99度a新莊中平店", "99度a板橋四維店", "99度a板橋大仁店", "99度a板橋四川店",
-							"99度a板橋文化店", "99度a鶯歌鶯桃店", "99度a板橋大同店", "99度a板橋中山店",
-							"99度a板橋南雅店", "99度a板橋新海店", "99度a板橋仁化店", "99度a蘆洲光華店",
-							"99度a蘆洲復興店", "99度a蘆洲長安店", "99度a土城裕民店", "99度a萬里野柳店",
-							"99度a樹林中華店", "99度a樹林保安店", "99度a樹林金門店", "99度a三重仁愛店",
-							"99度a汐止中興店", "99度a汐止新台五店", "99度a汐止樟樹店",
-							"99度a汐止建成店", "99度a台北八里店", "99度a台北深坑店", "99度a金山中山店",
-							"99度a新莊建安店", "99度a泰山明志店", "99度a台北泰山店", "99度a五股成泰店",
-							"99度a淡水竹圍店", "99度a淡水中山店", "99度a淡水學府店", "99度a三峽民生店",
-							"99度a三峽文化店", "99度a三峽中華店", "99度a鶯歌國慶店", "99度a瑞芳明燈店",
-							"99度a板橋三民店", "99度a新店安和店" }, { "新北衣" }, { "新北住" },
-					{ "新北行" }, { "新北育" }, { "新北樂" } },
-			// 3桃園
-			{
-					{ "99度a桃園北興店", "99度a桃園中華店", "99度a桃園縣府店", "99度a桃園經國店",
-							"99度a桃園桃鶯店", "99度a桃園大業店", "99度a桃園龍安店", "99度a桃園中正店",
-							"99度a中壢中原店", "99度a內壢中華店", "99度a中壢中央東店",
-							"99度a中壢環中店", "99度a中壢龍慈店", "99度a中壢民族(高榮)店",
-							"99度a中壢元化店", "99度a中壢龍岡店", "99度a中壢中山店", "99度a中壢振興店",
-							"99度a八德介壽店", "99度a平鎮中豐店", "99度a新屋中山店", "99度a中壢壢中店",
-							"99度a桃園萬壽店", "99度a桃園八德店", "99度a桃園福竹店", "99度a南崁南竹店",
-							"99度a桃園南崁店", "99度a大園中山店", "99度a觀音新坡店", "99度a中壢健行店",
-							"99度a楊梅新成店", "99度a楊梅中山店", "99度a桃園泰昌店", "99度a林口長庚店",
-							"99度a龍潭北龍店", "99度a迴龍龍華店", "99度a平鎮延平店", "99度a平鎮金陵店",
-							"99度a楊梅埔心店", "99度a平鎮文化店", "99度a中壢福州店" }, { "桃園衣" },
-					{ "桃園住" }, { "桃園行" }, { "桃園育" }, { "桃園樂" } },
-			// 4新竹市
-			{
-					{ "99度a新竹竹科店", "99度a新竹民權店", "99度a新竹中正店", "99度a新竹經國店",
-							"99度a新竹中華店" }, { "新竹市衣" }, { "新竹市住" }, { "新竹市行" },
-					{ "新竹市育" }, { "新竹市樂" } },
-			// 5新竹縣
-			{
-					{ "99度a竹北博愛店", "99度a竹北光明店", "99度a新豐建興店", "99度a湖口忠孝店",
-							"99度a竹東長春店", "99度a關西正義店", "99度a湖口中華店" },
-					{ "新竹縣衣" }, { "新竹縣住" }, { "新竹縣行" }, { "新竹縣育" }, { "新竹縣樂" } },
-			// 6苗栗
-			{
-					{ "99度a苗栗為公店", "99度a苗栗中正店", "99度a竹南光復店", "99度a頭份中正店",
-							"99度a頭份中央店", "99度a苑裡中山店" }, { "苗栗衣" }, { "苗栗住" },
-					{ "苗栗行" }, { "苗栗育" }, { "通霄海水浴場" } },
-			// 7台中
-			{
-					{ "99度a台中健行店", "99度a台中復興店", "99度a台中東勢店", "99度a台中青海店",
-							"99度a台中大肚店", "99度a台中高工店", "99度a台中一中店", "99度a台中友達店",
-							"99度a台中中科店", "99度a台中健行店", "99度a台中潭子店", "99度a台中逢甲店",
-							"99度a台中漢口店", "99度a台中大業店", "99度a台中昌平店", "99度a台中水湳店",
-							"99度a台中嶺東店", "99度a台中大墩店", "99度a台中崇德店", "99度a台中清水店",
-							"99度a台中黎明店", "99度a台中北平店", "99度a台中樂業店", "99度a大里國光店",
-							"99度a太平中山店", "99度a大里成功店", "99度a豐原南陽店", "99度a台中西屯店",
-							"99度a太平太平店", "99度a大里中興店", "99度a大雅學府店", "99度a霧峰吉峰店",
-							"99度a大里益民店", "99度a台中東海店", "99度a霧峰中正店", "99度a台中醫院店",
-							"99度a烏日中山店", "99度a大甲大甲店", "99度a台中公益店", "99度a大里永隆店",
-							"99度a梧棲文化店", "99度a豐原中興店", "99度a台中沙鹿店", "99度a台中愛買店",
-							"99度a豐原廟東店" }, { "台中衣" }, { "台中住" }, { "台中行" },
-					{ "台中育" }, { "台中樂" } },
-			// 8南投
-			{
-					{ "99度a南投大同店", "99度a草屯中山店", "99度a埔里中正店", "99度a南投竹山店",
-							"99度a南投中興店", "99度a南投水里店", "99度a名間彰南店", "99度a日月潭水社店" },
-					{ "南投衣" }, { "南投住" }, { "南投行" }, { "南投育" }, { "南投樂" } },
-			// 9彰化
-			{
-					{ "99度a彰化和平店", "99度a彰化中正店", "99度a彰化彰基店", "99度a員林萬年店",
-							"99度a員林靜修店", "99度a溪湖平和店", "99度a彰化田中店", "99度a彰化和美店",
-							"99度a鹿港中正店", "99度a彰濱秀傳店", "99度a彰化花壇店", "99度a彰化二林店",
-							"99度a彰化秀水店", "99度a彰化社頭店", "99度a彰化永靖店", "99度a員林大同店",
-							"99度a彰化中民店", "99度a彰化彰美店", "99度a鹿港民族店" }, { "彰化衣" },
-					{ "彰化住" }, { "彰化行" }, { "彰化育" }, { "彰化樂" } },
-			// 10雲林
-			{
-					{ "99度a斗南延平店", "99度a斗六站前店", "99度a雲林麥寮店", "99度a雲林北港店",
-							"99度a西螺中山店", "99度a虎尾林森店", "99度a斗六民生南店", "99度a土庫建國店" },
-					{ "雲林衣" }, { "雲林住" }, { "雲林行" }, { "雲林育" }, { "雲林樂" } },
-			// 11嘉義
-			{
-					{ "99度a嘉義朴子店", "99度a嘉義民雄店", "99度a嘉義水上店", "99度a新港奉天店",
-							"99度a嘉義民族店", "99度a嘉義中山店", "99度a嘉義彌陀店", "99度a嘉義友愛店",
-							"99度a嘉義nice店", "99度a嘉義仁愛店" }, { "嘉義衣" }, { "嘉義住" },
-					{ "嘉義行" }, { "嘉義育" }, { "嘉義樂" } },
-			// 12台南
-			{
-					{ "99度a永康南科店", "99度a永康小東店", "99度a台南關廟店", "99度a永康崑山店",
-							"99度a台南柳營店", "99度a台南新化店", "99度a仁德中正店", "99度a台南新市店",
-							"99度a台南中華東店", "99度a台南歸仁店", "99度a麻豆中華店",
-							"99度a新營民權店", "99度a台南善化店", "99度a台南佳里店", "99度a南科聯研店",
-							"99度a台南安南店", "99度a台南東寧店", "99度a台南健康店", "99度a台南北門店",
-							"99度a台南小北店", "99度a台南建平店", "99度a台南成功店", "99度a永康中華店",
-							"99度a台南東門店" }, { "台南衣" }, { "台南住" }, { "台南行" },
-					{ "台南育" }, { "台南樂" } },
-			// 13高雄
-			{
-					{ "99度a高雄高醫大店", "99度a路竹忠孝店", "99度a高雄中正店", "99度a鳳山文濱店",
-							"99度a鳳山五甲店", "99度a高雄林園店", "99度a高雄仁武店", "99度a高雄旗山店",
-							"99度a楠梓旗楠店", "99度a高雄岡山店", "99度a高雄右昌店", "99度a仁武仁雄店",
-							"99度a鳳山中山店", "99度a高雄七賢店", "少那之高雄中正門市" }, { "高雄衣" },
-					{ "高雄住" }, { "高雄行" }, { "高雄育" }, { "高雄樂" } },
-			// 14屏東
-			{
-					{ "99度a屏東枋寮店", "99度a屏東恆春店", "99度a屏東中正店", "99度a屏東麟洛店",
-							"99度a屏東和平店", "99度a屏東潮州店", "99度a屏東仁愛店", "99度a屏東內埔店",
-							"99度a屏東萬丹店" }, { "屏東衣" }, { "屏東住" }, { "屏東行" },
-					{ "屏東育" }, { "屏東樂" } },
-			// 15台東
-			{ { "99度a台東中華店" }, { "台東衣" }, { "台東住" }, { "台東行" }, { "台東育" },
-					{ "台東樂" } },
-			// 16花蓮
-			{ { "99度a花蓮中山店", "99度a花蓮中正店", "99度a花蓮和平店" }, { "花蓮衣" }, { "花蓮住" },
-					{ "花蓮行" }, { "花蓮育" }, { "花蓮樂" } },
-			// 17宜蘭
-			{
-					{ "99度a宜蘭復興店", "99度a宜蘭站前店", "99度a羅東民權店", "99度a羅東站前店",
-							"99度a頭城青雲店", "99度a宜蘭礁溪店" }, { "宜蘭衣" }, { "宜蘭住" },
-					{ "宜蘭行" }, { "宜蘭育" }, { "宜蘭樂" } },
-			// 18澎湖
-			{ { "99度a澎湖馬公店" }, { "澎湖衣" }, { "澎湖住" }, { "澎湖行" }, { "澎湖育" },
-					{ "澎湖樂" } },
-			// 19金門
-			{ { "99度a金門民族店" }, { "金門衣" }, { "金門住" }, { "金門行" }, { "金門育" },
-					{ "金門樂" } },
-			// 20連江
-			{ { "連江食" }, { "連江衣" }, { "連江住" }, { "連江行" }, { "連江育" }, { "連江樂" } } };
-	private Spinner sp1;// 第一個下拉選單
-	private Spinner sp2;// 第二個下拉選單
-	private Spinner sp3;// 第三個下拉選單
-	private Context context;
-
-	ArrayAdapter<String> adapter;
-	ArrayAdapter<String> adapter2;
-	ArrayAdapter<String> adapter3;
 
 	/* tab3 */
 	private TextView info, info2, info3;
@@ -874,8 +639,6 @@ public class MainActivity extends FragmentActivity implements
 		/* tab2 */
 		// google map
 		// try {
-		map = ((SupportMapFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.map)).getMap();
 
 		LatLng[] p00 = new LatLng[coordinate[0][0].length];
 		LatLng[] p10 = new LatLng[coordinate[1][0].length];
@@ -992,259 +755,32 @@ public class MainActivity extends FragmentActivity implements
 					coordinate[19][0][i][3]);
 		}
 
-		if (map != null) {
-			map.setOnMarkerClickListener(this);
-			// google mark
-			// 0基隆
-			for (int i = 0; i < coordinate[0][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p00[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-
-			// 1台北
-			for (int i = 0; i < coordinate[1][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p10[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-
-			// 2新北
-			for (int i = 0; i < coordinate[2][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p20[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-
-			// 3桃園
-			for (int i = 0; i < coordinate[3][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p30[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-
-			// 4新竹市
-			for (int i = 0; i < coordinate[4][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p40[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-
-			// 5新竹縣
-			for (int i = 0; i < coordinate[5][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p50[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-
-			// 6苗栗
-
-			for (int i = 0; i < coordinate[6][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p60[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-
-			map.addMarker(new MarkerOptions()
-					.position(p65[0])
-					.title("通霄海水浴場")
-					.icon(BitmapDescriptorFactory
-							.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-					.snippet("通霄"));
-
-			// 7台中
-			for (int i = 0; i < coordinate[7][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p70[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-			// 8南投縣市
-			for (int i = 0; i < coordinate[8][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p80[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-			// 9彰化縣市
-			for (int i = 0; i < coordinate[9][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p90[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-			// 10雲林縣市
-			for (int i = 0; i < coordinate[10][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p100[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-			// 11嘉義縣市
-			for (int i = 0; i < coordinate[11][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p110[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-			// 12 台南
-			for (int i = 0; i < coordinate[12][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p120[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-
-			// 13 高雄
-			for (int i = 0; i < coordinate[13][0].length - 1; i++) {
-
-				map.addMarker(new MarkerOptions()
-						.position(p130[i])
-						.title("99度a高雄高醫大店")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-
-			map.addMarker(new MarkerOptions()
-					.position(p130[14])
-					.title("少那之高雄中正門市")
-					.icon(BitmapDescriptorFactory
-							.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
-					.snippet("少那之"));
-			// 14屏東縣市
-			for (int i = 0; i < coordinate[14][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p140[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-			// 15台東縣市
-			for (int i = 0; i < coordinate[15][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p150[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-			// 16花蓮縣市
-			for (int i = 0; i < coordinate[16][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p160[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-			// 17宜蘭縣市
-			for (int i = 0; i < coordinate[17][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p170[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-			// 18澎湖縣
-			for (int i = 0; i < coordinate[18][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p180[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-			// 19金門縣
-			for (int i = 0; i < coordinate[19][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p190[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-			// google location
-			setUpMap();
-		}
+		
 
 		// } catch (NullPointerException e) {
 		// Log.i("map", "NullPointException");
 		// }
 
-		context = this;
 
-		// 程式剛啟動時載入第一個下拉選單
-		adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, type);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		sp1 = (Spinner) findViewById(R.id.type);
-		sp1.setAdapter(new NothingSelectedSpinnerAdapter(adapter,
-				R.layout.contact_spinner_row_nothing_selected,
-				// R.layout.contact_spinner_nothing_selected_dropdown, //
-				// Optional
-				this));
-		sp1.setOnItemSelectedListener(selectListener);
+		
+		wheelWidget = (Button) findViewById(R.id.wheelWidget);
+		openMap = (Button) findViewById(R.id.openMap);
+		wheelWidget.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 
-		// 程式剛啟動時載入第二個下拉選單
-		adapter2 = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, locationName1);
-		adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		sp2 = (Spinner) findViewById(R.id.type2);
-		sp2.setAdapter(new NothingSelectedSpinnerAdapter(adapter2,
-				R.layout.contact_spinner_row_nothing_selected2,
-				// R.layout.contact_spinner_nothing_selected_dropdown, //
-				// Optional
-				this));
-		sp2.setOnItemSelectedListener(selectListener2);
+				// TODO Auto-generated method stub
+				wheelWidget();
+			}
+		});
+		openMap.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 
-		// 程式剛啟動時載入第二個下拉選單，所以第三選單要載入第二個選單的子項目
-		adapter3 = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, locationName2);
-		adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		sp3 = (Spinner) findViewById(R.id.type3);
-		sp3.setAdapter(new NothingSelectedSpinnerAdapter(adapter3,
-				R.layout.contact_spinner_row_nothing_selected3,
-				// R.layout.contact_spinner_nothing_selected_dropdown, //
-				// Optional
-				this));
-		sp3.setOnItemSelectedListener(selectListener3);
-
+				// TODO Auto-generated method stub
+				goToGoogleMap();
+			}
+		});
 		/* tab3 */
 		info = (TextView) findViewById(R.id.info);
 		info2 = (TextView) findViewById(R.id.info2);
@@ -1607,157 +1143,16 @@ public class MainActivity extends FragmentActivity implements
 	
 	
 	/* tab2 */
-	private void setUpMap() {
-		// Enable MyLocation Layer of Google Map
-		map.setMyLocationEnabled(true);
-		// Get LocationManager object from System Service LOCATION_SERVICE
-		LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-		// Create a criteria object to resrieve provider
-		Criteria criteria = new Criteria();
-
-		// Get the name of the best provider
-		String provider = locationManager.getBestProvider(criteria, true);
-		try {
-
-			// Get Current Location
-			Location myLocation = locationManager
-					.getLastKnownLocation(provider);
-			// set map type
-			map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-			// Get latitude of the current location
-			double latitude = myLocation.getLatitude();
-			// Get longitude of the current location
-			double longitude = myLocation.getLongitude();
-			// Create a LatLng object for the current location
-			LatLng latLng = new LatLng(latitude, longitude);
-			// Show the current location in Google Map
-			map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
-			// Zoom in the Google Map
-			map.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-			// map.addMarker(new MarkerOptions().position(new LatLng(latitude,
-			// longitude)).title("現在位置"));
-
-		} catch (NullPointerException e) {
-		}
-
-		/* GPS開啟跳出確認視窗 */
-		// try {
-		// if (!locationManager
-		// .isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-		// new AlertDialog.Builder(MainActivity.this)
-		// .setTitle("GPS設定")
-		// .setMessage("您尚未啟動GPS，要啟動嗎?")
-		// .setCancelable(false)
-		// .setNegativeButton("啟動",
-		// new DialogInterface.OnClickListener() {
-		//
-		// public void onClick(DialogInterface dialog,
-		// int which) {
-		// startActivity(new Intent(
-		// Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-		// }
-		// })
-		// .setPositiveButton("不啟動",
-		// new DialogInterface.OnClickListener() {
-		// public void onClick(DialogInterface dialog,
-		// int which) {
-		// Toast.makeText(MainActivity.this,
-		// "不啟動GPS將使用網路定位",
-		// Toast.LENGTH_SHORT).show();
-		// }
-		// }).show();
-		//
-		// }
-		//
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
-	}
-
-	/* 點選marker顯示 */
-	@Override
-	public boolean onMarkerClick(Marker marker) {
-		Intent intent = new Intent(this, ShowMarkerInfo.class);
-		intent.putExtra("MarkTitle", marker.getSnippet());
+void wheelWidget(){
+	progress();
+	Intent intent = new Intent(this, WheelWidget.class);
+	startActivity(intent);
+}
+	void goToGoogleMap(){
+		progress();
+		Intent intent = new Intent(this, GoToGoogleMap.class);
 		startActivity(intent);
-		return false;
 	}
-
-	// 第一個下拉選單監聽動作
-	private OnItemSelectedListener selectListener = new OnItemSelectedListener() {
-		public void onItemSelected(AdapterView<?> parent, View v, int position,
-				long id) {
-			// 讀取第一個下拉選單是選擇第幾個
-			int pos = sp1.getSelectedItemPosition();
-			// 重新產生新的Adapter，用的是二維陣列type2[pos]
-			adapter2 = new ArrayAdapter<String>(context,
-					android.R.layout.simple_spinner_item, type2[pos]);
-			// 載入第二個下拉選單Spinner
-			sp2.setAdapter(adapter2);
-
-		}
-
-		public void onNothingSelected(AdapterView<?> arg0) {
-
-		}
-
-	};
-
-	// 第二個下拉類別的監看式
-	private OnItemSelectedListener selectListener2 = new OnItemSelectedListener() {
-		public void onItemSelected(AdapterView<?> parent, View v, int position,
-				long id) {
-			// 讀取第一個下拉選單是選擇第幾個
-			int pos = sp1.getSelectedItemPosition();
-			// 讀取第二個下拉選單是選擇第幾個
-			int pos2 = sp2.getSelectedItemPosition();
-			// 重新產生新的Adapter，用的是三維陣列type3[pos][pos2]
-			adapter3 = new ArrayAdapter<String>(context,
-					android.R.layout.simple_spinner_item, type3[pos][pos2]);
-			// 載入第三個下拉選單Spinner
-			sp3.setAdapter(adapter3);
-		}
-
-		public void onNothingSelected(AdapterView<?> arg0) {
-
-		}
-
-	};
-
-	// 第二個下拉選單監聽動作
-	private OnItemSelectedListener selectListener3 = new OnItemSelectedListener() {
-		public void onItemSelected(AdapterView<?> parent, View v, int position,
-				long id) {
-			setMapLocation(); // 移動到選定項目位置
-		}
-
-		public void onNothingSelected(AdapterView<?> arg0) {
-
-		}
-
-	};
-
-	public void setMapLocation() {
-		try {
-			int iSelect1 = sp1.getSelectedItemPosition(); // 第一個下拉選單被選到的第幾個項目
-			int iSelect2 = sp2.getSelectedItemPosition(); // 第二個下拉選單被選到的第幾個項目
-			int iSelect3 = sp3.getSelectedItemPosition(); // 第三個下拉選單被選到的第幾個項目
-			double dLat = coordinate[iSelect1][iSelect2][iSelect3][2]; // 抓取座標,南北緯
-			double dLon = coordinate[iSelect1][iSelect2][iSelect3][3]; // 抓取座標,東西經
-
-			if (spinnerNumber > 2) { // 初次進map不使用下拉選單
-				LatLng gg = new LatLng(dLat, dLon); // 將座標位置輸入設定
-				map.moveCamera(CameraUpdateFactory.newLatLng(gg)); // 移動到定點
-				map.animateCamera(CameraUpdateFactory.zoomTo(15)); // 縮放
-			}
-			spinnerNumber = spinnerNumber + 1;
-		} catch (NullPointerException e) {
-		}
-	}
-
 	/* tab3 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1784,7 +1179,7 @@ public class MainActivity extends FragmentActivity implements
 					SimpleDateFormat sdf = new SimpleDateFormat(
 							"yyyy/MM/dd HH:mm:ss"); // 取得小時
 					String scannerTime = sdf.format(new java.util.Date()); // 取得現在時間
-					int waitTime = 3; // 冷卻時間
+					int waitTime = 1; // 冷卻時間
 
 					Date dt = null; // 現在時間date初始化
 
@@ -2269,26 +1664,26 @@ public class MainActivity extends FragmentActivity implements
 
 		TabSpec spec = tabHost.newTabSpec("tab1");
 		spec.setContent(R.id.tab1);
-		spec.setIndicator("說明", getResources().getDrawable(R.drawable.tab1));
+		spec.setIndicator("", getResources().getDrawable(R.drawable.tab1));
 		tabHost.addTab(spec);
 
 		spec = tabHost.newTabSpec("tab2");
-		spec.setIndicator("地圖", getResources().getDrawable(R.drawable.tab2));
+		spec.setIndicator("", getResources().getDrawable(R.drawable.tab2));
 		spec.setContent(R.id.tab2);
 		tabHost.addTab(spec);
 
 		spec = tabHost.newTabSpec("tab3");
-		spec.setIndicator("掃描", getResources().getDrawable(R.drawable.tab3));
+		spec.setIndicator("", getResources().getDrawable(R.drawable.tab3));
 		spec.setContent(R.id.tab3);
 		tabHost.addTab(spec);
 
 		spec = tabHost.newTabSpec("tab4");
-		spec.setIndicator("團購", getResources().getDrawable(R.drawable.tab4));
+		spec.setIndicator("", getResources().getDrawable(R.drawable.tab4));
 		spec.setContent(R.id.tab4);
 		tabHost.addTab(spec);
 
 		spec = tabHost.newTabSpec("tab5");
-		spec.setIndicator("設定", getResources().getDrawable(R.drawable.tab5));
+		spec.setIndicator("", getResources().getDrawable(R.drawable.tab5));
 		spec.setContent(R.id.tab5);
 		tabHost.addTab(spec);
 

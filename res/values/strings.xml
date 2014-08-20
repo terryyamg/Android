@@ -38,6 +38,8 @@
     <string name="alert_dialog_title">Profile</string>
     <string name="alert_dialog_success">儲存成功!</string>
     <string name="alert_dialog_failed">儲存失敗</string>
+    <string name="openMap">使用地圖</string>
+    <string name="wheelWidget">選擇地點</string>
 
     <style name="ButtonText">
         <item name="android:layout_width">fill_parent</item>
