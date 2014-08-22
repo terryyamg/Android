@@ -1,25 +1,9 @@
 package com.manlen.tutorials.pushnotifications;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -29,19 +13,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StrikethroughSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -53,6 +42,8 @@ import android.widget.RadioGroup;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,10 +52,11 @@ import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.RefreshCallback;
 import com.parse.SaveCallback;
 
-public class MainActivity extends FragmentActivity{
+public class MainActivity extends FragmentActivity {
 	/* update */
 	protected static final int UPDATA_CLIENT = 0;
 	protected static final int CHECK_UPDATE = 1;
@@ -77,9 +69,9 @@ public class MainActivity extends FragmentActivity{
 	/* 建立桌面捷徑 */
 
 	/* tab1 */
-	
+
 	/* tab2 */
-	private Button wheelWidget,openMap;
+	private Button wheelWidget, openMap;
 	int spinnerNumber = 0; // 初次進map不使用下拉選單
 	private float coordinate[][][][] = { // [縣市][食衣住行育樂][店家][座標]
 			{
@@ -561,12 +553,14 @@ public class MainActivity extends FragmentActivity{
 	private Button scanner, scanner2;
 	private int scannerError = 0;
 	/* tab4 */
-	private ImageButton store1, store2;
-	private TextView storeInfo1, storeInfo2;
 	private EditText searchName;
-	private String searchObject;
+	private String searchObject, sn[], tableCommodity[][];
 	private Button searchButton;
+	private ImageButton imgButton[];
 	public ProgressDialog dialog = null;
+	private int opr[], pr[], sc[], id;
+	List<ParseObject> Object;
+
 	/* tab5 */
 	private TextView output, myRecommend;
 	private CheckBox checkBox_service;
@@ -581,11 +575,14 @@ public class MainActivity extends FragmentActivity{
 	public static final String GENDER_MALE = "male";
 	public static final String GENDER_FEMALE = "female";
 
+	Typeface fontch;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		/* 字型 */
+		fontch = Typeface.createFromAsset(getAssets(),
+				"fonts/wt034.ttf");
 		/* update */
 		/* 加入StrictMode避免發生 android.os.NetworkOnMainThreadException */
 		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
@@ -597,35 +594,38 @@ public class MainActivity extends FragmentActivity{
 		 * .penaltyLog().penaltyDeath().build());
 		 */
 
-		JSONArray obj = getJson("http://terryyamg.github.io/myweb/update_verson.json"); // 更新版本文件檔位置
-		try {
-			for (int i = 0; i < obj.length(); i++) {
-				JSONObject data = obj.getJSONObject(i);
-				newServerVersion = Integer.parseInt(data.getString("code")); // code為名稱，抓出來newServerVersion為值
-			}
-		} catch (JSONException e) {
-
-		} catch (NullPointerException e) {
-
-		}
-
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					Message msg = new Message();
-					msg.what = CHECK_UPDATE;
-					handler.sendMessage(msg);
-
-				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
-
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-
-				}
-
-			}
-		}).start();
+		// JSONArray obj =
+		// getJson("http://terryyamg.github.io/myweb/update_verson.json"); //
+		// 更新版本文件檔位置
+		// try {
+		// for (int i = 0; i < obj.length(); i++) {
+		// JSONObject data = obj.getJSONObject(i);
+		// newServerVersion = Integer.parseInt(data.getString("code")); //
+		// code為名稱，抓出來newServerVersion為值
+		// }
+		// } catch (JSONException e) {
+		//
+		// } catch (NullPointerException e) {
+		//
+		// }
+		//
+		// new Thread(new Runnable() {
+		// public void run() {
+		// try {
+		// Message msg = new Message();
+		// msg.what = CHECK_UPDATE;
+		// handler.sendMessage(msg);
+		//
+		// } catch (NumberFormatException e) {
+		// // TODO Auto-generated catch block
+		//
+		// } catch (Exception e) {
+		// // TODO Auto-generated catch block
+		//
+		// }
+		//
+		// }
+		// }).start();
 
 		/* 建立桌面捷徑 */
 		addShortcut();
@@ -635,7 +635,7 @@ public class MainActivity extends FragmentActivity{
 		// Set up our UI member properties.
 
 		/* tab1 */
-		
+
 		/* tab2 */
 		// google map
 		// try {
@@ -755,16 +755,16 @@ public class MainActivity extends FragmentActivity{
 					coordinate[19][0][i][3]);
 		}
 
-		
-
 		// } catch (NullPointerException e) {
 		// Log.i("map", "NullPointException");
 		// }
 
-
-		
 		wheelWidget = (Button) findViewById(R.id.wheelWidget);
 		openMap = (Button) findViewById(R.id.openMap);
+
+		wheelWidget.setTypeface(fontch);
+		openMap.setTypeface(fontch);
+
 		wheelWidget.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -787,6 +787,13 @@ public class MainActivity extends FragmentActivity{
 		info3 = (TextView) findViewById(R.id.info3);
 		scanner = (Button) findViewById(R.id.scanner);
 		scanner2 = (Button) findViewById(R.id.scanner2);
+
+		info.setTypeface(fontch); // 字型
+		info2.setTypeface(fontch);
+		info3.setTypeface(fontch);
+		scanner.setTypeface(fontch);
+		scanner2.setTypeface(fontch);
+
 		scanner2.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -796,12 +803,10 @@ public class MainActivity extends FragmentActivity{
 						.getCurrentInstallation().getInt("scannerNumber" + 0);
 				int scannerNumberInfo1 = ParseInstallation
 						.getCurrentInstallation().getInt("scannerNumber" + 1);
+				int sumOfUse = scannerNumberInfo0 + scannerNumberInfo1;
 				String setResult[] = { "99度a", "少那之" };
-				info2.setText("您已經使用"
-						+ Integer.valueOf(scannerNumberInfo0).toString() + "次"
-						+ setResult[0] + "優惠方案 \n" + "您已經使用"
-						+ Integer.valueOf(scannerNumberInfo1).toString() + "次"
-						+ setResult[1] + "優惠方案 \n");
+				info2.setText("您總共已經使用" + Integer.valueOf(sumOfUse).toString()
+						+ "次優惠方案 \n");
 
 				String scannerNextTime0 = ParseInstallation
 						.getCurrentInstallation().getString("scannerTime" + 0);
@@ -833,13 +838,13 @@ public class MainActivity extends FragmentActivity{
 		});
 
 		/* tab4 */
-		store1 = (ImageButton) findViewById(R.id.list_store1);
-		store2 = (ImageButton) findViewById(R.id.list_store2);
-		storeInfo1 = (TextView) findViewById(R.id.store1_info);
-		storeInfo2 = (TextView) findViewById(R.id.store2_info);
+
 		searchName = (EditText) findViewById(R.id.searchName);
 		searchButton = (Button) findViewById(R.id.searchButton);
 
+		searchButton.setTypeface(fontch);
+
+		// 搜尋商品
 		searchName.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void afterTextChanged(Editable s) {
@@ -870,21 +875,43 @@ public class MainActivity extends FragmentActivity{
 				goSearch();
 			}
 		});
-		storeInfo1.setText("店家名稱:小薇的店 \n" + "聯絡電話:\n"
-				+ "0938065905;0970978949 \n" + "Skype:olive8688 \n"
-				+ "Line ID:olive88888 \n");
-		storeInfo2.setText("");
 
-		store1.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-				store_list1();
+		// 列出所有商品
+		try {
+			ParseQuery<ParseObject> queryCommodity = new ParseQuery<ParseObject>(
+					"Commodity"); // 哪個table
+			Object = queryCommodity.find();// 搜尋物件
+			int sizeob = Object.size(); // 幾筆資料
+			sn = new String[sizeob]; // 商品名稱陣列
+			opr = new int[sizeob]; // 原價陣列
+			pr = new int[sizeob]; // 團購價陣列
+			sc = new int[sizeob]; // 商品類別陣列
+			tableCommodity = new String[sizeob + 1][3];
+
+			int i = 0;
+			for (ParseObject search : Object) {
+				// 取得資料
+				sn[i] = (String) search.get("commodity");
+				opr[i] = (int) search.getInt("originalPrice");
+				pr[i] = (int) search.getInt("price");
+
+				tableCommodity[i][0] = sn[i];
+				tableCommodity[i][1] = Integer.toString(opr[i]);
+				tableCommodity[i][2] = Integer.toString(pr[i]);
+
+				Log.i("tableCommodity", tableCommodity[i][0] + "");
+				Log.i("tableCommodity", tableCommodity[i][1] + "");
+				Log.i("tableCommodity", tableCommodity[i][2] + "");
+
+				i++;
 			}
-		});
-		store2.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-				store_list2();
-			}
-		});
+
+		} catch (Exception e) {
+			Log.i("error", "error");
+		}
+		// 排版
+		setTable();
+
 		/* tab5 */
 		output = (TextView) findViewById(R.id.output);
 		checkBox_service = (CheckBox) findViewById(R.id.checkBox_service);
@@ -892,6 +919,12 @@ public class MainActivity extends FragmentActivity{
 		shareButton = (Button) findViewById(R.id.shareButton);
 		myRecommend = (TextView) findViewById(R.id.myRecommend);
 		keyRecommedn = (Button) findViewById(R.id.keyRecommend);
+
+		output.setTypeface(fontch);
+		shareButton.setTypeface(fontch);
+		myRecommend.setTypeface(fontch);
+		keyRecommedn.setTypeface(fontch);
+
 		if (checkBox_service.isChecked()) {
 			start_Click();
 		} else {
@@ -970,156 +1003,157 @@ public class MainActivity extends FragmentActivity{
 	}
 
 	/* update */
-	public static JSONArray getJson(String url) {
-		InputStream is = null;
-		String result = "";
-		// 若線上資料為陣列，則使用JSONArray
-		JSONArray jsonArray = null;
-		// 若線上資料為單筆資料，則使用JSONObject
-		// JSONObject jsonObj = null;
-		// 透過HTTP連線取得回應
-		try {
-			HttpClient httpclient = new DefaultHttpClient(); // for port 80
-			HttpGet httppost = new HttpGet(url); // 要用Get，用Post會出現
-													// java.lang.string cannot
-													// be converted to jsonarray
-			HttpResponse response = httpclient.execute(httppost);// 沒有值會catch錯誤，加入前面StrictMode就可以
-			HttpEntity entity = response.getEntity();
-			is = entity.getContent();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		// 讀取回應
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					is, "utf8"), 9999999); // 99999為傳流大小，若資料很大，可自行調整
-			StringBuilder sb = new StringBuilder();
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				// 逐行取得資料
-				sb.append(line + "\n");
-			}
-			is.close();
-			result = sb.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		// 轉換文字為JSONArray
-		try {
-			jsonArray = new JSONArray(result);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return jsonArray;
-	}
+	// public static JSONArray getJson(String url) {
+	// InputStream is = null;
+	// String result = "";
+	// // 若線上資料為陣列，則使用JSONArray
+	// JSONArray jsonArray = null;
+	// // 若線上資料為單筆資料，則使用JSONObject
+	// // JSONObject jsonObj = null;
+	// // 透過HTTP連線取得回應
+	// try {
+	// HttpClient httpclient = new DefaultHttpClient(); // for port 80
+	// HttpGet httppost = new HttpGet(url); // 要用Get，用Post會出現
+	// // java.lang.string cannot
+	// // be converted to jsonarray
+	// HttpResponse response = httpclient.execute(httppost);//
+	// 沒有值會catch錯誤，加入前面StrictMode就可以
+	// HttpEntity entity = response.getEntity();
+	// is = entity.getContent();
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// // 讀取回應
+	// try {
+	// BufferedReader reader = new BufferedReader(new InputStreamReader(
+	// is, "utf8"), 9999999); // 99999為傳流大小，若資料很大，可自行調整
+	// StringBuilder sb = new StringBuilder();
+	// String line = null;
+	// while ((line = reader.readLine()) != null) {
+	// // 逐行取得資料
+	// sb.append(line + "\n");
+	// }
+	// is.close();
+	// result = sb.toString();
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// // 轉換文字為JSONArray
+	// try {
+	// jsonArray = new JSONArray(result);
+	// } catch (JSONException e) {
+	// e.printStackTrace();
+	// }
+	// return jsonArray;
+	// }
+	//
+	// public void showUpdateDialog() {
 
-	public void showUpdateDialog() {
+	// @SuppressWarnings("unused")
+	// AlertDialog alert = new AlertDialog.Builder(MainActivity.this)
+	// .setTitle("更新提示").setIcon(android.R.drawable.ic_dialog_info)
+	// .setMessage("最新優惠出來啦，快來下載更新")
+	// .setPositiveButton("下載", new DialogInterface.OnClickListener() {
+	//
+	// public void onClick(DialogInterface dialog, int which) {
+	// dialog.dismiss(); // 關閉對話框
+	// downLoadApk();
+	// }
+	//
+	// }).show();
 
-		// @SuppressWarnings("unused")
-		// AlertDialog alert = new AlertDialog.Builder(MainActivity.this)
-		// .setTitle("更新提示").setIcon(android.R.drawable.ic_dialog_info)
-		// .setMessage("最新優惠出來啦，快來下載更新")
-		// .setPositiveButton("下載", new DialogInterface.OnClickListener() {
-		//
-		// public void onClick(DialogInterface dialog, int which) {
-		// dialog.dismiss(); // 關閉對話框
-		// downLoadApk();
-		// }
-		//
-		// }).show();
+	// }
 
-	}
-
-	protected void downLoadApk() {
-		final ProgressDialog pd; // 進度條對話框
-		pd = new ProgressDialog(this);
-		pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		pd.setMessage("正在下載更新");
-		pd.show();
-		new Thread() {
-			@Override
-			public void run() {
-				try {
-					File file = getFileFromServer(downLoadApkUrl, pd);
-					sleep(3000);
-					installApk(file);
-					pd.dismiss(); // 結束進度條對話框
-				} catch (Exception e) {
-					pd.dismiss();
-					Message msg = new Message();
-					msg.what = DOWN_ERROR;
-					handler.sendMessage(msg);
-					e.printStackTrace();
-				}
-			}
-		}.start();
-	}
-
-	public static File getFileFromServer(String path, ProgressDialog pd)
-			throws Exception {
-		/* 如果相等的話表示當前的SDcard掛載在手機上並且是可用的 */
-		if (Environment.getExternalStorageState().equals(
-				Environment.MEDIA_MOUNTED)) {
-			URL url = new URL(path);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setConnectTimeout(5000);
-			pd.setMax(conn.getContentLength()); // 獲取副本文件大小
-			InputStream is = conn.getInputStream();
-			File file = new File(Environment.getExternalStorageDirectory(),
-					"update.apk");
-			FileOutputStream fos = new FileOutputStream(file);
-			BufferedInputStream bis = new BufferedInputStream(is);
-			byte[] buffer = new byte[1024];
-			int len;
-			int total = 0;
-			while ((len = bis.read(buffer)) != -1) {
-				fos.write(buffer, 0, len);
-				total += len;
-				pd.setProgress(total); // 獲取當前下載量
-			}
-			fos.close();
-			bis.close();
-			is.close();
-			return file;
-		} else {
-			return null;
-		}
-	}
-
-	/* 安裝APK */
-	protected void installApk(File file) {
-		Intent intent = new Intent();
-		intent.setAction(Intent.ACTION_VIEW); // 執行動作
-		intent.setDataAndType(Uri.fromFile(file),
-				"application/vnd.android.package-archive"); // 執行的數據類型
-		startActivity(intent);
-	}
-
-	Handler handler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-			super.handleMessage(msg);
-			switch (msg.what) {
-			case DOWN_ERROR:
-				// 下載APK失敗
-				Toast.makeText(getApplicationContext(), "下載新版本失敗", 1).show();
-				break;
-			case CHECK_UPDATE:
-				// 檢查更新
-
-				if (serverVersion == 0) {
-					serverVersion = newServerVersion;
-				}
-
-				if (serverVersion != newServerVersion) {
-					showUpdateDialog(); // 執行更新
-				}
-				break;
-			}
-		}
-	};
+	// protected void downLoadApk() {
+	// final ProgressDialog pd; // 進度條對話框
+	// pd = new ProgressDialog(this);
+	// pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+	// pd.setMessage("正在下載更新");
+	// pd.show();
+	// new Thread() {
+	// @Override
+	// public void run() {
+	// try {
+	// File file = getFileFromServer(downLoadApkUrl, pd);
+	// sleep(3000);
+	// installApk(file);
+	// pd.dismiss(); // 結束進度條對話框
+	// } catch (Exception e) {
+	// pd.dismiss();
+	// Message msg = new Message();
+	// msg.what = DOWN_ERROR;
+	// handler.sendMessage(msg);
+	// e.printStackTrace();
+	// }
+	// }
+	// }.start();
+	// }
+	//
+	// public static File getFileFromServer(String path, ProgressDialog pd)
+	// throws Exception {
+	// /* 如果相等的話表示當前的SDcard掛載在手機上並且是可用的 */
+	// if (Environment.getExternalStorageState().equals(
+	// Environment.MEDIA_MOUNTED)) {
+	// URL url = new URL(path);
+	// HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	// conn.setConnectTimeout(5000);
+	// pd.setMax(conn.getContentLength()); // 獲取副本文件大小
+	// InputStream is = conn.getInputStream();
+	// File file = new File(Environment.getExternalStorageDirectory(),
+	// "update.apk");
+	// FileOutputStream fos = new FileOutputStream(file);
+	// BufferedInputStream bis = new BufferedInputStream(is);
+	// byte[] buffer = new byte[1024];
+	// int len;
+	// int total = 0;
+	// while ((len = bis.read(buffer)) != -1) {
+	// fos.write(buffer, 0, len);
+	// total += len;
+	// pd.setProgress(total); // 獲取當前下載量
+	// }
+	// fos.close();
+	// bis.close();
+	// is.close();
+	// return file;
+	// } else {
+	// return null;
+	// }
+	// }
+	//
+	// /* 安裝APK */
+	// protected void installApk(File file) {
+	// Intent intent = new Intent();
+	// intent.setAction(Intent.ACTION_VIEW); // 執行動作
+	// intent.setDataAndType(Uri.fromFile(file),
+	// "application/vnd.android.package-archive"); // 執行的數據類型
+	// startActivity(intent);
+	// }
+	//
+	// Handler handler = new Handler() {
+	//
+	// @Override
+	// public void handleMessage(Message msg) {
+	// // TODO Auto-generated method stub
+	// super.handleMessage(msg);
+	// switch (msg.what) {
+	// case DOWN_ERROR:
+	// // 下載APK失敗
+	// Toast.makeText(getApplicationContext(), "下載新版本失敗", 1).show();
+	// break;
+	// case CHECK_UPDATE:
+	// // 檢查更新
+	//
+	// if (serverVersion == 0) {
+	// serverVersion = newServerVersion;
+	// }
+	//
+	// if (serverVersion != newServerVersion) {
+	// showUpdateDialog(); // 執行更新
+	// }
+	// break;
+	// }
+	// }
+	// };
 
 	/* 建立桌面捷徑 */
 	private void addShortcut() {
@@ -1140,19 +1174,20 @@ public class MainActivity extends FragmentActivity{
 	}
 
 	/* tab1 */
-	
-	
+
 	/* tab2 */
-void wheelWidget(){
-	progress();
-	Intent intent = new Intent(this, WheelWidget.class);
-	startActivity(intent);
-}
-	void goToGoogleMap(){
+	void wheelWidget() {
+		progress();
+		Intent intent = new Intent(this, WheelWidget.class);
+		startActivity(intent);
+	}
+
+	void goToGoogleMap() {
 		progress();
 		Intent intent = new Intent(this, GoToGoogleMap.class);
 		startActivity(intent);
 	}
+
 	/* tab3 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1326,17 +1361,71 @@ void wheelWidget(){
 		}
 	}
 
-	void store_list1() {
-		progress();
-		Intent intent = new Intent(this, ListCommodity.class);
-		intent.putExtra("storeName", "小薇的店");
-		startActivity(intent);
+	void setTable() {
+		TableLayout t1 = (TableLayout) findViewById(R.id.tableSet);
+		Log.i("tableCommodity.length", tableCommodity.length + "");
+		imgButton = new ImageButton[tableCommodity.length];
+		// 排版
+		for (int i = 0; i < (tableCommodity.length-1)*3; i++) { // 列
+			TableRow row = new TableRow(this);
+
+			// 第一列 圖片
+			if(i%3==0){
+			Log.i("iiii", i + "");
+			imgButton[i/3] = new ImageButton(this);
+			imgButton[i/3].setImageResource(R.drawable.store + (i/3 + 1));
+			imgButton[i/3].setBackgroundDrawable(null);
+			imgButton[i/3].setId(i/3);
+			imgButton[i/3].setOnClickListener(imgButtonListen);
+			row.addView(imgButton[i/3], 0);
+			}else if(i%3==1){
+			// 第二列 商品名稱
+			TextView tv2 = new TextView(this);
+			tv2.setTextSize(15);
+			tv2.setTypeface(fontch);
+			tv2.setTextColor(Color.WHITE);
+			tv2.setText(tableCommodity[i/3][0] + " ");
+			row.addView(tv2, 0);
+			}else if(i%3==2){
+			// 第三列 價格
+			TextView tv3 = new TextView(this);
+			tv3.setTextSize(15);
+			tv3.setTypeface(fontch);
+			tv3.setTextColor(Color.WHITE);
+			String oprl = tableCommodity[i/3][1];
+			String prl = tableCommodity[i/3][2];
+			String ss = "原價:$" + oprl + "團購價:$" + prl;
+			oprl.length(); // 原價數字長度
+			prl.length();// 團購數字長度
+			Spannable msp = new SpannableString(ss);
+			msp.setSpan(new StrikethroughSpan(), 4, 4 + oprl.length(),
+					Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 刪除線
+			msp.setSpan(new RelativeSizeSpan(2.0f), 9 + oprl.length(),
+					9 + oprl.length() + prl.length(),
+					Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 兩倍大小
+			tv3.setText(msp);
+			row.addView(tv3, 0);
+			}
+			t1.addView(row);
+		}
+
 	}
 
-	void store_list2() {
+	private OnClickListener imgButtonListen = new OnClickListener() {
+		public void onClick(View v) {
+			id = v.getId();
+			Log.i("iddddd", id+"");
+			goToListCommodity();
+
+		}
+	};
+
+	void goToListCommodity() {
 		progress();
 		Intent intent = new Intent(this, ListCommodity.class);
-		startActivity(intent);
+		intent.putExtra("storeName", sn[id]);
+		Log.i("button", sn[id]+"");
+		//startActivity(intent);
 	}
 
 	void progress() {

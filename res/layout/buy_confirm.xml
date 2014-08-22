@@ -161,7 +161,7 @@
         style="@style/ButtonText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/btn_black"
+        android:background="@drawable/btn_lightblue_glossy"
         android:text="@string/confirm" />
     
     <Button
@@ -169,7 +169,7 @@
         style="@style/ButtonText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/btn_black"
+        android:background="@drawable/btn_lightblue_glossy"
         android:text="@string/back" />
 
 </TableLayout>

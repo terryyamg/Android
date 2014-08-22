@@ -60,7 +60,7 @@
                         style="@style/ButtonText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/btn_black"
+                        android:background="@drawable/btn_lightblue_glossy"
                         android:text="@string/wheelWidget" />
 
                     <Button
@@ -68,7 +68,7 @@
                         style="@style/ButtonText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/btn_black"
+                        android:background="@drawable/btn_lightblue_glossy"
                         android:text="@string/openMap" />
                 </TableRow>
             </TableLayout>
@@ -85,7 +85,7 @@
                     style="@style/ButtonText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/btn_black"
+                    android:background="@drawable/btn_lightblue_glossy"
                     android:text="@string/scanner" />
 
                 <TextView
@@ -100,7 +100,7 @@
                     style="@style/ButtonText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/btn_black"
+                    android:background="@drawable/btn_lightblue_glossy"
                     android:text="@string/scanner2" />
 
                 <TextView
@@ -131,77 +131,37 @@
 
                     <EditText
                         android:id="@+id/searchName"
-                        android:layout_width="wrap_content"
+                        android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_column="1"
                         android:ems="10"
+                        android:hint="@string/searchName"
                         android:inputType="none" />
 
                     <Button
                         android:id="@+id/searchButton"
                         style="@style/ButtonText"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
                         android:layout_column="1"
-                        android:background="@drawable/btn_black"
+                        android:background="@drawable/btn_lightblue_glossy"
                         android:text="@string/sendSearch" />
                 </TableRow>
 
-                <ScrollView
-                    android:id="@+id/scrollStore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <ScrollView
+                        android:id="@+id/vs"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical" >
+                        android:scrollbars="vertical" >
 
-                        <TableRow
-                            android:id="@+id/tableRow1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" >
+                        <TableLayout
+                            android:id="@+id/tableSet"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal" >
+                        </TableLayout>
+                    </ScrollView>
 
-                            <ImageButton
-                                android:id="@+id/list_store1"
-                                android:layout_width="150dp"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/btn_black"
-                                android:src="@drawable/store1" />
-
-                            <TextView
-                                android:id="@+id/store1_info"
-                                style="@style/BuyText"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_column="1"
-                                android:gravity="left"
-                                android:text="" />
-                        </TableRow>
-
-                        <TableRow
-                            android:id="@+id/tableRow2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" >
-
-                            <ImageButton
-                                android:id="@+id/list_store2"
-                                android:layout_width="150dp"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/btn_black"
-                                android:src="@drawable/store2" />
-
-                            <TextView
-                                android:id="@+id/store2_info"
-                                style="@style/BuyText"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_column="1"
-                                android:gravity="left"
-                                android:text="" />
-                        </TableRow>
-                    </LinearLayout>
-                </ScrollView>
             </TableLayout>
 
             <TableLayout
@@ -230,7 +190,7 @@
                     style="@style/ButtonText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/btn_black"
+                    android:background="@drawable/btn_lightblue_glossy"
                     android:text="@string/shareButton" />
 
                 <TextView
@@ -245,7 +205,7 @@
                     style="@style/ButtonText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/btn_black"
+                    android:background="@drawable/btn_lightblue_glossy"
                     android:text="@string/keyRecommedn" />
             </TableLayout>
         </FrameLayout>

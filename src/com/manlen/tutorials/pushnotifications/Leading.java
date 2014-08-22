@@ -2,11 +2,13 @@ package com.manlen.tutorials.pushnotifications;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
@@ -30,6 +32,8 @@ public class Leading extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.leading);
+		
+		
 		initDot();
 		initViewPager();
 	}
@@ -61,8 +65,11 @@ public class Leading extends Activity {
 			myViewPager.setOnPageChangeListener(new MyPagerChangeListener());
 		} catch (NullPointerException e) {
 		}
+		/* 字型 */
+		Typeface fontch = Typeface.createFromAsset(getAssets(), "fonts/wt034.ttf");
 		startButton = (Button) view.findViewById(R.id.start); // 與上面對應，獲取這個按鈕
-
+		startButton.setTypeface(fontch);
+		
 		startButton.setOnClickListener(new OnClickListener() {
 
 			@SuppressLint("CommitPrefEdits")

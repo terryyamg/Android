@@ -49,7 +49,7 @@ public class SearchCommodity extends FragmentActivity {
 			pr = new int[sizeob]; // 商品價格陣列
 			tableSearch = new String[sizeob + 1][6];
 			tableSearch[0][0] = "商品圖片";
-			tableSearch[0][1] = "商品介紹";
+			tableSearch[0][1] = "商品名稱";
 			tableSearch[0][2] = "價格";
 			tableSearch[0][3] = "購買";
 			tableSearch[0][4] = "推薦";

@@ -8,23 +8,33 @@ import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class WheelWidget extends Activity {
 	// Scrolling flag
 	private boolean scrolling = false;
 	private int indexFor1;
 	private Button goButton;
-	private int no1=1, no2=0, no3=0;
+	private int no1 = 1, no2 = 0, no3 = 0;
+	private TextView wheeltv;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		/* ¦r«¬ */
+		Typeface fontch = Typeface.createFromAsset(getAssets(), "fonts/wt034.ttf");
+		
 		setContentView(R.layout.cities_layout);
+		wheeltv = (TextView) findViewById(R.id.wheeltv);
 		goButton = (Button) findViewById(R.id.goButton);
+		
+		wheeltv.setTypeface(fontch); //¦r«¬
+		goButton.setTypeface(fontch);
+		
 		goButton.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
