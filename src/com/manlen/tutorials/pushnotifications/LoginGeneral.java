@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
@@ -15,32 +16,56 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.ParseObject;
 
 public class LoginGeneral extends FragmentActivity {
 	private Button login, goBack;
+	private TextView tv1,tv2,tv3,tv4;
 	private EditText userNameEdit, telEdit, addressEdit;
 	private RadioGroup genderRadioGroup;
+	private RadioButton gender_male_button,gender_female_button;
 	private String store, commodityName, arrivalDate, arrivalTime, userName,
 			userTel, userAdd, gender, myName, myTel, myAdd;
 	private int numberIndex, totalPrice;
 	private boolean telboolean, myTelboolean;
 	public ProgressDialog dialog = null;
+	Typeface fontch;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_general);
+		/* 字型 */
+		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt034.ttf");
+		tv1 = (TextView) findViewById(R.id.tv1);
+		tv2 = (TextView) findViewById(R.id.tv2);
+		tv3 = (TextView) findViewById(R.id.tv3);
+		tv4 = (TextView) findViewById(R.id.tv4);
 		login = (Button) findViewById(R.id.login);
 		goBack = (Button) findViewById(R.id.back);
 		userNameEdit = (EditText) findViewById(R.id.userNameEdit);
 		telEdit = (EditText) findViewById(R.id.telEdit);
 		addressEdit = (EditText) findViewById(R.id.addressEdit);
 		genderRadioGroup = (RadioGroup) findViewById(R.id.gender_radio_group);
-
+		gender_male_button= (RadioButton) findViewById(R.id.gender_male_button);
+		gender_female_button= (RadioButton) findViewById(R.id.gender_female_button);
+		
+		tv1.setTypeface(fontch);
+		tv2.setTypeface(fontch);
+		tv3.setTypeface(fontch);
+		tv4.setTypeface(fontch);
+		login.setTypeface(fontch);
+		goBack.setTypeface(fontch);
+		userNameEdit.setTypeface(fontch);
+		telEdit.setTypeface(fontch);
+		addressEdit.setTypeface(fontch);
+		gender_male_button.setTypeface(fontch);
+		gender_female_button.setTypeface(fontch);
 		/* 取得購買資訊 */
 		Intent intent = getIntent();
 		store = intent.getStringExtra("store"); // 取得商店名稱
@@ -154,9 +179,14 @@ public class LoginGeneral extends FragmentActivity {
 
 		login.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
+				try {
 				Pattern pattern2 = Pattern.compile("(09)+[\\d]{8}"); // 正則
 				Matcher matcher2 = pattern2.matcher(myTel);
 				myTelboolean = matcher2.matches();
+				} catch (Exception e) {
+					Log.i("Exception", e + "");
+				}
+
 				if (userName == null && myName == null) {
 					Toast.makeText(getBaseContext(), "姓名尚未填寫",
 							Toast.LENGTH_SHORT).show();
@@ -249,7 +279,7 @@ public class LoginGeneral extends FragmentActivity {
 
 	void goListCommodity() {
 		progress();
-		Intent intent = new Intent(this, ListCommodity.class);
+		Intent intent = new Intent(this, MainActivity.class);
 		intent.putExtra("userTel", userTel); // 傳送使用者電話資料
 		startActivity(intent);
 	}

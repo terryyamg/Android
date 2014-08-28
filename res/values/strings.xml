@@ -20,7 +20,6 @@
     <string name="gender_text_view">性別</string>
     <string name="tel">手機號碼</string>
     <string name="address">地址</string>
-    <string name="login">再次確認</string>
     <string name="back">返回</string>
     <string name="confime_success">推薦成功!</string>
     <string name="confime_failed">推薦失敗</string>
@@ -41,8 +40,11 @@
     <string name="alert_dialog_failed">儲存失敗</string>
     <string name="openMap">使用地圖</string>
     <string name="wheelWidget">選擇地點</string>
+    <string name="logCompany">特約商店登入</string>
+    <string name="storeAccount">帳號</string>
+     <string name="storePassword">密碼</string>
 
-   <style name="ButtonText">
+    <style name="ButtonText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">#ffffff</item>

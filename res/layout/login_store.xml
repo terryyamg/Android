@@ -1,28 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_gravity="center"
+    android:background="@drawable/wallpaper"
     android:gravity="center"
-    android:orientation="vertical"
-    android:background="@drawable/wallpaper" >
+    android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textView"
+    <TableRow
+        android:id="@+id/tableRow1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/recommendNumberEX"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_height="wrap_content" >
 
-    <EditText
-        android:id="@+id/recommendNumber"
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/storeAccount"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/storeAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="none" >
+
+            <requestFocus />
+        </EditText>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="none" >
+        android:layout_height="wrap_content" >
 
-        <requestFocus />
-    </EditText>
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/storePassword"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/storePassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword" >
+        </EditText>
+    </TableRow>
 
     <Button
         android:id="@+id/confime"
@@ -36,15 +65,8 @@
         android:id="@+id/say"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text=""
         android:textColor="#FFF" />
 
-    <Button
-        android:id="@+id/close"
-        style="@style/ButtonText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/btn_lightblue_glossy"
-        android:text="@string/close" />
-
-</LinearLayout>
+</TableLayout>

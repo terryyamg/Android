@@ -12,7 +12,7 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/userName"
+            android:id="@+id/tv1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/userName"
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/gender_text_view"
+            android:id="@+id/tv2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/gender_text_view"
@@ -63,7 +63,7 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/tel"
+            android:id="@+id/tv3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tel"
@@ -86,7 +86,7 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/address"
+            android:id="@+id/tv4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/address"
@@ -106,7 +106,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_lightblue_glossy"
-        android:text="@string/login" />
+        android:text="@string/confirm" />
 
     <Button
         android:id="@+id/back"

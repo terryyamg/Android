@@ -8,12 +8,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StrikethroughSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
@@ -26,61 +32,65 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 public class ListCommodity extends FragmentActivity {
-	private Button close, bc1, bc2;
+	private Button buyButton, recommend;
 	private Button cancel[];
-	private TextView cd1, cd2, price11, price12;
-	private int pr1[], id;
-	private String store, userTel, myTel, storeName, s1[], tableData[][];
+	private ImageView img;
+	private int opr, pr, pn, id;
+	private String store, userTel, myTel, sn, si, tableData[][];
 	public ProgressDialog dialog = null;
 	List<ParseObject> searchObject;
 	List<ParseObject> ob;
+	Typeface fontch;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_commodity);
-		// tab1 取得商品資料
-		Intent intent = getIntent();
-		storeName = intent.getStringExtra("storeName"); // 取得商店名稱
+		/* 字型 */
+		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt034.ttf");
 		try {
+			// tab1 取得商品資料
+			Intent intent = getIntent();
+			sn = intent.getStringExtra("storeName"); // 取得商品名稱
+			opr = intent.getIntExtra("orientPrice", 0); // 取得原始價格
+			pr = intent.getIntExtra("price", 0); // 取得價格
+			pn = intent.getIntExtra("picNumber", 0); // 取得圖片號碼
+			// tab2 抓手機號碼
 			ParseQuery<ParseObject> queryCommodity = new ParseQuery<ParseObject>(
 					"Commodity"); // 哪個table
-			queryCommodity.whereEqualTo("store", storeName); // 條件
-			queryCommodity.orderByAscending("index");// 排序
+			queryCommodity.whereEqualTo("commodity", sn); // 條件
 			searchObject = queryCommodity.find();// 搜尋物件
-			int sizeob = searchObject.size(); // 幾筆資料
-			s1 = new String[sizeob]; // 商品名稱陣列
-			pr1 = new int[sizeob]; // 商品價格陣列
-			int i = 0;
 			for (ParseObject search : searchObject) {
 				// 取得資料
-				s1[i] = (String) search.get("commodity");
-				pr1[i] = (int) search.getInt("price");
-				i++;
+				si = (String) search.get("introduction"); // 商品介紹
+				store = (String) search.get("store"); // 店名
 			}
 
-			// tab2 抓手機號碼
 			SharedPreferences preferences = getApplicationContext()
 					.getSharedPreferences("Android",
 							android.content.Context.MODE_PRIVATE);
 
 			myTel = preferences.getString("myTel", userTel);
-			if(myTel == null){
+			if (myTel == null) {
 				myTel = "0"; // 抓不到手機號碼
 			}
 		} catch (Exception e) {
 			myTel = "0"; // 抓不到手機號碼
 		}
+
+		// 排版
+		setTable();
+
 		/* tab2 */
 		// 搜尋BuyerInfo 使用者的所有購買資訊
 		try {
-			Log.i("myTel2", myTel + "");
+
 			ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(
 					"BuyerInfo");
 			query.whereEqualTo("userTel", myTel);
 			query.orderByDescending("arrivalDate");
 			ob = query.find();
-			Log.i("myTel3", myTel + "");
+
 			int size = ob.size(); // 幾筆資料
 
 			String[] store = new String[size];
@@ -127,38 +137,6 @@ public class ListCommodity extends FragmentActivity {
 		}
 
 		/* tab1 */
-		close = (Button) findViewById(R.id.close);
-		bc1 = (Button) findViewById(R.id.bc1);
-		bc2 = (Button) findViewById(R.id.bc2);
-
-		cd1 = (TextView) findViewById(R.id.cd1);
-		cd2 = (TextView) findViewById(R.id.cd2);
-
-		price11 = (TextView) findViewById(R.id.price11);
-		price12 = (TextView) findViewById(R.id.price12);
-		// 商品說明
-		cd1.setText(s1[0] + "\n四件式比基尼泳裝:定價3980元特價890元 \n");
-		cd2.setText(s1[1] + "\n蘋果牌三件式比基尼泳裝定價2280元特價1690元 \n");
-		// 商品價格
-		price11.setText("NT." + pr1[0]);
-		price12.setText("NT." + pr1[1]);
-		// 第一件商品
-
-		bc1.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-
-				progress();
-				buy(s1[0]);
-			}
-		});
-		bc2.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-				progress();
-				buy(s1[1]);
-			}
-		});
-
-		close.setOnClickListener(back); // 返回
 
 		/* tab2 */
 
@@ -168,18 +146,121 @@ public class ListCommodity extends FragmentActivity {
 	}
 
 	/* tab1 */
-	// 第一件
-	void buy(String name) {
-		Intent intent = new Intent(this, BuyConfirm.class);
-		if (name.equals(s1[0])) {
-			intent.putExtra("commodityName", s1[0]);
-			intent.putExtra("price", pr1[0]);
-		} else if (name.equals(s1[1])) {
-			intent.putExtra("commodityName", s1[1]);
-			intent.putExtra("price", pr1[1]);
+
+	void setTable() {
+		TableLayout t1 = (TableLayout) findViewById(R.id.tableSet);
+		// 排版
+		buyButton = new Button(this);
+		recommend = new Button(this);
+		for (int i = 0; i < 6; i++) { // 列
+			TableRow row = new TableRow(this);
+
+			// 第一列 圖片
+			switch (i) {
+			case 0: // 第一列 商品圖片
+				img = new ImageView(this);
+				img.setImageResource(R.drawable.store + pn);
+				row.addView(img, 0);
+				break;
+			case 1: // 第二列 商品名稱
+				TextView tv2 = new TextView(this);
+				tv2.setTextSize(15);
+				tv2.setTypeface(fontch);
+				tv2.setTextColor(Color.WHITE);
+				tv2.setText(store + "-" + sn + " ");
+				row.addView(tv2, 0);
+				break;
+			case 2:
+				TextView tv3 = new TextView(this);
+				tv3.setTextSize(15);
+				tv3.setTypeface(fontch);
+				tv3.setTextColor(Color.WHITE);
+				String showSi="";
+				String[] siSplit = si.split(":");
+				for(int k=0;k<siSplit.length;k++){
+					showSi = showSi+siSplit[k]+"\n";				
+				}
+				tv3.setText(showSi);
+				row.addView(tv3, 0);
+				break;
+			case 3:
+				TextView tv4 = new TextView(this);
+				tv4.setTextSize(15);
+				tv4.setTypeface(fontch);
+				tv4.setTextColor(Color.WHITE);
+				String oprl = Integer.toString(opr);
+				String prl = Integer.toString(pr);
+				String ss = "原價:$" + oprl + "團購價:$" + prl;
+				oprl.length(); // 原價數字長度
+				prl.length();// 團購數字長度
+				Spannable msp = new SpannableString(ss);
+				msp.setSpan(new StrikethroughSpan(), 4, 4 + oprl.length(),
+						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 刪除線
+				msp.setSpan(new RelativeSizeSpan(2.0f), 9 + oprl.length(), 9
+						+ oprl.length() + prl.length(),
+						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 兩倍大小
+				tv4.setText(msp);
+				row.addView(tv4, 0);
+				break;
+			case 4:
+				buyButton = new Button(this);
+				buyButton.setTypeface(fontch);
+				buyButton.setTextColor(Color.WHITE);
+				buyButton.setBackgroundResource(R.drawable.btn_lightblue_glossy);
+				buyButton.setText("購買");
+				buyButton.setId(i);
+				buyButton.setOnClickListener(bb); // 購買動作
+				row.addView(buyButton, 0);
+				break;
+			case 5:
+				recommend = new Button(this);
+				recommend.setTypeface(fontch);
+				recommend.setTextColor(Color.WHITE);
+				recommend.setBackgroundResource(R.drawable.btn_lightblue_glossy);
+				recommend.setText("推薦");
+				recommend.setId(i);
+				recommend.setOnClickListener(rr); // 推薦動作
+				row.addView(recommend, 0);
+				break;
+
+			}
+			t1.addView(row);
 		}
+
+	}
+
+	// 購買
+	private OnClickListener bb = new OnClickListener() {
+		public void onClick(View v) {
+			progress();
+			buy();
+		}
+	};
+
+	void buy() {
+		Intent intent = new Intent(this, BuyConfirm.class);
+		intent.putExtra("commodityName", sn);
+		intent.putExtra("price", pr);
 		intent.putExtra("store", store);
 		startActivity(intent);
+	}
+
+	private OnClickListener rr = new OnClickListener() {
+		public void onClick(View v) {
+			shareDialog();
+		}
+	};
+
+	// 分享app
+	void shareDialog() {
+
+		String shareText = "好便宜!" + store + "-" + sn + "只賣NT." + pr + "推薦給你 ";
+		Intent shareIntent = new Intent();
+		shareIntent.setAction(Intent.ACTION_SEND);
+		shareIntent.setType("text/plain");
+		shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+		shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+		startActivity(Intent.createChooser(shareIntent, "分享"));
 	}
 
 	void progress() {
@@ -198,13 +279,6 @@ public class ListCommodity extends FragmentActivity {
 		}).start();
 	}
 
-	// 返回
-	private OnClickListener back = new OnClickListener() {
-		public void onClick(View v) {
-			finish();
-		}
-	};
-
 	/* tab2 */
 	public void init() {
 
@@ -216,22 +290,25 @@ public class ListCommodity extends FragmentActivity {
 			for (int j = 0; j < tableData[i].length - 1; j++) { // 行
 				if (i == 0) {
 					TextView tv = new TextView(this); // 設定第一排文字
+					tv.setTypeface(fontch);
 					tv.setTextSize(20);
-					tv.setTextColor(Color.BLACK);
+					tv.setTextColor(Color.WHITE);
 					tv.setText(tableData[i][j] + " ");
 					row.addView(tv, j);
 				} else {
 					if (j < tableData[i].length - 2) { // 設定 其他搜尋到的文字
 						TextView tv = new TextView(this);
+						tv.setTypeface(fontch);
 						tv.setTextSize(20);
-						tv.setTextColor(Color.BLACK);
+						tv.setTextColor(Color.WHITE);
 						tv.setText(tableData[i][j] + " ");
 						row.addView(tv, j);
 					} else if (j == tableData[i].length - 2) { // 設定按鈕
 
 						cancel[i] = new Button(this);
+						cancel[i].setTypeface(fontch);
 						cancel[i].setTextColor(Color.WHITE);
-						cancel[i].setBackgroundResource(R.drawable.btn_black);
+						cancel[i].setBackgroundResource(R.drawable.btn_lightblue_glossy);
 						cancel[i].setText("取消");
 						cancel[i].setId(i);
 						cancel[i].setOnClickListener(cc); // 取消訂單
@@ -261,6 +338,7 @@ public class ListCommodity extends FragmentActivity {
 											tableData[id][7])
 											.deleteEventually(); // Parse指令
 																	// 刪除指定的 row
+									ref();
 								}
 							})
 					.setPositiveButton("不刪除",
@@ -273,6 +351,15 @@ public class ListCommodity extends FragmentActivity {
 		}
 	};
 
+	void ref(){
+		Intent intent = new Intent(this, ListCommodity.class);
+		intent.putExtra("storeName", sn); // 取得商品名稱
+		intent.putExtra("orientPrice", opr); // 取得原始價格
+		intent.putExtra("price", pr); // 取得價格
+		intent.putExtra("picNumber", pn); // 取得圖片號碼
+		startActivity(intent);
+	}
+	
 	private void setupViewComponent() {
 		/* tabHost */
 		// 從資源類別R中取得介面元件

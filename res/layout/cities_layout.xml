@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="18dp"
-         android:background="@drawable/btn_black"
+        android:background="@drawable/btn_lightblue_glossy"
         android:text="確認"
         android:textSize="18sp" />
 

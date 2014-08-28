@@ -4,32 +4,18 @@
     android:layout_height="fill_parent"
     android:background="@drawable/wallpaper" >
 
-    <HorizontalScrollView
-        android:id="@+id/hs"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+    <ScrollView
+                        android:id="@+id/vs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="vertical" >
 
-        <ScrollView
-            android:id="@+id/vs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical" >
-
-            <TableLayout
-                android:id="@+id/tableSearch"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal" >
-            </TableLayout>
-        </ScrollView>
-    </HorizontalScrollView>
-
-    <Button
-        android:id="@+id/close"
-        style="@style/ButtonText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/btn_lightblue_glossy"
-        android:text="@string/back" />
+                        <TableLayout
+                            android:id="@+id/tableSet"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal" >
+                        </TableLayout>
+                    </ScrollView>
 
 </FrameLayout>

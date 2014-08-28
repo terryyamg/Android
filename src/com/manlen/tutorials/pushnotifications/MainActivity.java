@@ -27,7 +27,7 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StrikethroughSpan;
-import android.util.Log;
+
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -558,13 +558,13 @@ public class MainActivity extends FragmentActivity {
 	private Button searchButton;
 	private ImageButton imgButton[];
 	public ProgressDialog dialog = null;
-	private int opr[], pr[], sc[], id;
+	private int opr[], pr[], id, picNumber[];
 	List<ParseObject> Object;
 
 	/* tab5 */
 	private TextView output, myRecommend;
 	private CheckBox checkBox_service;
-	private Button shareButton, keyRecommedn;
+	private Button shareButton, keyRecommedn,logButton;
 	private int recommendFrequency;
 	private String objectId;
 	/* tab6 */
@@ -576,13 +576,13 @@ public class MainActivity extends FragmentActivity {
 	public static final String GENDER_FEMALE = "female";
 
 	Typeface fontch;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		/* 字型 */
-		fontch = Typeface.createFromAsset(getAssets(),
-				"fonts/wt034.ttf");
+		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt034.ttf");
 		/* update */
 		/* 加入StrictMode避免發生 android.os.NetworkOnMainThreadException */
 		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
@@ -880,13 +880,14 @@ public class MainActivity extends FragmentActivity {
 		try {
 			ParseQuery<ParseObject> queryCommodity = new ParseQuery<ParseObject>(
 					"Commodity"); // 哪個table
+			queryCommodity.orderByAscending("picNumber");
 			Object = queryCommodity.find();// 搜尋物件
 			int sizeob = Object.size(); // 幾筆資料
 			sn = new String[sizeob]; // 商品名稱陣列
 			opr = new int[sizeob]; // 原價陣列
 			pr = new int[sizeob]; // 團購價陣列
-			sc = new int[sizeob]; // 商品類別陣列
-			tableCommodity = new String[sizeob + 1][3];
+			picNumber = new int[sizeob]; // 第幾張圖
+			tableCommodity = new String[sizeob + 1][4];
 
 			int i = 0;
 			for (ParseObject search : Object) {
@@ -894,20 +895,18 @@ public class MainActivity extends FragmentActivity {
 				sn[i] = (String) search.get("commodity");
 				opr[i] = (int) search.getInt("originalPrice");
 				pr[i] = (int) search.getInt("price");
+				picNumber[i] = (int) search.getInt("picNumber");
 
 				tableCommodity[i][0] = sn[i];
 				tableCommodity[i][1] = Integer.toString(opr[i]);
 				tableCommodity[i][2] = Integer.toString(pr[i]);
-
-				Log.i("tableCommodity", tableCommodity[i][0] + "");
-				Log.i("tableCommodity", tableCommodity[i][1] + "");
-				Log.i("tableCommodity", tableCommodity[i][2] + "");
+				tableCommodity[i][3] = Integer.toString(picNumber[i]);
 
 				i++;
 			}
 
 		} catch (Exception e) {
-			Log.i("error", "error");
+
 		}
 		// 排版
 		setTable();
@@ -919,12 +918,14 @@ public class MainActivity extends FragmentActivity {
 		shareButton = (Button) findViewById(R.id.shareButton);
 		myRecommend = (TextView) findViewById(R.id.myRecommend);
 		keyRecommedn = (Button) findViewById(R.id.keyRecommend);
-
+		logButton = (Button) findViewById(R.id.logButton);
+		
 		output.setTypeface(fontch);
 		shareButton.setTypeface(fontch);
 		myRecommend.setTypeface(fontch);
 		keyRecommedn.setTypeface(fontch);
-
+		logButton.setTypeface(fontch);
+		
 		if (checkBox_service.isChecked()) {
 			start_Click();
 		} else {
@@ -969,6 +970,12 @@ public class MainActivity extends FragmentActivity {
 			}
 		});
 
+		logButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				logStore();
+			}
+		});
+		
 		// checkBox_service.performClick(); //自動按checkBox
 
 		/* tab5 */
@@ -1363,48 +1370,47 @@ public class MainActivity extends FragmentActivity {
 
 	void setTable() {
 		TableLayout t1 = (TableLayout) findViewById(R.id.tableSet);
-		Log.i("tableCommodity.length", tableCommodity.length + "");
 		imgButton = new ImageButton[tableCommodity.length];
 		// 排版
-		for (int i = 0; i < (tableCommodity.length-1)*3; i++) { // 列
+		for (int i = 0; i < (tableCommodity.length - 1) * 3; i++) { // 列
 			TableRow row = new TableRow(this);
 
 			// 第一列 圖片
-			if(i%3==0){
-			Log.i("iiii", i + "");
-			imgButton[i/3] = new ImageButton(this);
-			imgButton[i/3].setImageResource(R.drawable.store + (i/3 + 1));
-			imgButton[i/3].setBackgroundDrawable(null);
-			imgButton[i/3].setId(i/3);
-			imgButton[i/3].setOnClickListener(imgButtonListen);
-			row.addView(imgButton[i/3], 0);
-			}else if(i%3==1){
-			// 第二列 商品名稱
-			TextView tv2 = new TextView(this);
-			tv2.setTextSize(15);
-			tv2.setTypeface(fontch);
-			tv2.setTextColor(Color.WHITE);
-			tv2.setText(tableCommodity[i/3][0] + " ");
-			row.addView(tv2, 0);
-			}else if(i%3==2){
-			// 第三列 價格
-			TextView tv3 = new TextView(this);
-			tv3.setTextSize(15);
-			tv3.setTypeface(fontch);
-			tv3.setTextColor(Color.WHITE);
-			String oprl = tableCommodity[i/3][1];
-			String prl = tableCommodity[i/3][2];
-			String ss = "原價:$" + oprl + "團購價:$" + prl;
-			oprl.length(); // 原價數字長度
-			prl.length();// 團購數字長度
-			Spannable msp = new SpannableString(ss);
-			msp.setSpan(new StrikethroughSpan(), 4, 4 + oprl.length(),
-					Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 刪除線
-			msp.setSpan(new RelativeSizeSpan(2.0f), 9 + oprl.length(),
-					9 + oprl.length() + prl.length(),
-					Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 兩倍大小
-			tv3.setText(msp);
-			row.addView(tv3, 0);
+			if (i % 3 == 0) {
+				imgButton[i / 3] = new ImageButton(this);
+				imgButton[i / 3].setImageResource(R.drawable.store
+						+ picNumber[i / 3]);
+				imgButton[i / 3].setBackgroundDrawable(null);
+				imgButton[i / 3].setId(i / 3);
+				imgButton[i / 3].setOnClickListener(imgButtonListen);
+				row.addView(imgButton[i / 3], 0);
+			} else if (i % 3 == 1) {
+				// 第二列 商品名稱
+				TextView tv2 = new TextView(this);
+				tv2.setTextSize(15);
+				tv2.setTypeface(fontch);
+				tv2.setTextColor(Color.WHITE);
+				tv2.setText(tableCommodity[i / 3][0] + " ");
+				row.addView(tv2, 0);
+			} else if (i % 3 == 2) {
+				// 第三列 價格
+				TextView tv3 = new TextView(this);
+				tv3.setTextSize(15);
+				tv3.setTypeface(fontch);
+				tv3.setTextColor(Color.WHITE);
+				String oprl = tableCommodity[i / 3][1];
+				String prl = tableCommodity[i / 3][2];
+				String ss = "原價:$" + oprl + "團購價:$" + prl;
+				oprl.length(); // 原價數字長度
+				prl.length();// 團購數字長度
+				Spannable msp = new SpannableString(ss);
+				msp.setSpan(new StrikethroughSpan(), 4, 4 + oprl.length(),
+						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 刪除線
+				msp.setSpan(new RelativeSizeSpan(2.0f), 9 + oprl.length(), 9
+						+ oprl.length() + prl.length(),
+						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 兩倍大小
+				tv3.setText(msp);
+				row.addView(tv3, 0);
 			}
 			t1.addView(row);
 		}
@@ -1414,7 +1420,6 @@ public class MainActivity extends FragmentActivity {
 	private OnClickListener imgButtonListen = new OnClickListener() {
 		public void onClick(View v) {
 			id = v.getId();
-			Log.i("iddddd", id+"");
 			goToListCommodity();
 
 		}
@@ -1424,8 +1429,11 @@ public class MainActivity extends FragmentActivity {
 		progress();
 		Intent intent = new Intent(this, ListCommodity.class);
 		intent.putExtra("storeName", sn[id]);
-		Log.i("button", sn[id]+"");
-		//startActivity(intent);
+		intent.putExtra("orientPrice", opr[id]);
+		intent.putExtra("price", pr[id]);
+		intent.putExtra("picNumber", picNumber[id]);
+
+		startActivity(intent);
 	}
 
 	void progress() {
@@ -1728,6 +1736,11 @@ public class MainActivity extends FragmentActivity {
 		startActivity(intent);
 	}
 
+	void logStore(){
+		Intent intent = new Intent(this, LoginStore.class);
+		startActivity(intent);
+	}
+	
 	/* 儲存設定 */
 	private boolean getFromSP(String key) {
 		SharedPreferences preferences = getApplicationContext()

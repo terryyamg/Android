@@ -3,6 +3,7 @@ package com.manlen.tutorials.pushnotifications;
 import java.util.Calendar;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,16 +23,21 @@ public class BuyConfirm extends FragmentActivity {
 	private Button close, confirm;
 	private ImageButton plus, minus;
 	private EditText number;
-	private TextView name, money;
+	private TextView name, money,tv1,tv2,tv3,tv4,tv5;
 	private DatePicker DatePicker;
 	private String Year, Mon, Day, arrivalTime, commodityName, store;
 	private RadioGroup timeChose;
+	private RadioButton morning,afternoon,night;
 	private int price, numberIndex, totalPrice, nowDate, choseDate;
-
+	Typeface fontch;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.buy_confirm);
+		/* 字型 */
+		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt034.ttf");
+		
 		close = (Button) findViewById(R.id.close);
 		confirm = (Button) findViewById(R.id.confirm);
 		plus = (ImageButton) findViewById(R.id.plus);
@@ -38,13 +45,34 @@ public class BuyConfirm extends FragmentActivity {
 		number = (EditText) findViewById(R.id.number);
 		name = (TextView) findViewById(R.id.name);
 		money = (TextView) findViewById(R.id.money);
+		tv1 = (TextView) findViewById(R.id.tv1);
+		tv2 = (TextView) findViewById(R.id.tv2);
+		tv3 = (TextView) findViewById(R.id.tv3);
+		tv4 = (TextView) findViewById(R.id.tv4);
+		tv5 = (TextView) findViewById(R.id.tv5);
 		timeChose = (RadioGroup) findViewById(R.id.timeChose);
-
+		morning = (RadioButton) findViewById(R.id.morning);
+		afternoon = (RadioButton) findViewById(R.id.afternoon);
+		night = (RadioButton) findViewById(R.id.night);
+		
+		close.setTypeface(fontch);
+		confirm.setTypeface(fontch);
+		name.setTypeface(fontch);
+		money.setTypeface(fontch);
+		tv1.setTypeface(fontch);
+		tv2.setTypeface(fontch);
+		tv3.setTypeface(fontch);
+		tv4.setTypeface(fontch);
+		tv5.setTypeface(fontch);
+		morning.setTypeface(fontch);
+		afternoon.setTypeface(fontch);
+		night.setTypeface(fontch);
 		/* 取得商品名稱與價格 */
 		Intent intent = getIntent();
 		store = intent.getStringExtra("store"); // 取得商店名稱
 		commodityName = intent.getStringExtra("commodityName"); // 取得商品名稱
 		price = intent.getIntExtra("price", 1); // 取得單一價格
+		
 		name.setText(commodityName); // 商品名稱
 
 		number.addTextChangedListener(new TextWatcher() {
