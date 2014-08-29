@@ -46,7 +46,7 @@ public class KeyInRecommendNumber extends FragmentActivity {
 	/* 輸入驗證 */
 	void confimeRecommend() {
 		recommendCol = 10; // user column 數
-		gRecommend = recommendNumber.getText().toString();
+		gRecommend = recommendNumber.getText().toString(); //輸入的推薦碼
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("_Installation");
 		objectId = ParseInstallation.getCurrentInstallation().getObjectId(); // 取出自己的推薦碼
 		firstKey = ParseInstallation.getCurrentInstallation()

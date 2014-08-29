@@ -2,12 +2,14 @@ package com.manlen.tutorials.pushnotifications;
 
 import java.util.List;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,16 +18,19 @@ import android.widget.Toast;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.PushService;
 
 public class LoginStore extends FragmentActivity {
-	private String password, store, scannerName, storeAc, storePs;
+	private String password, store, scannerName, channels, storeAc, storePs;
 	private TextView textView1, textView2, say;
 	private Button confime;
 	private EditText storeAccount, storePassword;
 	Typeface fontch;
 	List<ParseObject> searchObject;
+	public ProgressDialog dialog = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +116,7 @@ public class LoginStore extends FragmentActivity {
 							password = object.getString("password"); // 抓取密碼
 							store = object.getString("store"); // 抓取團購店名
 							scannerName = object.getString("scannerName"); // 抓取特約商店店名
+							channels = object.getString("channels"); // 抓取頻道
 
 							if (storePs.equals(password)) { // 密碼ok
 								checkOk();
@@ -128,10 +134,31 @@ public class LoginStore extends FragmentActivity {
 	}
 
 	void checkOk() {
+		// 存入該手機用戶為商店頻道
+		progress();
+		PushService.subscribe(getApplicationContext(), channels,
+				MainActivity.class);
+
 		Intent intent = new Intent(this, CompanyBackground.class);
 		intent.putExtra("store", store);
 		intent.putExtra("scannerName", scannerName);
 		startActivity(intent);
 		Toast.makeText(getBaseContext(), "登入成功!", Toast.LENGTH_SHORT).show();
+	}
+
+	void progress() {
+		dialog = ProgressDialog.show(this, "讀取中", "請稍後...", true);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(5000);
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					dialog.dismiss();
+				}
+			}
+		}).start();
 	}
 }

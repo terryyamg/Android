@@ -23,28 +23,19 @@
             android:layout_height="fill_parent"
             android:layout_above="@android:id/tabs" >
 
-            <FrameLayout
+            <LinearLayout
                 android:id="@+id/tab1"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_gravity="center_horizontal" >
+                android:gravity="center" >
 
-                <ScrollView
-                    android:id="@+id/vs"
+                <TextView
+                    android:id="@+id/cbtv1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scrollbars="vertical" >
-
-                    <TextView
-                        android:id="@+id/cbtv1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text=""
-                        android:textColor="#FFF" />
-
-                </ScrollView>
-            </FrameLayout>
+                    android:text=""
+                    android:textColor="#FFF" />
+            </LinearLayout>
 
             <FrameLayout
                 android:id="@+id/tab2"

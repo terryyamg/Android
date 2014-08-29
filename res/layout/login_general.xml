@@ -23,7 +23,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="none" />
+            android:inputType="none" >
+
+            <requestFocus />
+        </EditText>
     </TableRow>
 
     <TableRow
@@ -75,8 +78,6 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="phone" >
-
-            <requestFocus />
         </EditText>
     </TableRow>
 

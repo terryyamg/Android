@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 
 public class LoginGeneral extends FragmentActivity {
 	private Button login, goBack;
@@ -30,7 +31,7 @@ public class LoginGeneral extends FragmentActivity {
 	private RadioGroup genderRadioGroup;
 	private RadioButton gender_male_button,gender_female_button;
 	private String store, commodityName, arrivalDate, arrivalTime, userName,
-			userTel, userAdd, gender, myName, myTel, myAdd;
+			userTel, userAdd, gender, myName, myTel, myAdd,storeClass;
 	private int numberIndex, totalPrice;
 	private boolean telboolean, myTelboolean;
 	public ProgressDialog dialog = null;
@@ -74,6 +75,7 @@ public class LoginGeneral extends FragmentActivity {
 		totalPrice = intent.getIntExtra("totalPrice", 1); // 取得總價
 		arrivalDate = intent.getStringExtra("arrivalDate"); // 取得抵達日期
 		arrivalTime = intent.getStringExtra("arrivalTime"); // 取得抵達時段
+		storeClass = intent.getStringExtra("storeClass"); //取的店家頻道
 
 		/* 登入資訊 */
 		// 姓名
@@ -279,6 +281,13 @@ public class LoginGeneral extends FragmentActivity {
 
 	void goListCommodity() {
 		progress();
+		//推撥通知店家頻道
+		ParsePush push = new ParsePush();
+		push.setChannel(storeClass); //選擇頻道
+		Log.i("storeClass", storeClass+"");
+		push.setMessage("您有一筆新的交易通知!!");
+		push.sendInBackground();
+		
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.putExtra("userTel", userTel); // 傳送使用者電話資料
 		startActivity(intent);

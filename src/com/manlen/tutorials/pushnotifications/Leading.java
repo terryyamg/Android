@@ -33,11 +33,30 @@ public class Leading extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.leading);
 		
-		
+		/* 建立桌面捷徑 */
+		addShortcut();
 		initDot();
 		initViewPager();
 	}
 
+	/* 建立桌面捷徑 */
+	private void addShortcut() {
+		Intent shortcutIntent = new Intent(getApplicationContext(),
+				SplashScreen.class); // 啟動捷徑入口，一般用MainActivity，有使用其他入口則填入相對名稱，ex:有使用SplashScreen
+		shortcutIntent.setAction(Intent.ACTION_MAIN);
+		Intent addIntent = new Intent();
+		addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent); // shortcutIntent送入
+		addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
+				getString(R.string.app_name)); // 捷徑app名稱
+		addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+				Intent.ShortcutIconResource.fromContext(
+						getApplicationContext(),// 捷徑app圖
+						R.drawable.ic_launcher));
+		addIntent.putExtra("duplicate", false); // 指創建一次
+		addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT"); // 安裝
+		getApplicationContext().sendBroadcast(addIntent); // 送出廣播
+	}
+	
 	private void initDot() {
 		dot1 = (TextView) this.findViewById(R.id.textView1); // 這些點都是文字
 		dot2 = (TextView) this.findViewById(R.id.textView2);

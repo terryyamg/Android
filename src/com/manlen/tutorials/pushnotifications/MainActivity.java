@@ -27,7 +27,7 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StrikethroughSpan;
-
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,6 +48,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.parse.GetCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
@@ -552,6 +553,8 @@ public class MainActivity extends FragmentActivity {
 	private TextView info, info2, info3;
 	private Button scanner, scanner2;
 	private int scannerError = 0;
+	List<ParseObject> searchSc;
+	
 	/* tab4 */
 	private EditText searchName;
 	private String searchObject, sn[], tableCommodity[][];
@@ -564,7 +567,7 @@ public class MainActivity extends FragmentActivity {
 	/* tab5 */
 	private TextView output, myRecommend;
 	private CheckBox checkBox_service;
-	private Button shareButton, keyRecommedn,logButton;
+	private Button shareButton, keyRecommedn, logButton;
 	private int recommendFrequency;
 	private String objectId;
 	/* tab6 */
@@ -627,8 +630,7 @@ public class MainActivity extends FragmentActivity {
 		// }
 		// }).start();
 
-		/* 建立桌面捷徑 */
-		addShortcut();
+		
 		// Track app opens.
 		ParseAnalytics.trackAppOpened(getIntent());
 
@@ -799,23 +801,39 @@ public class MainActivity extends FragmentActivity {
 			public void onClick(View v) {
 
 				// TODO Auto-generated method stub
-				int scannerNumberInfo0 = ParseInstallation
-						.getCurrentInstallation().getInt("scannerNumber" + 0);
-				int scannerNumberInfo1 = ParseInstallation
-						.getCurrentInstallation().getInt("scannerNumber" + 1);
-				int sumOfUse = scannerNumberInfo0 + scannerNumberInfo1;
-				String setResult[] = { "99度a", "少那之" };
-				info2.setText("您總共已經使用" + Integer.valueOf(sumOfUse).toString()
-						+ "次優惠方案 \n");
+				try {
+					ParseQuery<ParseObject> query = ParseQuery.getQuery("Scanner");
+					query.whereEqualTo("installID", objectId);
+					searchSc = query.find();// 搜尋物件
+					for (ParseObject search : searchSc) {
+						// 取得資料
+						int scannerNumberInfo0 = (int) search.getInt("scannerNumber" + 0);
+						int scannerNumberInfo1 = (int) search.getInt("scannerNumber" + 1);
+						int sumOfUse = scannerNumberInfo0 + scannerNumberInfo1;
+						String setResult[] = { "99度a", "少那之" };
+						info2.setText("您總共已經使用" + Integer.valueOf(sumOfUse).toString()
+								+ "次優惠方案 \n");
 
-				String scannerNextTime0 = ParseInstallation
-						.getCurrentInstallation().getString("scannerTime" + 0);
-				String scannerNextTime1 = ParseInstallation
-						.getCurrentInstallation().getString("scannerTime" + 1);
+						String scannerNextTime0 = (String) search.getString("scannerTime" + 0);
+						String scannerNextTime1 = (String) search.getString("scannerTime" + 1);
+						info3.setText("您下次可以使用" + setResult[0] + "優惠的時間為"
+								+ scannerNextTime0 + "\n" + "您下次可以使用" + setResult[1]
+								+ "優惠的時間為" + scannerNextTime1);
+					}
+				} catch (ParseException e) {
+				}
 
-				info3.setText("您下次可以使用" + setResult[0] + "優惠的時間為"
-						+ scannerNextTime0 + "\n" + "您下次可以使用" + setResult[1]
-						+ "優惠的時間為" + scannerNextTime1);
+				// int scannerNumberInfo0 = ParseInstallation
+				// .getCurrentInstallation().getInt("scannerNumber" + 0);
+				// int scannerNumberInfo1 = ParseInstallation
+				// .getCurrentInstallation().getInt("scannerNumber" + 1);
+				
+				// String scannerNextTime0 = ParseInstallation
+				// .getCurrentInstallation().getString("scannerTime" + 0);
+				// String scannerNextTime1 = ParseInstallation
+				// .getCurrentInstallation().getString("scannerTime" + 1);
+
+				
 			}
 		});
 		scanner.setOnClickListener(new Button.OnClickListener() {
@@ -919,13 +937,13 @@ public class MainActivity extends FragmentActivity {
 		myRecommend = (TextView) findViewById(R.id.myRecommend);
 		keyRecommedn = (Button) findViewById(R.id.keyRecommend);
 		logButton = (Button) findViewById(R.id.logButton);
-		
+
 		output.setTypeface(fontch);
 		shareButton.setTypeface(fontch);
 		myRecommend.setTypeface(fontch);
 		keyRecommedn.setTypeface(fontch);
 		logButton.setTypeface(fontch);
-		
+
 		if (checkBox_service.isChecked()) {
 			start_Click();
 		} else {
@@ -975,7 +993,7 @@ public class MainActivity extends FragmentActivity {
 				logStore();
 			}
 		});
-		
+
 		// checkBox_service.performClick(); //自動按checkBox
 
 		/* tab5 */
@@ -1162,23 +1180,7 @@ public class MainActivity extends FragmentActivity {
 	// }
 	// };
 
-	/* 建立桌面捷徑 */
-	private void addShortcut() {
-		Intent shortcutIntent = new Intent(getApplicationContext(),
-				SplashScreen.class); // 啟動捷徑入口，一般用MainActivity，有使用其他入口則填入相對名稱，ex:有使用SplashScreen
-		shortcutIntent.setAction(Intent.ACTION_MAIN);
-		Intent addIntent = new Intent();
-		addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent); // shortcutIntent送入
-		addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
-				getString(R.string.app_name)); // 捷徑app名稱
-		addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
-				Intent.ShortcutIconResource.fromContext(
-						getApplicationContext(),// 捷徑app圖
-						R.drawable.ic_launcher));
-		addIntent.putExtra("duplicate", false); // 指創建一次
-		addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT"); // 安裝
-		getApplicationContext().sendBroadcast(addIntent); // 送出廣播
-	}
+	
 
 	/* tab1 */
 
@@ -1209,14 +1211,31 @@ public class MainActivity extends FragmentActivity {
 			for (int i = 0; i < setResult.length; i++) {
 				if (setResult[i].equals(result)) {
 					String messsenger = "歡迎使用 \n" + "本公司優惠方案";
-
-					scannerNumber[i] = ParseInstallation
-							.getCurrentInstallation().getInt(
-									"scannerNumber" + i); // 取出第i間掃描次數
-
-					scannerNextTime[i] = ParseInstallation
-							.getCurrentInstallation().getString(
-									"scannerTime" + i); // 取出第i間下次可以掃描時間
+					
+					try {
+						ParseQuery<ParseObject> query = ParseQuery.getQuery("Scanner");
+						query.whereEqualTo("installID", objectId);
+						searchSc = query.find();// 搜尋物件
+						for (ParseObject search : searchSc) {
+							// 取得資料
+							scannerNumber[i] = (int) search.getInt("scannerNumber"+ i); // 取出第i間掃描次數
+							scannerNextTime[i] =(String) search.getString("scannerTime" + i); // 取出第i間下次可以掃描時間
+							Log.i("scannerNumber[i]", scannerNumber[i]+"");
+							Log.i("scannerNextTime[i]", scannerNextTime[i]+"");
+						}
+					} catch (ParseException e) {
+						scannerNumber[i] = 0;
+						scannerNextTime[i] = null;
+						Log.i("eeee", e+"");
+					}
+					
+					// scannerNumber[i] = ParseInstallation
+					// .getCurrentInstallation().getInt(
+					// "scannerNumber" + i); // 取出第i間掃描次數
+					//
+					// scannerNextTime[i] = ParseInstallation
+					// .getCurrentInstallation().getString(
+					// "scannerTime" + i); // 取出第i間下次可以掃描時間
 
 					SimpleDateFormat sdf = new SimpleDateFormat(
 							"yyyy/MM/dd HH:mm:ss"); // 取得小時
@@ -1240,33 +1259,40 @@ public class MainActivity extends FragmentActivity {
 					String sumTime = sdf.format(tdt);// 依照設定格式取得字串
 
 					if (scannerNextTime[i] == null) { // 初次掃描，scannerNextTime為空值
-
-						ParseInstallation.getCurrentInstallation().put(
-								"scannerTime" + i, sumTime);
+						ParseObject scannerTable = new ParseObject("Scanner"); // 建立Scanner table
+						Log.i("objectId", objectId+"");
+						scannerTable.put("installID", objectId); // 輸入installID
 						scannerNumber[i]++;
-						ParseInstallation.getCurrentInstallation().put(
-								"scannerNumber" + i, scannerNumber[i]);
-						ParseInstallation.getCurrentInstallation()
-								.saveInBackground(new SaveCallback() {
-									@Override
-									public void done(ParseException e) {
-										if (e == null) {
-											Toast toast = Toast.makeText(
-													getApplicationContext(),
-													R.string.scanner_success,
-													Toast.LENGTH_SHORT);
-											toast.show();
-										} else {
-											e.printStackTrace();
+						scannerTable.put("scannerNumber" + i, scannerNumber[i]); // 輸入scannerNumber
+						scannerTable.put("scannerTime" + i, sumTime); // 輸入scannerTime
+						scannerTable.saveInBackground(); // 儲存
 
-											Toast toast = Toast.makeText(
-													getApplicationContext(),
-													R.string.scanner_failed,
-													Toast.LENGTH_SHORT);
-											toast.show();
-										}
-									}
-								});
+						// ParseInstallation.getCurrentInstallation().put(
+						// "scannerTime" + i, sumTime);
+						// scannerNumber[i]++;
+						// ParseInstallation.getCurrentInstallation().put(
+						// "scannerNumber" + i, scannerNumber[i]);
+						// ParseInstallation.getCurrentInstallation()
+						// .saveInBackground(new SaveCallback() {
+						// @Override
+						// public void done(ParseException e) {
+						// if (e == null) {
+						// Toast toast = Toast.makeText(
+						// getApplicationContext(),
+						// R.string.scanner_success,
+						// Toast.LENGTH_SHORT);
+						// toast.show();
+						// } else {
+						// e.printStackTrace();
+						//
+						// Toast toast = Toast.makeText(
+						// getApplicationContext(),
+						// R.string.scanner_failed,
+						// Toast.LENGTH_SHORT);
+						// toast.show();
+						// }
+						// }
+						// });
 						info2.setText("您已經使用"
 								+ Integer.valueOf(scannerNumber[i]).toString()
 								+ "次" + setResult[i] + "優惠方案");
@@ -1286,35 +1312,50 @@ public class MainActivity extends FragmentActivity {
 
 						if (snt.before(dt)) { // 抓取出來可掃描時間(過去)snt before
 												// 現在時間dt，可記錄
-
-							ParseInstallation.getCurrentInstallation().put(
-									"scannerTime" + i, sumTime);
 							scannerNumber[i]++;
-							ParseInstallation.getCurrentInstallation().put(
-									"scannerNumber" + i, scannerNumber[i]);
-							ParseInstallation.getCurrentInstallation()
-									.saveInBackground(new SaveCallback() {
-										@Override
-										public void done(ParseException e) {
-											if (e == null) {
-												Toast toast = Toast
-														.makeText(
-																getApplicationContext(),
-																R.string.scanner_success,
-																Toast.LENGTH_SHORT);
-												toast.show();
-											} else {
-												e.printStackTrace();
+							try {
+								ParseQuery<ParseObject> query = ParseQuery.getQuery("Scanner");
+								query.whereEqualTo("installID", objectId);
+								searchSc = query.find();// 搜尋物件
+								for (ParseObject search : searchSc) {
+									// 取得資料
+									search.put("scannerNumber" + i,	scannerNumber[i]); // 輸入scannerNumber
+									search.put("scannerTime" + i, sumTime); // 輸入scannerTime
+									search.saveInBackground(); // 儲存
+								}
+							} catch (ParseException e) {
+								Log.i("eeee", e+"");
+							}
+							
 
-												Toast toast = Toast
-														.makeText(
-																getApplicationContext(),
-																R.string.scanner_failed,
-																Toast.LENGTH_SHORT);
-												toast.show();
-											}
-										}
-									});
+							// ParseInstallation.getCurrentInstallation().put(
+							// "scannerTime" + i, sumTime);
+							// scannerNumber[i]++;
+							// ParseInstallation.getCurrentInstallation().put(
+							// "scannerNumber" + i, scannerNumber[i]);
+							// ParseInstallation.getCurrentInstallation()
+							// .saveInBackground(new SaveCallback() {
+							// @Override
+							// public void done(ParseException e) {
+							// if (e == null) {
+							// Toast toast = Toast
+							// .makeText(
+							// getApplicationContext(),
+							// R.string.scanner_success,
+							// Toast.LENGTH_SHORT);
+							// toast.show();
+							// } else {
+							// e.printStackTrace();
+							//
+							// Toast toast = Toast
+							// .makeText(
+							// getApplicationContext(),
+							// R.string.scanner_failed,
+							// Toast.LENGTH_SHORT);
+							// toast.show();
+							// }
+							// }
+							// });
 							info2.setText("您已經使用"
 									+ Integer.valueOf(scannerNumber[i])
 											.toString() + "次" + setResult[i]
@@ -1736,11 +1777,11 @@ public class MainActivity extends FragmentActivity {
 		startActivity(intent);
 	}
 
-	void logStore(){
+	void logStore() {
 		Intent intent = new Intent(this, LoginStore.class);
 		startActivity(intent);
 	}
-	
+
 	/* 儲存設定 */
 	private boolean getFromSP(String key) {
 		SharedPreferences preferences = getApplicationContext()

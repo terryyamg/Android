@@ -36,7 +36,7 @@ public class ListCommodity extends FragmentActivity {
 	private Button cancel[];
 	private ImageView img;
 	private int opr, pr, pn, id;
-	private String store, userTel, myTel, sn, si, tableData[][];
+	private String store, userTel, myTel, sn, si,storeClass, tableData[][];
 	public ProgressDialog dialog = null;
 	List<ParseObject> searchObject;
 	List<ParseObject> ob;
@@ -64,6 +64,7 @@ public class ListCommodity extends FragmentActivity {
 				// 取得資料
 				si = (String) search.get("introduction"); // 商品介紹
 				store = (String) search.get("store"); // 店名
+				storeClass = (String) search.get("storeClass"); //店家類別
 			}
 
 			SharedPreferences preferences = getApplicationContext()
@@ -242,6 +243,7 @@ public class ListCommodity extends FragmentActivity {
 		intent.putExtra("commodityName", sn);
 		intent.putExtra("price", pr);
 		intent.putExtra("store", store);
+		intent.putExtra("storeClass",storeClass);
 		startActivity(intent);
 	}
 
@@ -329,7 +331,7 @@ public class ListCommodity extends FragmentActivity {
 			// 跳出確認視窗
 			new AlertDialog.Builder(ListCommodity.this)
 					.setTitle("確定刪除?")
-					.setMessage("刪除第" + id + "比資料")
+					.setMessage("刪除第" + id + "筆資料")
 					.setNegativeButton("刪除",
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,

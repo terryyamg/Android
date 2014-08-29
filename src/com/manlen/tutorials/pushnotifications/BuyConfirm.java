@@ -25,7 +25,7 @@ public class BuyConfirm extends FragmentActivity {
 	private EditText number;
 	private TextView name, money,tv1,tv2,tv3,tv4,tv5;
 	private DatePicker DatePicker;
-	private String Year, Mon, Day, arrivalTime, commodityName, store;
+	private String Year, Mon, Day, arrivalTime, commodityName, store,storeClass;
 	private RadioGroup timeChose;
 	private RadioButton morning,afternoon,night;
 	private int price, numberIndex, totalPrice, nowDate, choseDate;
@@ -72,6 +72,7 @@ public class BuyConfirm extends FragmentActivity {
 		store = intent.getStringExtra("store"); // 取得商店名稱
 		commodityName = intent.getStringExtra("commodityName"); // 取得商品名稱
 		price = intent.getIntExtra("price", 1); // 取得單一價格
+		storeClass = intent.getStringExtra("storeClass"); //取的店家頻道
 		
 		name.setText(commodityName); // 商品名稱
 
@@ -229,6 +230,7 @@ public class BuyConfirm extends FragmentActivity {
 			intent.putExtra("totalPrice", totalPrice); // 總價
 			intent.putExtra("arrivalDate", Year + Mon + Day); // 取貨日期
 			intent.putExtra("arrivalTime", arrivalTime); // 取貨日期
+			intent.putExtra("storeClass",storeClass);
 			startActivity(intent);
 		}
 

@@ -29,7 +29,8 @@
                 android:id="@+id/tab1"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_gravity="center_horizontal" >
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/wallpaper1" >
 
                 <ScrollView
                     android:id="@+id/scrollView1"
@@ -46,15 +47,16 @@
 
             <TableLayout
                 android:id="@+id/tab2"
-                android:layout_width="200dp"
+                android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:gravity="center"
-                android:layout_gravity="center" >
+                android:layout_gravity="center"
+                android:background="@drawable/wallpaper2"
+                android:gravity="center" >
 
                 <Button
                     android:id="@+id/wheelWidget"
                     style="@style/ButtonText"
-                    android:layout_width="wrap_content"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_lightblue_glossy"
                     android:text="@string/wheelWidget" />
@@ -67,7 +69,7 @@
                 <Button
                     android:id="@+id/openMap"
                     style="@style/ButtonText"
-                    android:layout_width="wrap_content"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_lightblue_glossy"
                     android:text="@string/openMap" />
@@ -75,15 +77,16 @@
 
             <TableLayout
                 android:id="@+id/tab3"
-                android:layout_width="200dp"
+                android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center_horizontal"
+                android:background="@drawable/wallpaper3"
                 android:paddingTop="70dp" >
 
                 <Button
                     android:id="@+id/scanner"
                     style="@style/ButtonText"
-                    android:layout_width="wrap_content"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_lightblue_glossy"
                     android:text="@string/scanner" />
@@ -98,7 +101,7 @@
                 <Button
                     android:id="@+id/scanner2"
                     style="@style/ButtonText"
-                    android:layout_width="wrap_content"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_lightblue_glossy"
                     android:text="@string/scanner2" />
@@ -122,7 +125,8 @@
                 android:id="@+id/tab4"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_gravity="center_horizontal" >
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/wallpaper4" >
 
                 <TableRow
                     android:id="@+id/tableRow0"
@@ -206,7 +210,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_lightblue_glossy"
                     android:text="@string/keyRecommedn" />
-                
+
                 <Button
                     android:id="@+id/logButton"
                     style="@style/ButtonText"
