@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.manlen.tutorials.pushnotifications"
-    android:versionCode="10"
+    android:versionCode="11"
     android:versionName="1.0" >
 
     <uses-sdk
@@ -84,8 +84,14 @@
         <!-- ShowMarkerInfo -->
         <activity android:name=".ShowMarkerInfo" >
         </activity>
+        <!-- DetailMarkerInfo -->
+         <activity android:name=".DetailMarkerInfo" >
+        </activity>
         <!-- SearchCommodity -->
         <activity android:name=".SearchCommodity" >
+        </activity>
+        <!-- PushStore -->
+        <activity android:name=".PushStore" >
         </activity>
         <!-- GoToGoogleMap -->
         <activity android:name=".GoToGoogleMap" >

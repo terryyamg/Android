@@ -37,7 +37,7 @@ public class LoginStore extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_store);
 		/* ¦r«¬ */
-		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt034.ttf");
+		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt001.ttf");
 
 		textView1 = (TextView) findViewById(R.id.textView1);
 		textView2 = (TextView) findViewById(R.id.textView2);

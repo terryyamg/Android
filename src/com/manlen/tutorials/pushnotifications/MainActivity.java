@@ -27,6 +27,7 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StrikethroughSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -48,7 +49,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.parse.GetCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
@@ -554,7 +554,7 @@ public class MainActivity extends FragmentActivity {
 	private Button scanner, scanner2;
 	private int scannerError = 0;
 	List<ParseObject> searchSc;
-	
+
 	/* tab4 */
 	private EditText searchName;
 	private String searchObject, sn[], tableCommodity[][];
@@ -585,7 +585,8 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		/* 字型 */
-		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt034.ttf");
+		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt001.ttf");
+
 		/* update */
 		/* 加入StrictMode避免發生 android.os.NetworkOnMainThreadException */
 		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
@@ -630,7 +631,6 @@ public class MainActivity extends FragmentActivity {
 		// }
 		// }).start();
 
-		
 		// Track app opens.
 		ParseAnalytics.trackAppOpened(getIntent());
 
@@ -761,26 +761,26 @@ public class MainActivity extends FragmentActivity {
 		// Log.i("map", "NullPointException");
 		// }
 
-		wheelWidget = (Button) findViewById(R.id.wheelWidget);
 		openMap = (Button) findViewById(R.id.openMap);
+		wheelWidget = (Button) findViewById(R.id.wheelWidget);
 
-		wheelWidget.setTypeface(fontch);
 		openMap.setTypeface(fontch);
+		wheelWidget.setTypeface(fontch);
 
-		wheelWidget.setOnClickListener(new Button.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				// TODO Auto-generated method stub
-				wheelWidget();
-			}
-		});
 		openMap.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 
 				// TODO Auto-generated method stub
 				goToGoogleMap();
+			}
+		});
+		wheelWidget.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				// TODO Auto-generated method stub
+				wheelWidget();
 			}
 		});
 		/* tab3 */
@@ -802,23 +802,29 @@ public class MainActivity extends FragmentActivity {
 
 				// TODO Auto-generated method stub
 				try {
-					ParseQuery<ParseObject> query = ParseQuery.getQuery("Scanner");
+					ParseQuery<ParseObject> query = ParseQuery
+							.getQuery("Scanner");
 					query.whereEqualTo("installID", objectId);
 					searchSc = query.find();// 搜尋物件
 					for (ParseObject search : searchSc) {
 						// 取得資料
-						int scannerNumberInfo0 = (int) search.getInt("scannerNumber" + 0);
-						int scannerNumberInfo1 = (int) search.getInt("scannerNumber" + 1);
+						int scannerNumberInfo0 = (int) search
+								.getInt("scannerNumber" + 0);
+						int scannerNumberInfo1 = (int) search
+								.getInt("scannerNumber" + 1);
 						int sumOfUse = scannerNumberInfo0 + scannerNumberInfo1;
 						String setResult[] = { "99度a", "少那之" };
-						info2.setText("您總共已經使用" + Integer.valueOf(sumOfUse).toString()
+						info2.setText("您總共已經使用"
+								+ Integer.valueOf(sumOfUse).toString()
 								+ "次優惠方案 \n");
 
-						String scannerNextTime0 = (String) search.getString("scannerTime" + 0);
-						String scannerNextTime1 = (String) search.getString("scannerTime" + 1);
+						String scannerNextTime0 = (String) search
+								.getString("scannerTime" + 0);
+						String scannerNextTime1 = (String) search
+								.getString("scannerTime" + 1);
 						info3.setText("您下次可以使用" + setResult[0] + "優惠的時間為"
-								+ scannerNextTime0 + "\n" + "您下次可以使用" + setResult[1]
-								+ "優惠的時間為" + scannerNextTime1);
+								+ scannerNextTime0 + "\n" + "您下次可以使用"
+								+ setResult[1] + "優惠的時間為" + scannerNextTime1);
 					}
 				} catch (ParseException e) {
 				}
@@ -827,13 +833,12 @@ public class MainActivity extends FragmentActivity {
 				// .getCurrentInstallation().getInt("scannerNumber" + 0);
 				// int scannerNumberInfo1 = ParseInstallation
 				// .getCurrentInstallation().getInt("scannerNumber" + 1);
-				
+
 				// String scannerNextTime0 = ParseInstallation
 				// .getCurrentInstallation().getString("scannerTime" + 0);
 				// String scannerNextTime1 = ParseInstallation
 				// .getCurrentInstallation().getString("scannerTime" + 1);
 
-				
 			}
 		});
 		scanner.setOnClickListener(new Button.OnClickListener() {
@@ -1180,8 +1185,6 @@ public class MainActivity extends FragmentActivity {
 	// }
 	// };
 
-	
-
 	/* tab1 */
 
 	/* tab2 */
@@ -1211,31 +1214,24 @@ public class MainActivity extends FragmentActivity {
 			for (int i = 0; i < setResult.length; i++) {
 				if (setResult[i].equals(result)) {
 					String messsenger = "歡迎使用 \n" + "本公司優惠方案";
-					
+
 					try {
-						ParseQuery<ParseObject> query = ParseQuery.getQuery("Scanner");
+						ParseQuery<ParseObject> query = ParseQuery
+								.getQuery("Scanner");
 						query.whereEqualTo("installID", objectId);
 						searchSc = query.find();// 搜尋物件
 						for (ParseObject search : searchSc) {
 							// 取得資料
-							scannerNumber[i] = (int) search.getInt("scannerNumber"+ i); // 取出第i間掃描次數
-							scannerNextTime[i] =(String) search.getString("scannerTime" + i); // 取出第i間下次可以掃描時間
-							Log.i("scannerNumber[i]", scannerNumber[i]+"");
-							Log.i("scannerNextTime[i]", scannerNextTime[i]+"");
+							scannerNumber[i] = (int) search
+									.getInt("scannerNumber" + i); // 取出第i間掃描次數
+							scannerNextTime[i] = (String) search
+									.getString("scannerTime" + i); // 取出第i間下次可以掃描時間
 						}
 					} catch (ParseException e) {
 						scannerNumber[i] = 0;
 						scannerNextTime[i] = null;
-						Log.i("eeee", e+"");
+						Log.i("eeee", e + "");
 					}
-					
-					// scannerNumber[i] = ParseInstallation
-					// .getCurrentInstallation().getInt(
-					// "scannerNumber" + i); // 取出第i間掃描次數
-					//
-					// scannerNextTime[i] = ParseInstallation
-					// .getCurrentInstallation().getString(
-					// "scannerTime" + i); // 取出第i間下次可以掃描時間
 
 					SimpleDateFormat sdf = new SimpleDateFormat(
 							"yyyy/MM/dd HH:mm:ss"); // 取得小時
@@ -1259,40 +1255,15 @@ public class MainActivity extends FragmentActivity {
 					String sumTime = sdf.format(tdt);// 依照設定格式取得字串
 
 					if (scannerNextTime[i] == null) { // 初次掃描，scannerNextTime為空值
-						ParseObject scannerTable = new ParseObject("Scanner"); // 建立Scanner table
-						Log.i("objectId", objectId+"");
+						ParseObject scannerTable = new ParseObject("Scanner"); // 建立Scanner
+																				// table
+						Log.i("objectId", objectId + "");
 						scannerTable.put("installID", objectId); // 輸入installID
 						scannerNumber[i]++;
 						scannerTable.put("scannerNumber" + i, scannerNumber[i]); // 輸入scannerNumber
 						scannerTable.put("scannerTime" + i, sumTime); // 輸入scannerTime
 						scannerTable.saveInBackground(); // 儲存
 
-						// ParseInstallation.getCurrentInstallation().put(
-						// "scannerTime" + i, sumTime);
-						// scannerNumber[i]++;
-						// ParseInstallation.getCurrentInstallation().put(
-						// "scannerNumber" + i, scannerNumber[i]);
-						// ParseInstallation.getCurrentInstallation()
-						// .saveInBackground(new SaveCallback() {
-						// @Override
-						// public void done(ParseException e) {
-						// if (e == null) {
-						// Toast toast = Toast.makeText(
-						// getApplicationContext(),
-						// R.string.scanner_success,
-						// Toast.LENGTH_SHORT);
-						// toast.show();
-						// } else {
-						// e.printStackTrace();
-						//
-						// Toast toast = Toast.makeText(
-						// getApplicationContext(),
-						// R.string.scanner_failed,
-						// Toast.LENGTH_SHORT);
-						// toast.show();
-						// }
-						// }
-						// });
 						info2.setText("您已經使用"
 								+ Integer.valueOf(scannerNumber[i]).toString()
 								+ "次" + setResult[i] + "優惠方案");
@@ -1314,48 +1285,21 @@ public class MainActivity extends FragmentActivity {
 												// 現在時間dt，可記錄
 							scannerNumber[i]++;
 							try {
-								ParseQuery<ParseObject> query = ParseQuery.getQuery("Scanner");
+								ParseQuery<ParseObject> query = ParseQuery
+										.getQuery("Scanner");
 								query.whereEqualTo("installID", objectId);
 								searchSc = query.find();// 搜尋物件
 								for (ParseObject search : searchSc) {
 									// 取得資料
-									search.put("scannerNumber" + i,	scannerNumber[i]); // 輸入scannerNumber
+									search.put("scannerNumber" + i,
+											scannerNumber[i]); // 輸入scannerNumber
 									search.put("scannerTime" + i, sumTime); // 輸入scannerTime
 									search.saveInBackground(); // 儲存
 								}
 							} catch (ParseException e) {
-								Log.i("eeee", e+"");
+								Log.i("eeee", e + "");
 							}
-							
 
-							// ParseInstallation.getCurrentInstallation().put(
-							// "scannerTime" + i, sumTime);
-							// scannerNumber[i]++;
-							// ParseInstallation.getCurrentInstallation().put(
-							// "scannerNumber" + i, scannerNumber[i]);
-							// ParseInstallation.getCurrentInstallation()
-							// .saveInBackground(new SaveCallback() {
-							// @Override
-							// public void done(ParseException e) {
-							// if (e == null) {
-							// Toast toast = Toast
-							// .makeText(
-							// getApplicationContext(),
-							// R.string.scanner_success,
-							// Toast.LENGTH_SHORT);
-							// toast.show();
-							// } else {
-							// e.printStackTrace();
-							//
-							// Toast toast = Toast
-							// .makeText(
-							// getApplicationContext(),
-							// R.string.scanner_failed,
-							// Toast.LENGTH_SHORT);
-							// toast.show();
-							// }
-							// }
-							// });
 							info2.setText("您已經使用"
 									+ Integer.valueOf(scannerNumber[i])
 											.toString() + "次" + setResult[i]
@@ -1411,6 +1355,7 @@ public class MainActivity extends FragmentActivity {
 
 	void setTable() {
 		TableLayout t1 = (TableLayout) findViewById(R.id.tableSet);
+
 		imgButton = new ImageButton[tableCommodity.length];
 		// 排版
 		for (int i = 0; i < (tableCommodity.length - 1) * 3; i++) { // 列
@@ -1430,7 +1375,7 @@ public class MainActivity extends FragmentActivity {
 				TextView tv2 = new TextView(this);
 				tv2.setTextSize(15);
 				tv2.setTypeface(fontch);
-				tv2.setTextColor(Color.WHITE);
+				tv2.setTextColor(Color.BLACK);
 				tv2.setText(tableCommodity[i / 3][0] + " ");
 				row.addView(tv2, 0);
 			} else if (i % 3 == 2) {
@@ -1438,18 +1383,22 @@ public class MainActivity extends FragmentActivity {
 				TextView tv3 = new TextView(this);
 				tv3.setTextSize(15);
 				tv3.setTypeface(fontch);
-				tv3.setTextColor(Color.WHITE);
+				tv3.setTextColor(Color.BLACK);
 				String oprl = tableCommodity[i / 3][1];
 				String prl = tableCommodity[i / 3][2];
-				String ss = "原價:$" + oprl + "團購價:$" + prl;
+				String ss = "原價:$" + oprl + "  團購價:$" + prl;
 				oprl.length(); // 原價數字長度
 				prl.length();// 團購數字長度
 				Spannable msp = new SpannableString(ss);
 				msp.setSpan(new StrikethroughSpan(), 4, 4 + oprl.length(),
 						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 刪除線
-				msp.setSpan(new RelativeSizeSpan(2.0f), 9 + oprl.length(), 9
+				msp.setSpan(new RelativeSizeSpan(2.0f), 11 + oprl.length(), 11
 						+ oprl.length() + prl.length(),
 						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 兩倍大小
+				msp.setSpan(
+						new StyleSpan(android.graphics.Typeface.BOLD_ITALIC),
+						11 + oprl.length(), 11 + oprl.length() + prl.length(),
+						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); //斜字體
 				tv3.setText(msp);
 				row.addView(tv3, 0);
 			}
@@ -1805,12 +1754,12 @@ public class MainActivity extends FragmentActivity {
 		TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
 		tabHost.setup();
 
-		TabSpec spec = tabHost.newTabSpec("tab1");
-		spec.setContent(R.id.tab1);
-		spec.setIndicator("", getResources().getDrawable(R.drawable.tab1));
-		tabHost.addTab(spec);
+		// TabSpec spec = tabHost.newTabSpec("tab1");
+		// spec.setContent(R.id.tab1);
+		// spec.setIndicator("", getResources().getDrawable(R.drawable.tab1));
+		// tabHost.addTab(spec);
 
-		spec = tabHost.newTabSpec("tab2");
+		TabSpec spec = tabHost.newTabSpec("tab2");
 		spec.setIndicator("", getResources().getDrawable(R.drawable.tab2));
 		spec.setContent(R.id.tab2);
 		tabHost.addTab(spec);
@@ -1829,11 +1778,6 @@ public class MainActivity extends FragmentActivity {
 		spec.setIndicator("", getResources().getDrawable(R.drawable.tab5));
 		spec.setContent(R.id.tab5);
 		tabHost.addTab(spec);
-
-		// spec = tabHost.newTabSpec("tab5");
-		// spec.setIndicator("", getResources().getDrawable(R.drawable.tab5));
-		// spec.setContent(R.id.tab5);
-		// tabHost.addTab(spec);
 
 		tabHost.setCurrentTab(0);
 
@@ -1860,14 +1804,10 @@ public class MainActivity extends FragmentActivity {
 		tab.setTextSize(15);
 		tab.setTextColor(Color.LTGRAY);
 
-		tabView = tabWidget.getChildTabViewAt(4);
-		tab = (TextView) tabView.findViewById(android.R.id.title);
-		tab.setTextSize(15);
-		tab.setTextColor(Color.LTGRAY);
-
 		// tabView = tabWidget.getChildTabViewAt(4);
 		// tab = (TextView) tabView.findViewById(android.R.id.title);
-		// tab.setTextSize(10);
+		// tab.setTextSize(15);
+		// tab.setTextColor(Color.LTGRAY);
 
 	}
 

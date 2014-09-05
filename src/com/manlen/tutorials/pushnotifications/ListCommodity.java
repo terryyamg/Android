@@ -16,9 +16,13 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StrikethroughSpan;
+import android.text.style.StyleSpan;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
@@ -36,7 +40,7 @@ public class ListCommodity extends FragmentActivity {
 	private Button cancel[];
 	private ImageView img;
 	private int opr, pr, pn, id;
-	private String store, userTel, myTel, sn, si,storeClass, tableData[][];
+	private String store, userTel, myTel, sn, si, storeClass, tableData[][];
 	public ProgressDialog dialog = null;
 	List<ParseObject> searchObject;
 	List<ParseObject> ob;
@@ -47,7 +51,7 @@ public class ListCommodity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_commodity);
 		/* 字型 */
-		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt034.ttf");
+		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt001.ttf");
 		try {
 			// tab1 取得商品資料
 			Intent intent = getIntent();
@@ -64,7 +68,7 @@ public class ListCommodity extends FragmentActivity {
 				// 取得資料
 				si = (String) search.get("introduction"); // 商品介紹
 				store = (String) search.get("store"); // 店名
-				storeClass = (String) search.get("storeClass"); //店家類別
+				storeClass = (String) search.get("storeClass"); // 店家類別
 			}
 
 			SharedPreferences preferences = getApplicationContext()
@@ -150,6 +154,7 @@ public class ListCommodity extends FragmentActivity {
 
 	void setTable() {
 		TableLayout t1 = (TableLayout) findViewById(R.id.tableSet);
+
 		// 排版
 		buyButton = new Button(this);
 		recommend = new Button(this);
@@ -160,54 +165,59 @@ public class ListCommodity extends FragmentActivity {
 			switch (i) {
 			case 0: // 第一列 商品圖片
 				img = new ImageView(this);
-				img.setImageResource(R.drawable.store + pn);
+				img.setImageResource(R.drawable.store + pn);				
 				row.addView(img, 0);
 				break;
 			case 1: // 第二列 商品名稱
 				TextView tv2 = new TextView(this);
-				tv2.setTextSize(15);
+				tv2.setTextSize(20);
 				tv2.setTypeface(fontch);
-				tv2.setTextColor(Color.WHITE);
-				tv2.setText(store + "-" + sn + " ");
+				tv2.setTextColor(Color.BLACK);
+				tv2.setText(store + "\n" + sn + " ");
 				row.addView(tv2, 0);
 				break;
 			case 2:
 				TextView tv3 = new TextView(this);
-				tv3.setTextSize(15);
+				tv3.setTextSize(20);
 				tv3.setTypeface(fontch);
-				tv3.setTextColor(Color.WHITE);
-				String showSi="";
+				tv3.setTextColor(Color.BLACK);
+				String showSi = "";
 				String[] siSplit = si.split(":");
-				for(int k=0;k<siSplit.length;k++){
-					showSi = showSi+siSplit[k]+"\n";				
+				for (int k = 0; k < siSplit.length; k++) {
+					showSi = showSi + siSplit[k] + "\n";
 				}
 				tv3.setText(showSi);
 				row.addView(tv3, 0);
 				break;
 			case 3:
 				TextView tv4 = new TextView(this);
-				tv4.setTextSize(15);
+				tv4.setTextSize(20);
 				tv4.setTypeface(fontch);
-				tv4.setTextColor(Color.WHITE);
+				tv4.setTextColor(Color.BLACK);
 				String oprl = Integer.toString(opr);
 				String prl = Integer.toString(pr);
-				String ss = "原價:$" + oprl + "團購價:$" + prl;
+				String ss = "原價:$" + oprl + "  團購價:$" + prl;
 				oprl.length(); // 原價數字長度
 				prl.length();// 團購數字長度
 				Spannable msp = new SpannableString(ss);
 				msp.setSpan(new StrikethroughSpan(), 4, 4 + oprl.length(),
 						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 刪除線
-				msp.setSpan(new RelativeSizeSpan(2.0f), 9 + oprl.length(), 9
+				msp.setSpan(new RelativeSizeSpan(2.0f), 11 + oprl.length(), 11
 						+ oprl.length() + prl.length(),
 						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 兩倍大小
+				msp.setSpan(
+						new StyleSpan(android.graphics.Typeface.BOLD_ITALIC),
+						11 + oprl.length(), 11 + oprl.length() + prl.length(),
+						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); //斜字體
 				tv4.setText(msp);
 				row.addView(tv4, 0);
 				break;
 			case 4:
 				buyButton = new Button(this);
 				buyButton.setTypeface(fontch);
-				buyButton.setTextColor(Color.WHITE);
-				buyButton.setBackgroundResource(R.drawable.btn_lightblue_glossy);
+				buyButton.setTextColor(Color.BLACK);
+				buyButton
+						.setBackgroundResource(R.drawable.btn_lightblue_glossy);
 				buyButton.setText("購買");
 				buyButton.setId(i);
 				buyButton.setOnClickListener(bb); // 購買動作
@@ -216,8 +226,9 @@ public class ListCommodity extends FragmentActivity {
 			case 5:
 				recommend = new Button(this);
 				recommend.setTypeface(fontch);
-				recommend.setTextColor(Color.WHITE);
-				recommend.setBackgroundResource(R.drawable.btn_lightblue_glossy);
+				recommend.setTextColor(Color.BLACK);
+				recommend
+						.setBackgroundResource(R.drawable.btn_lightblue_glossy);
 				recommend.setText("推薦");
 				recommend.setId(i);
 				recommend.setOnClickListener(rr); // 推薦動作
@@ -243,7 +254,7 @@ public class ListCommodity extends FragmentActivity {
 		intent.putExtra("commodityName", sn);
 		intent.putExtra("price", pr);
 		intent.putExtra("store", store);
-		intent.putExtra("storeClass",storeClass);
+		intent.putExtra("storeClass", storeClass);
 		startActivity(intent);
 	}
 
@@ -294,7 +305,7 @@ public class ListCommodity extends FragmentActivity {
 					TextView tv = new TextView(this); // 設定第一排文字
 					tv.setTypeface(fontch);
 					tv.setTextSize(20);
-					tv.setTextColor(Color.WHITE);
+					tv.setTextColor(Color.BLACK);
 					tv.setText(tableData[i][j] + " ");
 					row.addView(tv, j);
 				} else {
@@ -302,15 +313,16 @@ public class ListCommodity extends FragmentActivity {
 						TextView tv = new TextView(this);
 						tv.setTypeface(fontch);
 						tv.setTextSize(20);
-						tv.setTextColor(Color.WHITE);
+						tv.setTextColor(Color.BLACK);
 						tv.setText(tableData[i][j] + " ");
 						row.addView(tv, j);
 					} else if (j == tableData[i].length - 2) { // 設定按鈕
 
 						cancel[i] = new Button(this);
 						cancel[i].setTypeface(fontch);
-						cancel[i].setTextColor(Color.WHITE);
-						cancel[i].setBackgroundResource(R.drawable.btn_lightblue_glossy);
+						cancel[i].setTextColor(Color.BLACK);
+						cancel[i]
+								.setBackgroundResource(R.drawable.btn_lightblue_glossy);
 						cancel[i].setText("取消");
 						cancel[i].setId(i);
 						cancel[i].setOnClickListener(cc); // 取消訂單
@@ -353,7 +365,7 @@ public class ListCommodity extends FragmentActivity {
 		}
 	};
 
-	void ref(){
+	void ref() {
 		Intent intent = new Intent(this, ListCommodity.class);
 		intent.putExtra("storeName", sn); // 取得商品名稱
 		intent.putExtra("orientPrice", opr); // 取得原始價格
@@ -361,7 +373,7 @@ public class ListCommodity extends FragmentActivity {
 		intent.putExtra("picNumber", pn); // 取得圖片號碼
 		startActivity(intent);
 	}
-	
+
 	private void setupViewComponent() {
 		/* tabHost */
 		// 從資源類別R中取得介面元件
@@ -386,12 +398,10 @@ public class ListCommodity extends FragmentActivity {
 				.findViewById(android.R.id.tabs);
 		View tabView = tabWidget.getChildTabViewAt(0);
 		TextView tab = (TextView) tabView.findViewById(android.R.id.title);
-		tab.setTextSize(15);
-		tab.setTextColor(Color.LTGRAY);
+		tab.setTextSize(20);
 
 		tabView = tabWidget.getChildTabViewAt(1);
 		tab = (TextView) tabView.findViewById(android.R.id.title);
-		tab.setTextSize(15);
-		tab.setTextColor(Color.LTGRAY);
+		tab.setTextSize(20);
 	}
 }

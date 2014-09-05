@@ -42,7 +42,7 @@ public class LoginGeneral extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_general);
 		/* ¦r«¬ */
-		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt034.ttf");
+		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt001.ttf");
 		tv1 = (TextView) findViewById(R.id.tv1);
 		tv2 = (TextView) findViewById(R.id.tv2);
 		tv3 = (TextView) findViewById(R.id.tv3);

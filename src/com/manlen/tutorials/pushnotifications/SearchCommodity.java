@@ -43,7 +43,7 @@ public class SearchCommodity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search_commodity);
 		/* 字型 */
-		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt034.ttf");
+		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt001.ttf");
 		Intent intent = getIntent();
 		searchName = intent.getStringExtra("searchName"); // 取得搜尋名稱
 		Log.i("search", searchName + "");
@@ -105,7 +105,7 @@ public class SearchCommodity extends FragmentActivity {
 				TextView tv2 = new TextView(this);
 				tv2.setTextSize(15);
 				tv2.setTypeface(fontch);
-				tv2.setTextColor(Color.WHITE);
+				tv2.setTextColor(Color.BLACK);
 				tv2.setText(tableSearch[i / 3][0] + " ");
 				row.addView(tv2, 0);
 			} else if (i % 3 == 2) {
@@ -113,7 +113,7 @@ public class SearchCommodity extends FragmentActivity {
 				TextView tv3 = new TextView(this);
 				tv3.setTextSize(15);
 				tv3.setTypeface(fontch);
-				tv3.setTextColor(Color.WHITE);
+				tv3.setTextColor(Color.BLACK);
 				String oprl = tableSearch[i / 3][1];
 				String prl = tableSearch[i / 3][2];
 				String ss = "原價:$" + oprl + "團購價:$" + prl;

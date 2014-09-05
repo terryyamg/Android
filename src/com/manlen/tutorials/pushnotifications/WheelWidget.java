@@ -26,7 +26,7 @@ public class WheelWidget extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		/* ¦r«¬ */
-		Typeface fontch = Typeface.createFromAsset(getAssets(), "fonts/wt034.ttf");
+		Typeface fontch = Typeface.createFromAsset(getAssets(), "fonts/wt001.ttf");
 		
 		setContentView(R.layout.cities_layout);
 		wheeltv = (TextView) findViewById(R.id.wheeltv);

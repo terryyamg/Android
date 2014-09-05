@@ -1,5 +1,7 @@
 package com.manlen.tutorials.pushnotifications;
 
+import com.parse.ParseInstallation;
+
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,8 +10,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-
-
 
 public class GPSService extends Service implements LocationListener {
 	private LocationManager manager;
@@ -425,187 +425,294 @@ public class GPSService extends Service implements LocationListener {
 			dest.setLongitude(longitude190[i]);
 			distance190[i] = current.distanceTo(dest);// 計算19的所有座標距離
 		}
-try{
-		if (distance00[0] < 1000.0 || distance00[1] < 1000.0
-				|| distance00[2] < 1000.0 || distance00[3] < 1000.0
-				|| distance00[4] < 1000.0 || distance00[5] < 1000.0
-				|| distance00[6] < 1000.0 || distance00[7] < 1000.0
-				|| distance10[0] < 1000.0 || distance10[1] < 1000.0
-				|| distance10[2] < 1000.0 || distance10[3] < 1000.0
-				|| distance10[4] < 1000.0 || distance10[5] < 1000.0
-				|| distance10[6] < 1000.0 || distance10[7] < 1000.0
-				|| distance10[8] < 1000.0 || distance10[9] < 1000.0
-				|| distance10[10] < 1000.0 || distance10[11] < 1000.0
-				|| distance10[12] < 1000.0 || distance10[13] < 1000.0
-				|| distance10[14] < 1000.0 || distance10[15] < 1000.0
-				|| distance10[16] < 1000.0 || distance10[17] < 1000.0
-				|| distance10[18] < 1000.0 || distance10[19] < 1000.0
-				|| distance10[20] < 1000.0 || distance10[21] < 1000.0
-				|| distance10[22] < 1000.0 || distance10[23] < 1000.0
-				|| distance10[24] < 1000.0 || distance10[25] < 1000.0
-				|| distance10[26] < 1000.0 || distance10[27] < 1000.0
-				|| distance10[28] < 1000.0 || distance10[29] < 1000.0
-				|| distance10[30] < 1000.0 || distance10[31] < 1000.0
-				|| distance10[32] < 1000.0 || distance10[33] < 1000.0
-				|| distance10[34] < 1000.0 || distance10[35] < 1000.0
-				|| distance10[36] < 1000.0 || distance10[37] < 1000.0
-				|| distance10[38] < 1000.0 || distance10[39] < 1000.0
-				|| distance10[40] < 1000.0 || distance20[0] < 1000.0
-				|| distance20[1] < 1000.0 || distance20[2] < 1000.0
-				|| distance20[3] < 1000.0 || distance20[4] < 1000.0
-				|| distance20[5] < 1000.0 || distance20[6] < 1000.0
-				|| distance20[7] < 1000.0 || distance20[8] < 1000.0
-				|| distance20[9] < 1000.0 || distance20[10] < 1000.0
-				|| distance20[11] < 1000.0 || distance20[12] < 1000.0
-				|| distance20[13] < 1000.0 || distance20[14] < 1000.0
-				|| distance20[15] < 1000.0 || distance20[16] < 1000.0
-				|| distance20[17] < 1000.0 || distance20[18] < 1000.0
-				|| distance20[19] < 1000.0 || distance20[20] < 1000.0
-				|| distance20[21] < 1000.0 || distance20[22] < 1000.0
-				|| distance20[23] < 1000.0 || distance20[24] < 1000.0
-				|| distance20[25] < 1000.0 || distance20[26] < 1000.0
-				|| distance20[27] < 1000.0 || distance20[28] < 1000.0
-				|| distance20[29] < 1000.0 || distance20[30] < 1000.0
-				|| distance20[31] < 1000.0 || distance20[32] < 1000.0
-				|| distance20[33] < 1000.0 || distance20[34] < 1000.0
-				|| distance20[35] < 1000.0 || distance20[36] < 1000.0
-				|| distance20[37] < 1000.0 || distance20[38] < 1000.0
-				|| distance20[39] < 1000.0 || distance20[40] < 1000.0
-				|| distance20[41] < 1000.0 || distance20[42] < 1000.0
-				|| distance20[43] < 1000.0 || distance20[44] < 1000.0
-				|| distance20[45] < 1000.0 || distance20[46] < 1000.0
-				|| distance20[47] < 1000.0 || distance20[48] < 1000.0
-				|| distance20[49] < 1000.0 || distance20[50] < 1000.0
-				|| distance20[51] < 1000.0 || distance20[52] < 1000.0
-				|| distance20[53] < 1000.0 || distance20[54] < 1000.0
-				|| distance20[55] < 1000.0 || distance20[56] < 1000.0
-				|| distance20[57] < 1000.0 || distance20[58] < 1000.0
-				|| distance20[59] < 1000.0 || distance20[60] < 1000.0
-				|| distance20[61] < 1000.0 || distance20[62] < 1000.0
-				|| distance20[63] < 1000.0 || distance20[64] < 1000.0
-				|| distance20[65] < 1000.0 || distance20[66] < 1000.0
-				|| distance20[67] < 1000.0 || distance20[68] < 1000.0
-				|| distance20[69] < 1000.0 || distance20[70] < 1000.0
-				|| distance20[71] < 1000.0 || distance20[72] < 1000.0
-				|| distance30[0] < 1000.0 || distance30[1] < 1000.0
-				|| distance30[2] < 1000.0 || distance30[3] < 1000.0
-				|| distance30[4] < 1000.0 || distance30[5] < 1000.0
-				|| distance30[6] < 1000.0 || distance30[7] < 1000.0
-				|| distance30[8] < 1000.0 || distance30[9] < 1000.0
-				|| distance30[10] < 1000.0 || distance30[11] < 1000.0
-				|| distance30[12] < 1000.0 || distance30[13] < 1000.0
-				|| distance30[14] < 1000.0 || distance30[15] < 1000.0
-				|| distance30[16] < 1000.0 || distance30[17] < 1000.0
-				|| distance30[18] < 1000.0 || distance30[19] < 1000.0
-				|| distance30[20] < 1000.0 || distance30[21] < 1000.0
-				|| distance30[22] < 1000.0 || distance30[23] < 1000.0
-				|| distance30[24] < 1000.0 || distance30[25] < 1000.0
-				|| distance30[26] < 1000.0 || distance30[27] < 1000.0
-				|| distance30[28] < 1000.0 || distance30[29] < 1000.0
-				|| distance30[30] < 1000.0 || distance30[31] < 1000.0
-				|| distance30[32] < 1000.0 || distance30[33] < 1000.0
-				|| distance30[34] < 1000.0 || distance30[35] < 1000.0
-				|| distance30[36] < 1000.0 || distance30[37] < 1000.0
-				|| distance30[38] < 1000.0 || distance30[39] < 1000.0
-				|| distance30[40] < 1000.0 || distance40[0] < 1000.0
-				|| distance40[1] < 1000.0 || distance40[2] < 1000.0
-				|| distance40[3] < 1000.0 || distance40[4] < 1000.0
-				|| distance50[0] < 1000.0 || distance50[1] < 1000.0
-				|| distance50[2] < 1000.0 || distance50[3] < 1000.0
-				|| distance50[4] < 1000.0 || distance50[5] < 1000.0
-				|| distance50[6] < 1000.0 || distance60[0] < 1000.0
-				|| distance60[1] < 1000.0 || distance60[2] < 1000.0
-				|| distance60[3] < 1000.0 || distance60[4] < 1000.0
-				|| distance60[5] < 1000.0 || distance65[0] < 1000.0
-				|| distance70[0] < 1000.0 || distance70[1] < 1000.0
-				|| distance70[2] < 1000.0 || distance70[3] < 1000.0
-				|| distance70[4] < 1000.0 || distance70[5] < 1000.0
-				|| distance70[6] < 1000.0 || distance70[7] < 1000.0
-				|| distance70[8] < 1000.0 || distance70[9] < 1000.0
-				|| distance70[10] < 1000.0 || distance70[11] < 1000.0
-				|| distance70[12] < 1000.0 || distance70[13] < 1000.0
-				|| distance70[14] < 1000.0 || distance70[15] < 1000.0
-				|| distance70[16] < 1000.0 || distance70[17] < 1000.0
-				|| distance70[18] < 1000.0 || distance70[19] < 1000.0
-				|| distance70[20] < 1000.0 || distance70[21] < 1000.0
-				|| distance70[22] < 1000.0 || distance70[23] < 1000.0
-				|| distance70[24] < 1000.0 || distance70[25] < 1000.0
-				|| distance70[26] < 1000.0 || distance70[27] < 1000.0
-				|| distance70[28] < 1000.0 || distance70[29] < 1000.0
-				|| distance70[30] < 1000.0 || distance70[31] < 1000.0
-				|| distance70[32] < 1000.0 || distance70[33] < 1000.0
-				|| distance70[34] < 1000.0 || distance70[35] < 1000.0
-				|| distance70[36] < 1000.0 || distance70[37] < 1000.0
-				|| distance70[38] < 1000.0 || distance70[39] < 1000.0
-				|| distance70[40] < 1000.0 || distance70[41] < 1000.0
-				|| distance70[42] < 1000.0 || distance70[43] < 1000.0
-				|| distance70[44] < 1000.0 || distance80[0] < 1000.0
-				|| distance80[1] < 1000.0 || distance80[2] < 1000.0
-				|| distance80[3] < 1000.0 || distance80[4] < 1000.0
-				|| distance80[5] < 1000.0 || distance80[6] < 1000.0
-				|| distance80[7] < 1000.0 || distance90[0] < 1000.0
-				|| distance90[1] < 1000.0 || distance90[2] < 1000.0
-				|| distance90[3] < 1000.0 || distance90[4] < 1000.0
-				|| distance90[5] < 1000.0 || distance90[6] < 1000.0
-				|| distance90[7] < 1000.0 || distance90[8] < 1000.0
-				|| distance90[9] < 1000.0 || distance90[10] < 1000.0
-				|| distance90[11] < 1000.0 || distance90[12] < 1000.0
-				|| distance90[13] < 1000.0 || distance90[14] < 1000.0
-				|| distance90[15] < 1000.0 || distance90[16] < 1000.0
-				|| distance90[17] < 1000.0 || distance90[18] < 1000.0
-				|| distance100[0] < 1000.0 || distance100[1] < 1000.0
-				|| distance100[2] < 1000.0 || distance100[3] < 1000.0
-				|| distance100[4] < 1000.0 || distance100[5] < 1000.0
-				|| distance100[6] < 1000.0 || distance100[7] < 1000.0
-				|| distance110[0] < 1000.0 || distance110[1] < 1000.0
-				|| distance110[2] < 1000.0 || distance110[3] < 1000.0
-				|| distance110[4] < 1000.0 || distance110[5] < 1000.0
-				|| distance110[6] < 1000.0 || distance110[7] < 1000.0
-				|| distance110[8] < 1000.0 || distance110[9] < 1000.0
-				|| distance120[0] < 1000.0 || distance120[1] < 1000.0
-				|| distance120[2] < 1000.0 || distance120[3] < 1000.0
-				|| distance120[4] < 1000.0 || distance120[5] < 1000.0
-				|| distance120[6] < 1000.0 || distance120[7] < 1000.0
-				|| distance120[8] < 1000.0 || distance120[9] < 1000.0
-				|| distance120[10] < 1000.0 || distance120[11] < 1000.0
-				|| distance120[12] < 1000.0 || distance120[13] < 1000.0
-				|| distance120[14] < 1000.0 || distance120[15] < 1000.0
-				|| distance120[16] < 1000.0 || distance120[17] < 1000.0
-				|| distance120[18] < 1000.0 || distance120[19] < 1000.0
-				|| distance120[20] < 1000.0 || distance120[21] < 1000.0
-				|| distance120[22] < 1000.0 || distance120[23] < 1000.0
-				|| distance130[0] < 1000.0 || distance130[1] < 1000.0
-				|| distance130[2] < 1000.0 || distance130[3] < 1000.0
-				|| distance130[4] < 1000.0 || distance130[5] < 1000.0
-				|| distance130[6] < 1000.0 || distance130[7] < 1000.0
-				|| distance130[8] < 1000.0 || distance130[9] < 1000.0
-				|| distance130[10] < 1000.0 || distance130[11] < 1000.0
-				|| distance130[12] < 1000.0 || distance130[13] < 1000.0
-				|| distance130[14] < 1000.0 || distance140[0] < 1000.0
-				|| distance140[1] < 1000.0 || distance140[2] < 1000.0
-				|| distance140[3] < 1000.0 || distance140[4] < 1000.0
-				|| distance140[5] < 1000.0 || distance140[6] < 1000.0
-				|| distance140[7] < 1000.0 || distance140[8] < 1000.0
-				|| distance150[0] < 1000.0 || distance160[0] < 1000.0
-				|| distance160[1] < 1000.0 || distance160[2] < 1000.0
-				|| distance170[0] < 1000.0 || distance170[1] < 1000.0
-				|| distance170[2] < 1000.0 || distance170[3] < 1000.0
-				|| distance170[4] < 1000.0 || distance170[5] < 1000.0
-				|| distance180[0] < 1000.0 || distance190[0] < 1000.0) {
-			if (isInArea == false && Frequency <= 999) {
-				Intent intent = new Intent("android.broadcast.LOCATION");
-				sendBroadcast(intent);
-				isInArea = true;
-				Frequency++;
-				saveFrequency("Frequency", Frequency);
 
+		try {
+
+			float[] all = { distance00[0], distance10[0], distance20[0],
+					distance30[0], distance40[0], distance50[0], distance60[0],
+					distance70[0], distance80[0], distance90[0],
+					distance100[0], distance110[0], distance120[0],
+					distance130[0], distance140[0], distance150[0],
+					distance160[0], distance170[0], distance180[0],
+					distance190[0] };
+
+			// 比較距離，儲存位置
+			float min = all[0];
+			int number = 0;
+			for (int i = 1; i < 20; i++) {
+				if (min > all[i]) {
+					min = all[i];
+					number = i;
+				}
 			}
-		} else {
-			isInArea = false;
-		}
-} catch (ArrayIndexOutOfBoundsException e) {
+			switch (number) {
+			case 0:// 0基隆
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "基隆");
+				break;
+			case 1:// 1台北
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "台北");
+				break;
+			case 2:// 2新北
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "新北");
+				break;
+			case 3:// 3桃園
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "桃園");
+				break;
+			case 4:// 4新竹市
+				ParseInstallation.getCurrentInstallation().put("location",
+						"新竹市");
+				break;
+			case 5:// 5新竹縣
+				ParseInstallation.getCurrentInstallation().put("location",
+						"新竹縣");
+				break;
+			case 6:// 6苗栗
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "苗栗");
+				break;
+			case 7:// 7台中
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "台中");
+				break;
+			case 8:// 8南投
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "南投");
+				break;
+			case 9:// 9彰化
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "彰化");
+				break;
+			case 10:// 10雲林
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "雲林");
+				break;
+			case 11:// 11嘉義
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "嘉義");
+				break;
+			case 12:// 12台南
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "台南");
+				break;
+			case 13:// 13高雄
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "高雄");
+				break;
+			case 14:// 14屏東
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "屏東");
+				break;
+			case 15:// 15台東
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "台東");
+				break;
+			case 16:// 16花蓮
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "花蓮");
+				break;
+			case 17:// 17宜蘭
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "宜蘭");
+				break;
+			case 18:// 18澎湖
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "澎湖");
+				break;
+			case 19:// 19金門
+				ParseInstallation.getCurrentInstallation()
+						.put("location", "金門");
+				break;
+			}
+			ParseInstallation.getCurrentInstallation().saveInBackground();
 
-}
+		} catch (Exception e) {
+
+		}
+		try {
+			if (distance00[0] < 1000.0 || distance00[1] < 1000.0
+					|| distance00[2] < 1000.0 || distance00[3] < 1000.0
+					|| distance00[4] < 1000.0 || distance00[5] < 1000.0
+					|| distance00[6] < 1000.0 || distance00[7] < 1000.0
+					|| distance10[0] < 1000.0 || distance10[1] < 1000.0
+					|| distance10[2] < 1000.0 || distance10[3] < 1000.0
+					|| distance10[4] < 1000.0 || distance10[5] < 1000.0
+					|| distance10[6] < 1000.0 || distance10[7] < 1000.0
+					|| distance10[8] < 1000.0 || distance10[9] < 1000.0
+					|| distance10[10] < 1000.0 || distance10[11] < 1000.0
+					|| distance10[12] < 1000.0 || distance10[13] < 1000.0
+					|| distance10[14] < 1000.0 || distance10[15] < 1000.0
+					|| distance10[16] < 1000.0 || distance10[17] < 1000.0
+					|| distance10[18] < 1000.0 || distance10[19] < 1000.0
+					|| distance10[20] < 1000.0 || distance10[21] < 1000.0
+					|| distance10[22] < 1000.0 || distance10[23] < 1000.0
+					|| distance10[24] < 1000.0 || distance10[25] < 1000.0
+					|| distance10[26] < 1000.0 || distance10[27] < 1000.0
+					|| distance10[28] < 1000.0 || distance10[29] < 1000.0
+					|| distance10[30] < 1000.0 || distance10[31] < 1000.0
+					|| distance10[32] < 1000.0 || distance10[33] < 1000.0
+					|| distance10[34] < 1000.0 || distance10[35] < 1000.0
+					|| distance10[36] < 1000.0 || distance10[37] < 1000.0
+					|| distance10[38] < 1000.0 || distance10[39] < 1000.0
+					|| distance10[40] < 1000.0 || distance20[0] < 1000.0
+					|| distance20[1] < 1000.0 || distance20[2] < 1000.0
+					|| distance20[3] < 1000.0 || distance20[4] < 1000.0
+					|| distance20[5] < 1000.0 || distance20[6] < 1000.0
+					|| distance20[7] < 1000.0 || distance20[8] < 1000.0
+					|| distance20[9] < 1000.0 || distance20[10] < 1000.0
+					|| distance20[11] < 1000.0 || distance20[12] < 1000.0
+					|| distance20[13] < 1000.0 || distance20[14] < 1000.0
+					|| distance20[15] < 1000.0 || distance20[16] < 1000.0
+					|| distance20[17] < 1000.0 || distance20[18] < 1000.0
+					|| distance20[19] < 1000.0 || distance20[20] < 1000.0
+					|| distance20[21] < 1000.0 || distance20[22] < 1000.0
+					|| distance20[23] < 1000.0 || distance20[24] < 1000.0
+					|| distance20[25] < 1000.0 || distance20[26] < 1000.0
+					|| distance20[27] < 1000.0 || distance20[28] < 1000.0
+					|| distance20[29] < 1000.0 || distance20[30] < 1000.0
+					|| distance20[31] < 1000.0 || distance20[32] < 1000.0
+					|| distance20[33] < 1000.0 || distance20[34] < 1000.0
+					|| distance20[35] < 1000.0 || distance20[36] < 1000.0
+					|| distance20[37] < 1000.0 || distance20[38] < 1000.0
+					|| distance20[39] < 1000.0 || distance20[40] < 1000.0
+					|| distance20[41] < 1000.0 || distance20[42] < 1000.0
+					|| distance20[43] < 1000.0 || distance20[44] < 1000.0
+					|| distance20[45] < 1000.0 || distance20[46] < 1000.0
+					|| distance20[47] < 1000.0 || distance20[48] < 1000.0
+					|| distance20[49] < 1000.0 || distance20[50] < 1000.0
+					|| distance20[51] < 1000.0 || distance20[52] < 1000.0
+					|| distance20[53] < 1000.0 || distance20[54] < 1000.0
+					|| distance20[55] < 1000.0 || distance20[56] < 1000.0
+					|| distance20[57] < 1000.0 || distance20[58] < 1000.0
+					|| distance20[59] < 1000.0 || distance20[60] < 1000.0
+					|| distance20[61] < 1000.0 || distance20[62] < 1000.0
+					|| distance20[63] < 1000.0 || distance20[64] < 1000.0
+					|| distance20[65] < 1000.0 || distance20[66] < 1000.0
+					|| distance20[67] < 1000.0 || distance20[68] < 1000.0
+					|| distance20[69] < 1000.0 || distance20[70] < 1000.0
+					|| distance20[71] < 1000.0 || distance20[72] < 1000.0
+					|| distance30[0] < 1000.0 || distance30[1] < 1000.0
+					|| distance30[2] < 1000.0 || distance30[3] < 1000.0
+					|| distance30[4] < 1000.0 || distance30[5] < 1000.0
+					|| distance30[6] < 1000.0 || distance30[7] < 1000.0
+					|| distance30[8] < 1000.0 || distance30[9] < 1000.0
+					|| distance30[10] < 1000.0 || distance30[11] < 1000.0
+					|| distance30[12] < 1000.0 || distance30[13] < 1000.0
+					|| distance30[14] < 1000.0 || distance30[15] < 1000.0
+					|| distance30[16] < 1000.0 || distance30[17] < 1000.0
+					|| distance30[18] < 1000.0 || distance30[19] < 1000.0
+					|| distance30[20] < 1000.0 || distance30[21] < 1000.0
+					|| distance30[22] < 1000.0 || distance30[23] < 1000.0
+					|| distance30[24] < 1000.0 || distance30[25] < 1000.0
+					|| distance30[26] < 1000.0 || distance30[27] < 1000.0
+					|| distance30[28] < 1000.0 || distance30[29] < 1000.0
+					|| distance30[30] < 1000.0 || distance30[31] < 1000.0
+					|| distance30[32] < 1000.0 || distance30[33] < 1000.0
+					|| distance30[34] < 1000.0 || distance30[35] < 1000.0
+					|| distance30[36] < 1000.0 || distance30[37] < 1000.0
+					|| distance30[38] < 1000.0 || distance30[39] < 1000.0
+					|| distance30[40] < 1000.0 || distance40[0] < 1000.0
+					|| distance40[1] < 1000.0 || distance40[2] < 1000.0
+					|| distance40[3] < 1000.0 || distance40[4] < 1000.0
+					|| distance50[0] < 1000.0 || distance50[1] < 1000.0
+					|| distance50[2] < 1000.0 || distance50[3] < 1000.0
+					|| distance50[4] < 1000.0 || distance50[5] < 1000.0
+					|| distance50[6] < 1000.0 || distance60[0] < 1000.0
+					|| distance60[1] < 1000.0 || distance60[2] < 1000.0
+					|| distance60[3] < 1000.0 || distance60[4] < 1000.0
+					|| distance60[5] < 1000.0 || distance65[0] < 1000.0
+					|| distance70[0] < 1000.0 || distance70[1] < 1000.0
+					|| distance70[2] < 1000.0 || distance70[3] < 1000.0
+					|| distance70[4] < 1000.0 || distance70[5] < 1000.0
+					|| distance70[6] < 1000.0 || distance70[7] < 1000.0
+					|| distance70[8] < 1000.0 || distance70[9] < 1000.0
+					|| distance70[10] < 1000.0 || distance70[11] < 1000.0
+					|| distance70[12] < 1000.0 || distance70[13] < 1000.0
+					|| distance70[14] < 1000.0 || distance70[15] < 1000.0
+					|| distance70[16] < 1000.0 || distance70[17] < 1000.0
+					|| distance70[18] < 1000.0 || distance70[19] < 1000.0
+					|| distance70[20] < 1000.0 || distance70[21] < 1000.0
+					|| distance70[22] < 1000.0 || distance70[23] < 1000.0
+					|| distance70[24] < 1000.0 || distance70[25] < 1000.0
+					|| distance70[26] < 1000.0 || distance70[27] < 1000.0
+					|| distance70[28] < 1000.0 || distance70[29] < 1000.0
+					|| distance70[30] < 1000.0 || distance70[31] < 1000.0
+					|| distance70[32] < 1000.0 || distance70[33] < 1000.0
+					|| distance70[34] < 1000.0 || distance70[35] < 1000.0
+					|| distance70[36] < 1000.0 || distance70[37] < 1000.0
+					|| distance70[38] < 1000.0 || distance70[39] < 1000.0
+					|| distance70[40] < 1000.0 || distance70[41] < 1000.0
+					|| distance70[42] < 1000.0 || distance70[43] < 1000.0
+					|| distance70[44] < 1000.0 || distance80[0] < 1000.0
+					|| distance80[1] < 1000.0 || distance80[2] < 1000.0
+					|| distance80[3] < 1000.0 || distance80[4] < 1000.0
+					|| distance80[5] < 1000.0 || distance80[6] < 1000.0
+					|| distance80[7] < 1000.0 || distance90[0] < 1000.0
+					|| distance90[1] < 1000.0 || distance90[2] < 1000.0
+					|| distance90[3] < 1000.0 || distance90[4] < 1000.0
+					|| distance90[5] < 1000.0 || distance90[6] < 1000.0
+					|| distance90[7] < 1000.0 || distance90[8] < 1000.0
+					|| distance90[9] < 1000.0 || distance90[10] < 1000.0
+					|| distance90[11] < 1000.0 || distance90[12] < 1000.0
+					|| distance90[13] < 1000.0 || distance90[14] < 1000.0
+					|| distance90[15] < 1000.0 || distance90[16] < 1000.0
+					|| distance90[17] < 1000.0 || distance90[18] < 1000.0
+					|| distance100[0] < 1000.0 || distance100[1] < 1000.0
+					|| distance100[2] < 1000.0 || distance100[3] < 1000.0
+					|| distance100[4] < 1000.0 || distance100[5] < 1000.0
+					|| distance100[6] < 1000.0 || distance100[7] < 1000.0
+					|| distance110[0] < 1000.0 || distance110[1] < 1000.0
+					|| distance110[2] < 1000.0 || distance110[3] < 1000.0
+					|| distance110[4] < 1000.0 || distance110[5] < 1000.0
+					|| distance110[6] < 1000.0 || distance110[7] < 1000.0
+					|| distance110[8] < 1000.0 || distance110[9] < 1000.0
+					|| distance120[0] < 1000.0 || distance120[1] < 1000.0
+					|| distance120[2] < 1000.0 || distance120[3] < 1000.0
+					|| distance120[4] < 1000.0 || distance120[5] < 1000.0
+					|| distance120[6] < 1000.0 || distance120[7] < 1000.0
+					|| distance120[8] < 1000.0 || distance120[9] < 1000.0
+					|| distance120[10] < 1000.0 || distance120[11] < 1000.0
+					|| distance120[12] < 1000.0 || distance120[13] < 1000.0
+					|| distance120[14] < 1000.0 || distance120[15] < 1000.0
+					|| distance120[16] < 1000.0 || distance120[17] < 1000.0
+					|| distance120[18] < 1000.0 || distance120[19] < 1000.0
+					|| distance120[20] < 1000.0 || distance120[21] < 1000.0
+					|| distance120[22] < 1000.0 || distance120[23] < 1000.0
+					|| distance130[0] < 1000.0 || distance130[1] < 1000.0
+					|| distance130[2] < 1000.0 || distance130[3] < 1000.0
+					|| distance130[4] < 1000.0 || distance130[5] < 1000.0
+					|| distance130[6] < 1000.0 || distance130[7] < 1000.0
+					|| distance130[8] < 1000.0 || distance130[9] < 1000.0
+					|| distance130[10] < 1000.0 || distance130[11] < 1000.0
+					|| distance130[12] < 1000.0 || distance130[13] < 1000.0
+					|| distance130[14] < 1000.0 || distance140[0] < 1000.0
+					|| distance140[1] < 1000.0 || distance140[2] < 1000.0
+					|| distance140[3] < 1000.0 || distance140[4] < 1000.0
+					|| distance140[5] < 1000.0 || distance140[6] < 1000.0
+					|| distance140[7] < 1000.0 || distance140[8] < 1000.0
+					|| distance150[0] < 1000.0 || distance160[0] < 1000.0
+					|| distance160[1] < 1000.0 || distance160[2] < 1000.0
+					|| distance170[0] < 1000.0 || distance170[1] < 1000.0
+					|| distance170[2] < 1000.0 || distance170[3] < 1000.0
+					|| distance170[4] < 1000.0 || distance170[5] < 1000.0
+					|| distance180[0] < 1000.0 || distance190[0] < 1000.0) {
+				if (isInArea == false && Frequency <= 999) {
+					Intent intent = new Intent("android.broadcast.LOCATION");
+					sendBroadcast(intent);
+					isInArea = true;
+					Frequency++;
+					saveFrequency("Frequency", Frequency);
+
+				}
+			} else {
+				isInArea = false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+
+		}
 	}
 
 	/* 儲存廣播次數 */

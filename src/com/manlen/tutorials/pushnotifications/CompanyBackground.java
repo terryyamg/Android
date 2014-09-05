@@ -38,7 +38,7 @@ public class CompanyBackground extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.company_background);
 		/* 字型 */
-		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt034.ttf");
+		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt001.ttf");
 
 		tv1 = (TextView) findViewById(R.id.cbtv1);
 		tv1.setTypeface(fontch);
@@ -161,7 +161,7 @@ public class CompanyBackground extends FragmentActivity {
 					TextView tv = new TextView(this); // 設定第一排文字
 					tv.setTypeface(fontch);
 					tv.setTextSize(20);
-					tv.setTextColor(Color.WHITE);
+					tv.setTextColor(Color.BLACK);
 					tv.setText(tableData[i][j] + " ");
 					row.addView(tv, j);
 				} else {
@@ -169,7 +169,7 @@ public class CompanyBackground extends FragmentActivity {
 						TextView tv = new TextView(this);
 						tv.setTypeface(fontch);
 						tv.setTextSize(20);
-						tv.setTextColor(Color.WHITE);
+						tv.setTextColor(Color.BLACK);
 						tv.setText(tableData[i][j] + " ");
 						row.addView(tv, j);
 					} else if (j == tableData[i].length - 3) { // 設定按鈕
@@ -177,13 +177,13 @@ public class CompanyBackground extends FragmentActivity {
 							TextView tv = new TextView(this);
 							tv.setTypeface(fontch);
 							tv.setTextSize(20);
-							tv.setTextColor(Color.WHITE);
+							tv.setTextColor(Color.BLACK);
 							tv.setText("已完成");
 							row.addView(tv, j);
 						} else {// 出現按鈕
 							complete[i] = new Button(this);
 							complete[i].setTypeface(fontch);
-							complete[i].setTextColor(Color.WHITE);
+							complete[i].setTextColor(Color.BLACK);
 							complete[i]
 									.setBackgroundResource(R.drawable.btn_lightblue_glossy);
 							complete[i].setText("未完成");

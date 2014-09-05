@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/wallpaper"
+    android:layout_gravity="center"
+    android:background="@drawable/wallpaper2"
+    android:gravity="center"
     android:orientation="vertical" >
 
     <TextView
@@ -11,9 +13,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="24dp"
-        android:text="請選擇特約商店"
-        android:textSize="20sp"
-        android:textColor="#FFF" />
+        android:text="@string/wheeltv"
+        android:textColor="#000"
+        android:textSize="20sp" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -39,7 +41,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:layout_weight="1.5" />
-        
+
         <kankan.wheel.widget.WheelView
             android:id="@+id/wheel3"
             android:layout_width="150dp"
@@ -51,7 +53,7 @@
 
     <Button
         android:id="@+id/goButton"
-         style="@style/ButtonText"
+        style="@style/ButtonText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

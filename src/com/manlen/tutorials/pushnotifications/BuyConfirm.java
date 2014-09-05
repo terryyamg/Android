@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -20,25 +21,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class BuyConfirm extends FragmentActivity {
-	private Button close, confirm;
+	private Button confirm;
 	private ImageButton plus, minus;
 	private EditText number;
-	private TextView name, money,tv1,tv2,tv3,tv4,tv5;
+	private TextView name, money, tv1, tv2, tv3, tv4, tv5,tv6;
 	private DatePicker DatePicker;
-	private String Year, Mon, Day, arrivalTime, commodityName, store,storeClass;
+	private String Year, Mon, Day, arrivalTime, commodityName, store,
+			storeClass;
 	private RadioGroup timeChose;
-	private RadioButton morning,afternoon,night;
+	private RadioButton morning, afternoon, night;
 	private int price, numberIndex, totalPrice, nowDate, choseDate;
 	Typeface fontch;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.buy_confirm);
 		/* 字型 */
-		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt034.ttf");
-		
-		close = (Button) findViewById(R.id.close);
+		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt001.ttf");
+
 		confirm = (Button) findViewById(R.id.confirm);
 		plus = (ImageButton) findViewById(R.id.plus);
 		minus = (ImageButton) findViewById(R.id.minus);
@@ -50,12 +51,12 @@ public class BuyConfirm extends FragmentActivity {
 		tv3 = (TextView) findViewById(R.id.tv3);
 		tv4 = (TextView) findViewById(R.id.tv4);
 		tv5 = (TextView) findViewById(R.id.tv5);
+		tv6 = (TextView) findViewById(R.id.tv6);
 		timeChose = (RadioGroup) findViewById(R.id.timeChose);
 		morning = (RadioButton) findViewById(R.id.morning);
 		afternoon = (RadioButton) findViewById(R.id.afternoon);
 		night = (RadioButton) findViewById(R.id.night);
-		
-		close.setTypeface(fontch);
+
 		confirm.setTypeface(fontch);
 		name.setTypeface(fontch);
 		money.setTypeface(fontch);
@@ -64,6 +65,7 @@ public class BuyConfirm extends FragmentActivity {
 		tv3.setTypeface(fontch);
 		tv4.setTypeface(fontch);
 		tv5.setTypeface(fontch);
+		tv6.setTypeface(fontch);
 		morning.setTypeface(fontch);
 		afternoon.setTypeface(fontch);
 		night.setTypeface(fontch);
@@ -72,8 +74,8 @@ public class BuyConfirm extends FragmentActivity {
 		store = intent.getStringExtra("store"); // 取得商店名稱
 		commodityName = intent.getStringExtra("commodityName"); // 取得商品名稱
 		price = intent.getIntExtra("price", 1); // 取得單一價格
-		storeClass = intent.getStringExtra("storeClass"); //取的店家頻道
-		
+		storeClass = intent.getStringExtra("storeClass"); // 取的店家頻道
+
 		name.setText(commodityName); // 商品名稱
 
 		number.addTextChangedListener(new TextWatcher() {
@@ -143,7 +145,24 @@ public class BuyConfirm extends FragmentActivity {
 		int sYear = TodayDate.get(Calendar.YEAR); // 一開啟軟體即取得年的數值
 		int sMon = TodayDate.get(Calendar.MONTH) + 1; // 一開啟軟體即取得月的數值
 														// 月的起始是0，所以+1.
-		int sDay = TodayDate.get(Calendar.DAY_OF_MONTH);// 一開啟軟體即取得日的數值
+		int sDay = TodayDate.get(Calendar.DAY_OF_MONTH) + 2;// 一開啟軟體即取得日的數值
+		tv5.setText("系動自動設定到貨日期為兩天後"+"\n"+"現在日期:"+sYear+"-"+sMon+"-"+(sDay-2));
+		Log.i("mon", sMon + "");
+		Log.i("day", sDay + "");
+		if (sMon == 2 && sDay > 28) { // 2月
+			sMon = sMon + 1;
+			sDay = sDay - 28;
+		} else if (sMon % 2 == 1 && sDay > 31) { // 單數月
+			sMon = sMon + 1;
+			sDay = sDay - 31;
+		} else if (sMon % 2 == 0 && sDay > 30) { // 雙數月
+			sMon = sMon + 1;
+			sDay = sDay - 30;
+			if (sMon == 12) { //12月
+				sMon = sMon - 12;
+			}
+		}
+
 		// 將取得的數字轉成String.
 		Year = DateFix(sYear);
 		Mon = DateFix(sMon);
@@ -153,7 +172,7 @@ public class BuyConfirm extends FragmentActivity {
 		DatePicker = (DatePicker) findViewById(R.id.DatePicker);
 		DatePicker.init(TodayDate.get(Calendar.YEAR),
 				TodayDate.get(Calendar.MONTH),
-				TodayDate.get(Calendar.DAY_OF_MONTH),
+				TodayDate.get(Calendar.DAY_OF_MONTH)+2,
 				// DatePicker年月日更改後，會觸發作以下的事情。
 				new DatePicker.OnDateChangedListener() {
 					@Override
@@ -175,8 +194,7 @@ public class BuyConfirm extends FragmentActivity {
 				sentToLogin();
 			}
 		});
-		// 返回
-		close.setOnClickListener(back);
+
 	}
 
 	// 方法DateFix:將傳送進來的年月日轉成String，在判斷是否前面需要加0。
@@ -212,13 +230,14 @@ public class BuyConfirm extends FragmentActivity {
 
 	// 送出
 	void sentToLogin() {
-
+		Log.i("nowDate", nowDate + "");
+		Log.i("choseDate", choseDate + "");
 		if (numberIndex == 0) { // 數量判斷
 			Toast.makeText(getBaseContext(), "數量不可為0", Toast.LENGTH_SHORT)
 					.show();
 		} else if (nowDate > choseDate) { // 現在時間 比 選擇時間 早
-			Toast.makeText(getBaseContext(), "日期不可為今天以前", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(getBaseContext(), "到貨日期限制必須在購買日兩天後",
+					Toast.LENGTH_SHORT).show();
 		} else if (arrivalTime == null) { // 時段判斷
 			Toast.makeText(getBaseContext(), "時段尚未選擇", Toast.LENGTH_SHORT)
 					.show();
@@ -230,16 +249,10 @@ public class BuyConfirm extends FragmentActivity {
 			intent.putExtra("totalPrice", totalPrice); // 總價
 			intent.putExtra("arrivalDate", Year + Mon + Day); // 取貨日期
 			intent.putExtra("arrivalTime", arrivalTime); // 取貨日期
-			intent.putExtra("storeClass",storeClass);
+			intent.putExtra("storeClass", storeClass);
 			startActivity(intent);
 		}
 
 	}
 
-	// 返回
-	private OnClickListener back = new OnClickListener() {
-		public void onClick(View v) {
-			finish();
-		}
-	};
 }

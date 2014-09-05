@@ -2,12 +2,15 @@ package com.manlen.tutorials.pushnotifications;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,6 +26,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 public class GoToGoogleMap extends FragmentActivity implements
 		OnMarkerClickListener {
 	private GoogleMap map;
+	private Button pushStore;
 	LatLng latLng;
 	int spinnerNumber = 0; // 初次進map不使用下拉選單
 	private float coordinate[][][][] = { // [縣市][食衣住行育樂][店家][座標]
@@ -500,23 +504,32 @@ public class GoToGoogleMap extends FragmentActivity implements
 					{ { 20, 4, (float) 24.1260010, (float) 120.6628070 } },
 					{ { 20, 5, (float) 24.1260010, (float) 120.6628070 } } } };
 	private int no1, no2, no3;
-
+	Typeface fontch;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.go_to_googlemap);
+		/* 字型 */
+		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt001.ttf");
+		
 		// 取的滾輪選擇項目
 		Intent intent = getIntent();
 		String check = intent.getStringExtra("check");
 		no1 = intent.getIntExtra("no1", 0); // 取得縣市指標
 		no2 = intent.getIntExtra("no2", 0); // 取得食衣住行指標
 		no3 = intent.getIntExtra("no3", 0); // 取得特約商店指標
-		Log.i("no1", no1 + "");
-		Log.i("no2", no2 + "");
-		Log.i("no3", no3 + "");
 
+		pushStore = (Button) findViewById(R.id.pushStore);
+		pushStore.setTypeface(fontch);
+		pushStore.setTextColor(Color.BLACK);
+		pushStore.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				pushStore();
+			}
+		});
 		// google map
-		// try {
+		try {
 		map = ((SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map)).getMap();
 
@@ -714,7 +727,7 @@ public class GoToGoogleMap extends FragmentActivity implements
 					.title("通霄海水浴場")
 					.icon(BitmapDescriptorFactory
 							.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-					.snippet("通霄"));
+					.snippet("通霄海水浴場"));
 
 			// 7台中
 			for (int i = 0; i < coordinate[7][0].length; i++) {
@@ -846,15 +859,15 @@ public class GoToGoogleMap extends FragmentActivity implements
 			setUpMap();
 		}
 
-		// } catch (NullPointerException e) {
+		 } catch (NullPointerException e) {
 		// Log.i("map", "NullPointException");
-		// }
+		 }
 
 		if (check != null) {
 			setMapLocation();
 			Log.i("check", check + "");
 		}
-
+		
 	}
 
 	private void setUpMap() {
@@ -954,4 +967,9 @@ public class GoToGoogleMap extends FragmentActivity implements
 		}
 	}
 
+	void pushStore(){
+		Intent intent = new Intent(this, PushStore.class);
+		startActivity(intent);
+	}
+	
 }

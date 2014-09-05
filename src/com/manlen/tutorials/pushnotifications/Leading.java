@@ -85,7 +85,7 @@ public class Leading extends Activity {
 		} catch (NullPointerException e) {
 		}
 		/* 字型 */
-		Typeface fontch = Typeface.createFromAsset(getAssets(), "fonts/wt034.ttf");
+		Typeface fontch = Typeface.createFromAsset(getAssets(), "fonts/wt001.ttf");
 		startButton = (Button) view.findViewById(R.id.start); // 與上面對應，獲取這個按鈕
 		startButton.setTypeface(fontch);
 		

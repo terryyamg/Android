@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tabHost"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/wallpaper" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/wallpaper4" >
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -23,13 +23,19 @@
             android:layout_height="fill_parent"
             android:layout_above="@android:id/tabs" >
 
-            <FrameLayout
+            <LinearLayout
                 android:id="@+id/tab1"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_gravity="center_horizontal" >
+                android:layout_gravity="center_horizontal"
+                android:gravity="center" >
 
-                <ScrollView
+                <TableLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal" >
+
+                    <ScrollView
                         android:id="@+id/vs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -42,7 +48,8 @@
                             android:layout_gravity="center_horizontal" >
                         </TableLayout>
                     </ScrollView>
-            </FrameLayout>
+                </TableLayout>
+            </LinearLayout>
 
             <FrameLayout
                 android:id="@+id/tab2"
@@ -64,7 +71,7 @@
                         <TableLayout
                             android:id="@+id/tablay2"
                             android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal" >
                         </TableLayout>
                     </ScrollView>

@@ -38,16 +38,18 @@
     <string name="alert_dialog_title">Profile</string>
     <string name="alert_dialog_success">儲存成功!</string>
     <string name="alert_dialog_failed">儲存失敗</string>
-    <string name="openMap">使用地圖</string>
-    <string name="wheelWidget">選擇地點</string>
+    <string name="openMap">周邊優惠</string>
+    <string name="wheelWidget">地點搜尋</string>
+    <string name="wheeltv">請選擇特約商店</string>
     <string name="logCompany">特約商店登入</string>
     <string name="storeAccount">帳號</string>
      <string name="storePassword">密碼</string>
+     <string name="pushStore">推薦</string>
 
     <style name="ButtonText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">#ffffff</item>
+        <item name="android:textColor">#000000</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_margin">3dp</item>
         <item name="android:textSize">20dp</item>
