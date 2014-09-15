@@ -1,36 +1,49 @@
-<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tabHost"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/wallpaper"
-    android:orientation="vertical"
     tools:context=".MainActivity" >
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" >
+    <!-- The main content view -->
 
-        <TabWidget
-            android:id="@android:id/tabs"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:gravity="center_horizontal" />
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-        <FrameLayout
-            android:id="@android:id/tabcontent"
+        <TabHost
+            android:id="@+id/tabHost"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_above="@android:id/tabs" >
+            android:orientation="vertical" >
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewPager1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical" >
 
-           <!--  <FrameLayout
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center_horizontal" />
+
+                <FrameLayout
+                    android:id="@android:id/tabcontent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_above="@android:id/tabs" >
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/viewPager1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <!--
+            <FrameLayout
                 android:id="@+id/tab1"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -48,190 +61,204 @@
                         android:orientation="vertical" >
                     </LinearLayout>
                 </ScrollView>
-            </FrameLayout> -->
+            </FrameLayout>
+                    -->
 
-            <TableLayout
-                android:id="@+id/tab2"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center"
-                android:background="@drawable/wallpaper2"
-                android:gravity="center" >
-
-                <Button
-                    android:id="@+id/openMap"
-                    style="@style/ButtonText"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/btn_lightblue_glossy"
-                    android:text="@string/openMap" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="" />
-
-                <Button
-                    android:id="@+id/wheelWidget"
-                    style="@style/ButtonText"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/btn_lightblue_glossy"
-                    android:text="@string/wheelWidget" />
-            </TableLayout>
-
-            <TableLayout
-                android:id="@+id/tab3"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/wallpaper3"
-                android:paddingTop="70dp" >
-
-                <Button
-                    android:id="@+id/scanner"
-                    style="@style/ButtonText"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/btn_lightblue_glossy"
-                    android:text="@string/scanner" />
-
-                <TextView
-                    android:id="@+id/info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="#000" />
-
-                <Button
-                    android:id="@+id/scanner2"
-                    style="@style/ButtonText"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/btn_lightblue_glossy"
-                    android:text="@string/scanner2" />
-
-                <TextView
-                    android:id="@+id/info2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="#000" />
-
-                <TextView
-                    android:id="@+id/info3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="#000" />
-            </TableLayout>
-
-            <LinearLayout
-                android:id="@+id/tab4"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/wallpaper4"
-                android:gravity="center" >
-
-                <TableLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal" >
-
-                    <TableRow
-                        android:id="@+id/tableRow0"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
-
-                        <EditText
-                            android:id="@+id/searchName"
-                            android:layout_width="150dp"
-                            android:layout_height="wrap_content"
-                            android:layout_column="1"
-                            android:ems="10"
-                            android:hint="@string/searchName"
-                            android:inputType="none" />
+                    <TableLayout
+                        android:id="@+id/tab2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center"
+                        android:background="@drawable/wallpaper2"
+                        android:gravity="center" >
 
                         <Button
-                            android:id="@+id/searchButton"
+                            android:id="@+id/openMap"
                             style="@style/ButtonText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="50dp"
-                            android:layout_column="1"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/btn_lightblue_glossy"
-                            android:text="@string/sendSearch" />
-                    </TableRow>
+                            android:text="@string/openMap" />
 
-                    <ScrollView
-                        android:id="@+id/vs"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:scrollbars="vertical" >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="" />
+
+                        <Button
+                            android:id="@+id/wheelWidget"
+                            style="@style/ButtonText"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/btn_lightblue_glossy"
+                            android:text="@string/wheelWidget" />
+                    </TableLayout>
+
+                    <TableLayout
+                        android:id="@+id/tab3"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/wallpaper3"
+                        android:paddingTop="70dp" >
+
+                        <Button
+                            android:id="@+id/scanner"
+                            style="@style/ButtonText"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/btn_lightblue_glossy"
+                            android:text="@string/scanner" />
+
+                        <TextView
+                            android:id="@+id/info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="#000" />
+
+                        <Button
+                            android:id="@+id/scanner2"
+                            style="@style/ButtonText"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/btn_lightblue_glossy"
+                            android:text="@string/scanner2" />
+
+                        <TextView
+                            android:id="@+id/info2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="#000" />
+
+                        <TextView
+                            android:id="@+id/info3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="#000" />
+                    </TableLayout>
+
+                    <LinearLayout
+                        android:id="@+id/tab4"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/wallpaper4"
+                        android:gravity="center" >
 
                         <TableLayout
-                            android:id="@+id/tableSet"
-                            android:layout_width="fill_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal" >
+
+                            <TableRow
+                                android:id="@+id/tableRow0"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" >
+
+                                <EditText
+                                    android:id="@+id/searchName"
+                                    android:layout_width="150dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_column="1"
+                                    android:ems="10"
+                                    android:hint="@string/searchName"
+                                    android:inputType="none" />
+
+                                <Button
+                                    android:id="@+id/searchButton"
+                                    style="@style/ButtonText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="50dp"
+                                    android:layout_column="1"
+                                    android:background="@drawable/btn_lightblue_glossy"
+                                    android:text="@string/sendSearch" />
+                            </TableRow>
+
+                            <ScrollView
+                                android:id="@+id/vs"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:scrollbars="vertical" >
+
+                                <TableLayout
+                                    android:id="@+id/tableSet"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal" >
+                                </TableLayout>
+                            </ScrollView>
                         </TableLayout>
-                    </ScrollView>
-                </TableLayout>
-            </LinearLayout>
+                    </LinearLayout>
 
-            <TableLayout
-                android:id="@+id/tab5"
-                android:layout_width="200dp"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center_horizontal"
-                android:paddingTop="70dp" >
+                    <TableLayout
+                        android:id="@+id/tab5"
+                        android:layout_width="200dp"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingTop="70dp" >
 
-                <CheckBox
-                    android:id="@+id/checkBox_service"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/service"
-                    android:textColor="#000" />
+                        <CheckBox
+                            android:id="@+id/checkBox_service"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/service"
+                            android:textColor="#000" />
 
-                <TextView
-                    android:id="@+id/output"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="#000" />
+                        <TextView
+                            android:id="@+id/output"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="#000" />
 
-                <Button
-                    android:id="@+id/shareButton"
-                    style="@style/ButtonText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/btn_lightblue_glossy"
-                    android:text="@string/shareButton" />
+                        <Button
+                            android:id="@+id/shareButton"
+                            style="@style/ButtonText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/btn_lightblue_glossy"
+                            android:text="@string/shareButton" />
 
-                <TextView
-                    android:id="@+id/myRecommend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="#000" />
+                        <TextView
+                            android:id="@+id/myRecommend"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="#000" />
 
-                <Button
-                    android:id="@+id/keyRecommend"
-                    style="@style/ButtonText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/btn_lightblue_glossy"
-                    android:text="@string/keyRecommedn" />
+                        <Button
+                            android:id="@+id/keyRecommend"
+                            style="@style/ButtonText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/btn_lightblue_glossy"
+                            android:text="@string/keyRecommedn" />
 
-                <Button
-                    android:id="@+id/logButton"
-                    style="@style/ButtonText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/btn_lightblue_glossy"
-                    android:text="@string/logCompany" />
-            </TableLayout>
-        </FrameLayout>
-    </RelativeLayout>
+                        <Button
+                            android:id="@+id/logButton"
+                            style="@style/ButtonText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/btn_lightblue_glossy"
+                            android:text="@string/logCompany" />
+                    </TableLayout>
+                </FrameLayout>
+            </RelativeLayout>
+        </TabHost>
+    </FrameLayout>
+    <!-- The navigation drawer -->
 
-</TabHost>
+    <ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#e0000000"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp" />
+
+</android.support.v4.widget.DrawerLayout>

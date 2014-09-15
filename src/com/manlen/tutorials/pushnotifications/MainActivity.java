@@ -1,11 +1,16 @@
 package com.manlen.tutorials.pushnotifications;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -19,7 +24,10 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -30,16 +38,24 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SimpleAdapter;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
@@ -58,6 +74,16 @@ import com.parse.RefreshCallback;
 import com.parse.SaveCallback;
 
 public class MainActivity extends FragmentActivity {
+	/* ND */
+	private DrawerLayout layDrawer;
+	private ListView lstDrawer;
+
+	private ActionBarDrawerToggle drawerToggle;
+	private CharSequence mDrawerTitle;
+	private CharSequence mTitle;
+
+	private String[] drawer_menu;
+
 	/* update */
 	protected static final int UPDATA_CLIENT = 0;
 	protected static final int CHECK_UPDATE = 1;
@@ -583,9 +609,18 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+
 		/* 字型 */
 		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt001.ttf");
+
+		/* ND */
+		initActionBar();
+		initDrawer();
+		initDrawerList();
+
+//		if (savedInstanceState == null) {
+//			selectItem(0);
+//		}
 
 		/* update */
 		/* 加入StrictMode避免發生 android.os.NetworkOnMainThreadException */
@@ -1032,6 +1067,181 @@ public class MainActivity extends FragmentActivity {
 		setupViewComponent();
 	}
 
+	/* ND */
+	// ================================================================================
+	// Init
+	// ================================================================================
+	private void initActionBar() {
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
+	}
+
+	private void initDrawer() {
+		setContentView(R.layout.activity_main);
+
+		layDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		lstDrawer = (ListView) findViewById(R.id.left_drawer);
+
+		layDrawer
+				.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
+		mTitle = mDrawerTitle = getTitle();
+		drawerToggle = new ActionBarDrawerToggle(this, layDrawer,
+				R.drawable.ic_drawer, R.string.drawer_open,
+				R.string.drawer_close) {
+
+			@Override
+			public void onDrawerClosed(View view) {
+				super.onDrawerClosed(view);
+				getActionBar().setTitle(mTitle);
+			}
+
+			@Override
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
+				getActionBar().setTitle(mDrawerTitle);
+			}
+		};
+		drawerToggle.syncState();
+
+		layDrawer.setDrawerListener(drawerToggle);
+	}
+
+	private void initDrawerList() {
+		drawer_menu = this.getResources().getStringArray(R.array.drawer_menu);
+		// ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+		// R.layout.drawer_list_item, drawer_menu);
+
+		List<HashMap<String, String>> lstData = new ArrayList<HashMap<String, String>>();
+		for (int i = 0; i < 4; i++) {
+			HashMap<String, String> mapValue = new HashMap<String, String>();
+			mapValue.put("icon", Integer.toString(R.drawable.ic_launcher));
+			mapValue.put("title", drawer_menu[i]);
+			lstData.add(mapValue);
+		}
+		HashMap<String, String> mapValue = new HashMap<String, String>();
+		mapValue.put("icon", Integer.toString(R.drawable.tab1));
+		mapValue.put("title", drawer_menu[4]);
+		lstData.add(mapValue);
+		SimpleAdapter adapter = new SimpleAdapter(this, lstData,
+				R.layout.drawer_list_item2, new String[] { "icon", "title" },
+				new int[] { R.id.imgIcon, R.id.txtItem });
+		lstDrawer.setAdapter(adapter);
+
+		// 側選單點選偵聽器
+		lstDrawer.setOnItemClickListener(new DrawerItemClickListener());
+	}
+
+	// ================================================================================
+	// Action Button 建立及點選事件
+	// ================================================================================
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		// home
+		if (drawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+
+		// action buttons
+		switch (item.getItemId()) {
+		case R.id.action_refresh:
+			// 前往搜尋
+			Toast.makeText(getBaseContext(), "action_refresh",
+					Toast.LENGTH_SHORT).show();
+			break;
+		default:
+			break;
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
+
+	// ================================================================================
+	// 側選單點選事件
+	// ================================================================================
+	private class DrawerItemClickListener implements
+			ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			selectItem(position);
+		}
+	}
+
+	private void selectItem(int position) {
+		Fragment fragment = null;
+
+		switch (position) {
+		case 0:
+			fragment = new MyShopList();
+			break;
+
+		case 1:
+			// fragment = new FragmentBook();
+			break;
+
+		case 2:
+			// fragment = new FragmentCat();
+			break;
+		case 3:
+			// fragment = new TestD();
+			break;
+		case 4:
+			// fragment = new TestD();
+			break;
+		default:
+			// 還沒製作的選項，fragment 是 null，直接返回
+			return;
+		}
+
+		FragmentManager fragmentManager = getFragmentManager();
+		// [方法1]直接置換，無法按 Back 返回
+		// fragmentManager.beginTransaction().replace(R.id.content_frame,
+		// fragment).commit();
+
+		// [方法2]開啟並將前一個送入堆疊
+		// 重要！ 必須加寫 "onBackPressed"
+
+		FragmentTransaction fragmentTransaction = fragmentManager
+				.beginTransaction();
+		fragmentTransaction.replace(R.id.content_frame, fragment);
+		fragmentTransaction.addToBackStack("home");
+		fragmentTransaction
+				.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+		fragmentTransaction.commit();
+
+		// 更新被選擇項目，換標題文字，關閉選單
+		lstDrawer.setItemChecked(position, true);
+		setTitle(drawer_menu[position]);
+		layDrawer.closeDrawer(lstDrawer);
+	}
+
+	@Override
+	public void setTitle(CharSequence title) {
+		mTitle = title;
+		getActionBar().setTitle(mTitle);
+	}
+
+	/**
+	 * Back 鍵處理 當最後一個 stack 為 R.id.content_frame, 結束 App
+	 */
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		FragmentManager fragmentManager = this.getFragmentManager();
+		int stackCount = fragmentManager.getBackStackEntryCount();
+		if (stackCount == 0) {
+			this.finish();
+		}
+	}
+
 	/* update */
 	// public static JSONArray getJson(String url) {
 	// InputStream is = null;
@@ -1358,49 +1568,56 @@ public class MainActivity extends FragmentActivity {
 
 		imgButton = new ImageButton[tableCommodity.length];
 		// 排版
-		for (int i = 0; i < (tableCommodity.length - 1) * 3; i++) { // 列
+		for (int i = 0; i < (tableCommodity.length - 1) * 2; i++) { // 列
 			TableRow row = new TableRow(this);
 
 			// 第一列 圖片
-			if (i % 3 == 0) {
-				imgButton[i / 3] = new ImageButton(this);
-				imgButton[i / 3].setImageResource(R.drawable.store
-						+ picNumber[i / 3]);
-				imgButton[i / 3].setBackgroundDrawable(null);
-				imgButton[i / 3].setId(i / 3);
-				imgButton[i / 3].setOnClickListener(imgButtonListen);
-				row.addView(imgButton[i / 3], 0);
-			} else if (i % 3 == 1) {
-				// 第二列 商品名稱
+			if (i % 2 == 0) {
+				imgButton[i / 2] = new ImageButton(this);
+				imgButton[i / 2].setImageResource(R.drawable.store
+						+ picNumber[i / 2]);
+				imgButton[i / 2].setBackgroundDrawable(null);
+				imgButton[i / 2].setId(i / 2);
+				imgButton[i / 2].setOnClickListener(imgButtonListen);
+				row.addView(imgButton[i / 2], 0);
+				// 第三列 商品名稱 價格
 				TextView tv2 = new TextView(this);
 				tv2.setTextSize(15);
 				tv2.setTypeface(fontch);
 				tv2.setTextColor(Color.BLACK);
-				tv2.setText(tableCommodity[i / 3][0] + " ");
-				row.addView(tv2, 0);
-			} else if (i % 3 == 2) {
-				// 第三列 價格
-				TextView tv3 = new TextView(this);
-				tv3.setTextSize(15);
-				tv3.setTypeface(fontch);
-				tv3.setTextColor(Color.BLACK);
-				String oprl = tableCommodity[i / 3][1];
-				String prl = tableCommodity[i / 3][2];
-				String ss = "原價:$" + oprl + "  團購價:$" + prl;
+
+				String namel = tableCommodity[i / 2][0];
+				String oprl = tableCommodity[i / 2][1];
+				String prl = tableCommodity[i / 2][2];
+
+				String ss = namel + "\n" + "原價:NT$" + oprl + "\n" + "團購價:NT$"
+						+ prl;
+
+				namel.length();// 產品名長度
 				oprl.length(); // 原價數字長度
 				prl.length();// 團購數字長度
 				Spannable msp = new SpannableString(ss);
-				msp.setSpan(new StrikethroughSpan(), 4, 4 + oprl.length(),
+				msp.setSpan(new StrikethroughSpan(), namel.length() + 7,
+						namel.length() + 7 + oprl.length(),
 						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 刪除線
-				msp.setSpan(new RelativeSizeSpan(2.0f), 11 + oprl.length(), 11
-						+ oprl.length() + prl.length(),
-						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 兩倍大小
+				msp.setSpan(new RelativeSizeSpan(2.0f), namel.length() + 15
+						+ oprl.length(), namel.length() + 15 + oprl.length()
+						+ prl.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 兩倍大小
 				msp.setSpan(
 						new StyleSpan(android.graphics.Typeface.BOLD_ITALIC),
-						11 + oprl.length(), 11 + oprl.length() + prl.length(),
-						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); //斜字體
-				tv3.setText(msp);
-				row.addView(tv3, 0);
+						namel.length() + 15 + oprl.length(), namel.length()
+								+ 15 + oprl.length() + prl.length(),
+						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); // 斜字體
+				tv2.setText(msp);
+				row.addView(tv2, 1);
+			} else if (i % 2 == 1) {
+				ImageView iv = new ImageView(this);
+				iv.setImageResource(R.drawable.dividers);
+				TableRow.LayoutParams rowSpanLayout = new TableRow.LayoutParams(
+						TableRow.LayoutParams.FILL_PARENT,
+						TableRow.LayoutParams.WRAP_CONTENT);
+				rowSpanLayout.span = 2;
+				row.addView(iv, rowSpanLayout);
 			}
 			t1.addView(row);
 		}

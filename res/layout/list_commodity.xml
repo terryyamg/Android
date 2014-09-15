@@ -1,83 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tabHost"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tab1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/wallpaper4" >
+    android:layout_gravity="center_horizontal"
+    android:background="@drawable/wallpaper4"
+    android:gravity="center" >
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" >
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" >
 
-        <TabWidget
-            android:id="@android:id/tabs"
-            android:layout_width="fill_parent"
+        <ScrollView
+            android:id="@+id/vs"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:gravity="center_horizontal" />
+            android:scrollbars="vertical" >
 
-        <FrameLayout
-            android:id="@android:id/tabcontent"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_above="@android:id/tabs" >
-
-            <LinearLayout
-                android:id="@+id/tab1"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center" >
-
-                <TableLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal" >
-
-                    <ScrollView
-                        android:id="@+id/vs"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:scrollbars="vertical" >
-
-                        <TableLayout
-                            android:id="@+id/tableSet"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal" >
-                        </TableLayout>
-                    </ScrollView>
-                </TableLayout>
-            </LinearLayout>
-
-            <FrameLayout
-                android:id="@+id/tab2"
+            <TableLayout
+                android:id="@+id/tableSet"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal" >
+            </TableLayout>
+        </ScrollView>
+    </TableLayout>
 
-                <HorizontalScrollView
-                    android:id="@+id/hs2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <ScrollView
-                        android:id="@+id/vs2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:scrollbars="vertical" >
-
-                        <TableLayout
-                            android:id="@+id/tablay2"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal" >
-                        </TableLayout>
-                    </ScrollView>
-                </HorizontalScrollView>
-            </FrameLayout>
-        </FrameLayout>
-    </RelativeLayout>
-
-</TabHost>
+</LinearLayout>
