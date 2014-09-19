@@ -19,6 +19,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StrikethroughSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -87,46 +88,59 @@ public class SearchCommodity extends FragmentActivity {
 
 		TableLayout t1 = (TableLayout) findViewById(R.id.tableSet);
 		imgButton = new ImageButton[tableSearch.length];
-		for (int i = 0; i < (tableSearch.length-1)*3; i++) { // 列
+		for (int i = 0; i < (tableSearch.length-1)*2; i++) { // 列
 
 			TableRow row = new TableRow(this);
 
 			// 第一列 圖片
-			if (i % 3 == 0) {
-				imgButton[i / 3] = new ImageButton(this);
-				imgButton[i / 3].setImageResource(R.drawable.store
-						+ picNumber[i / 3]);
-				imgButton[i / 3].setBackgroundDrawable(null);
-				imgButton[i / 3].setId(i / 3);
-				imgButton[i / 3].setOnClickListener(imgButtonListen);
-				row.addView(imgButton[i / 3], 0);
-			} else if (i % 3 == 1) {
+			if (i % 2 == 0) {
+				imgButton[i / 2] = new ImageButton(this);
+				imgButton[i / 2].setImageResource(R.drawable.store
+						+ picNumber[i / 2]);
+				imgButton[i / 2].setBackgroundDrawable(null);
+				imgButton[i / 2].setId(i / 2);
+				imgButton[i / 2].setOnClickListener(imgButtonListen);
+				row.addView(imgButton[i / 2], 0);
 				// 第二列 商品名稱
 				TextView tv2 = new TextView(this);
 				tv2.setTextSize(15);
 				tv2.setTypeface(fontch);
 				tv2.setTextColor(Color.BLACK);
-				tv2.setText(tableSearch[i / 3][0] + " ");
-				row.addView(tv2, 0);
-			} else if (i % 3 == 2) {
-				// 第三列 價格
-				TextView tv3 = new TextView(this);
-				tv3.setTextSize(15);
-				tv3.setTypeface(fontch);
-				tv3.setTextColor(Color.BLACK);
-				String oprl = tableSearch[i / 3][1];
-				String prl = tableSearch[i / 3][2];
-				String ss = "原價:$" + oprl + "團購價:$" + prl;
+				tv2.setText(tableSearch[i / 2][0] + " ");
+				
+				String namel = tableSearch[i / 2][0];
+				String oprl = tableSearch[i / 2][1];
+				String prl = tableSearch[i / 2][2];
+
+				String ss = namel + "\n" + "原價:NT$" + oprl + "\n" + "團購價:NT$"
+						+ prl;
+
+				namel.length();// 產品名長度
 				oprl.length(); // 原價數字長度
 				prl.length();// 團購數字長度
 				Spannable msp = new SpannableString(ss);
-				msp.setSpan(new StrikethroughSpan(), 4, 4 + oprl.length(),
+				msp.setSpan(new StrikethroughSpan(), namel.length() + 7,
+						namel.length() + 7 + oprl.length(),
 						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 刪除線
-				msp.setSpan(new RelativeSizeSpan(2.0f), 9 + oprl.length(), 9
-						+ oprl.length() + prl.length(),
-						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 兩倍大小
-				tv3.setText(msp);
-				row.addView(tv3, 0);
+				msp.setSpan(new RelativeSizeSpan(2.0f), namel.length() + 15
+						+ oprl.length(), namel.length() + 15 + oprl.length()
+						+ prl.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 兩倍大小
+				msp.setSpan(
+						new StyleSpan(android.graphics.Typeface.BOLD_ITALIC),
+						namel.length() + 15 + oprl.length(), namel.length()
+								+ 15 + oprl.length() + prl.length(),
+						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); // 斜字體
+				
+				tv2.setText(msp);
+				row.addView(tv2, 1);
+			} else if (i % 2 == 1) {
+				ImageView iv = new ImageView(this);
+				iv.setImageResource(R.drawable.dividers);
+				TableRow.LayoutParams rowSpanLayout = new TableRow.LayoutParams(
+						TableRow.LayoutParams.FILL_PARENT,
+						TableRow.LayoutParams.WRAP_CONTENT);
+				rowSpanLayout.span = 2;
+				row.addView(iv, rowSpanLayout);
 			}
 			t1.addView(row);
 		}

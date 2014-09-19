@@ -3,7 +3,7 @@
 
     <string name="app_name">曼聯通優惠</string>
     <string name="service">特約商店主動通知</string>
-    <string name="shareButton">我要分享此App</string>
+    <string name="shareButton">我要分享App</string>
     <string name="keyRecommedn">輸入推薦碼</string>
     <string name="saveButton">儲存設定</string>
     <string name="scanner">QRcode掃描</string>
@@ -11,7 +11,7 @@
     <string name="scanner_success">掃描成功!</string>
     <string name="scanner_failed">掃描失敗</string>
     <string name="buyText">團購</string>
-    <string name="searchName"> 搜尋商品名稱...</string>
+    <string name="searchName"> 搜尋團購商品...</string>
     <string name="sendSearch">Go</string>
     <string name="buyCommodity">購買</string>
     <string name="loginGeneral">一般登入</string>
@@ -25,7 +25,9 @@
     <string name="confime_failed">推薦失敗</string>
     <string name="close">關閉視窗</string>
     <string name="confirm">輸入確認</string>
+     <string name="myRecommendButton">已推薦次數</string>
     <string name="recommendNumberEX">請輸入推薦碼</string>
+    <string name="lookMyRecommend">我的推薦碼</string>
     <string name="action_settings">Settings</string>
     <string name="hello_message">個人資料</string>
     <string name="age_text_view">年齡</string>
@@ -46,9 +48,10 @@
      <string name="storePassword">密碼</string>
      <string name="pushStore">推薦</string>
 
-      <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
+     <string name="drawer_open">開啟</string>
+    <string name="drawer_close">關閉</string>
     <string-array name="drawer_menu">
+        <item>首頁</item>
         <item>我的購買紀錄</item>
         <item>設定</item>
         <item>精選/廣告推撥</item>
@@ -56,7 +59,7 @@
         <item>粉絲團專頁</item>
     </string-array>
     
-    <string name="action_search">搜尋</string>  
+    <string name="action_search">團購搜尋</string>  
      
     <style name="ButtonText">
         <item name="android:layout_width">wrap_content</item>

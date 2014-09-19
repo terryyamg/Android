@@ -19,7 +19,7 @@ public class GPSReceiver extends BroadcastReceiver {
 
 		Notification notification = new Notification(R.drawable.ic_launcher,
 				"您已經接近特約商店", System.currentTimeMillis());
-		Intent newintent = new Intent(context, MainActivity.class);
+		Intent newintent = new Intent(context, NavigationDrawer.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				newintent, 0);
 		notification.setLatestEventInfo(context, "您已經進入曼聯通優惠商店區", null, contentIntent);

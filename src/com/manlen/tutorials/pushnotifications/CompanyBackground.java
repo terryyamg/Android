@@ -205,7 +205,8 @@ public class CompanyBackground extends FragmentActivity {
 	private OnClickListener cc = new OnClickListener() {
 		public void onClick(View v) {
 			id = v.getId();
-			Log.i("tableData[id][11]", tableData[id][11]+"");
+			Log.i("tableData[id][4]", tableData[id][4]+"");
+			
 			// 跳出確認視窗
 			new AlertDialog.Builder(CompanyBackground.this)
 					.setTitle("確定完成?")
@@ -214,6 +215,7 @@ public class CompanyBackground extends FragmentActivity {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int which) {
+									//輸入complete=1  顯示完成
 									ParseQuery<ParseObject> query = ParseQuery
 											.getQuery("BuyerInfo");
 									query.whereEqualTo("objectId",
@@ -227,6 +229,22 @@ public class CompanyBackground extends FragmentActivity {
 											}
 										}
 									});
+									//紀錄商品次數
+									ParseQuery<ParseObject> queryC = ParseQuery.getQuery("Commodity");
+									queryC.whereEqualTo("commodity",tableData[id][4]);
+									queryC.getFirstInBackground(new GetCallback<ParseObject>() {
+										public void done(ParseObject object,
+												ParseException e) {
+											if (e == null) {
+												int sellNumber = object.getInt("sellNumber");
+												Log.i("sellNumber", sellNumber+"");
+												sellNumber++;
+												object.put("sellNumber", sellNumber);
+												object.saveInBackground();
+											}
+										}
+									});
+									
 									ref();
 								}
 							})

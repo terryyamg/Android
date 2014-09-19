@@ -34,7 +34,7 @@ public class SplashScreen extends Activity {
 
 				checkFirst = preferences.getInt("first", first);
 				if (checkFirst == 1) { // 有開過
-					Intent i = new Intent(SplashScreen.this, MainActivity.class);
+					Intent i = new Intent(SplashScreen.this, NavigationDrawer.class);
 					startActivity(i);
 				} else { // 沒開過，開啟說明頁
 					Intent i = new Intent(SplashScreen.this, Leading.class);

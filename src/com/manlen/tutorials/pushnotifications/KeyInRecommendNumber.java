@@ -1,5 +1,6 @@
 package com.manlen.tutorials.pushnotifications;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -23,16 +24,23 @@ public class KeyInRecommendNumber extends FragmentActivity {
 	private String objectId, gRecommend;
 	private int firstKey, number, recommendCol;
 	private boolean determine;
+	Typeface fontch;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recommend);
-
+		/* 字型 */
+		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt001.ttf");
 		close = (Button) findViewById(R.id.close);
 		confime = (Button) findViewById(R.id.confime);
 		say = (TextView) findViewById(R.id.say);
 		recommendNumber = (EditText) findViewById(R.id.recommendNumber);
+
+		close.setTypeface(fontch);
+		confime.setTypeface(fontch);
+		say.setTypeface(fontch);
+		recommendNumber.setTypeface(fontch);
 
 		confime.setOnClickListener(new Button.OnClickListener() { // 確認輸入
 			public void onClick(View v) {
@@ -46,7 +54,7 @@ public class KeyInRecommendNumber extends FragmentActivity {
 	/* 輸入驗證 */
 	void confimeRecommend() {
 		recommendCol = 10; // user column 數
-		gRecommend = recommendNumber.getText().toString(); //輸入的推薦碼
+		gRecommend = recommendNumber.getText().toString(); // 輸入的推薦碼
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("_Installation");
 		objectId = ParseInstallation.getCurrentInstallation().getObjectId(); // 取出自己的推薦碼
 		firstKey = ParseInstallation.getCurrentInstallation()
@@ -105,8 +113,6 @@ public class KeyInRecommendNumber extends FragmentActivity {
 											recommendList.saveInBackground(); // 存入recommendList
 																				// table
 										}
-									} else {
-
 									}
 								}
 							});

@@ -70,11 +70,11 @@ public class DetailMarkerInfo extends FragmentActivity {
 
 		mTabHost = (TabHost) findViewById(android.R.id.tabhost);
 		mTabHost.setup();
-		mTabHost.addTab(mTabHost.newTabSpec("one").setIndicator("商品明細")
+		mTabHost.addTab(mTabHost.newTabSpec("one").setIndicator("商品明細", getResources().getDrawable(R.drawable.detail_marker_info1))
 				.setContent(R.id.tab1));
-		mTabHost.addTab(mTabHost.newTabSpec("two").setIndicator("店家位置")
+		mTabHost.addTab(mTabHost.newTabSpec("two").setIndicator("店家位置", getResources().getDrawable(R.drawable.detail_marker_info2))
 				.setContent(R.id.tab2));
-		mTabHost.addTab(mTabHost.newTabSpec("three").setIndicator("注意事項")
+		mTabHost.addTab(mTabHost.newTabSpec("three").setIndicator("注意事項", getResources().getDrawable(R.drawable.detail_marker_info3))
 				.setContent(R.id.tab3));
 
 		TabWidget tabWidget = mTabHost.getTabWidget();

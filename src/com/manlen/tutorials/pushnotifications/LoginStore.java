@@ -137,7 +137,7 @@ public class LoginStore extends FragmentActivity {
 		// 存入該手機用戶為商店頻道
 		progress();
 		PushService.subscribe(getApplicationContext(), channels,
-				MainActivity.class);
+				NavigationDrawer.class);
 
 		Intent intent = new Intent(this, CompanyBackground.class);
 		intent.putExtra("store", store);

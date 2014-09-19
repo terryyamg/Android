@@ -1,10 +1,12 @@
 package com.manlen.tutorials.pushnotifications;
 
+import java.util.Arrays;
 import java.util.List;
 
-import android.app.AlertDialog;
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -17,33 +19,30 @@ import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
-import android.widget.TabWidget;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 public class ListCommodity extends FragmentActivity {
-	private Button buyButton, recommend;
-	private Button cancel[];
+	private Button buyButton, recommend, favourite;
 	private ImageView img;
-	private int opr, pr, pn, id;
-	private String store, userTel, myTel, sn, si, storeClass, tableData[][];
+	private int opr, pr, pn, sellNumber, favouriteKey;
+	private String store, userTel, myTel, sn, si, storeClass, objectId;
 	public ProgressDialog dialog = null;
-	List<ParseObject> searchObject;
-	List<ParseObject> ob;
+	private boolean picIndex1;
+	List<ParseObject> searchObject, ob, results;
 	Typeface fontch;
 
 	@Override
@@ -69,6 +68,7 @@ public class ListCommodity extends FragmentActivity {
 				si = (String) search.get("introduction"); // 商品介紹
 				store = (String) search.get("store"); // 店名
 				storeClass = (String) search.get("storeClass"); // 店家類別
+				sellNumber = (int) search.getInt("sellNumber"); // 賣出數量
 			}
 
 			SharedPreferences preferences = getApplicationContext()
@@ -96,14 +96,21 @@ public class ListCommodity extends FragmentActivity {
 		// 排版
 		buyButton = new Button(this);
 		recommend = new Button(this);
-		for (int i = 0; i < 6; i++) { // 列
+		favourite = new Button(this);
+		for (int i = 0; i < 7; i++) { // 列
 			TableRow row = new TableRow(this);
-
+			TableRow.LayoutParams rowSpanLayout = new TableRow.LayoutParams(
+					200, 200);
+			rowSpanLayout.span = 2;
+			TableRow.LayoutParams rowSpanLayout2 = new TableRow.LayoutParams(
+					30, 30);
+			rowSpanLayout2.topMargin = 20;
 			// 第一列 圖片
 			switch (i) {
 			case 0: // 第一列 商品圖片
 				img = new ImageView(this);
 				img.setImageResource(R.drawable.store + pn);
+				img.setLayoutParams(rowSpanLayout);
 				row.addView(img, 0);
 				break;
 			case 1: // 第二列 商品名稱
@@ -114,11 +121,25 @@ public class ListCommodity extends FragmentActivity {
 				tv2.setText(store + "\n" + sn + " ");
 				row.addView(tv2, 0);
 				break;
-			case 2:
+			case 2: // 賣出數量
 				TextView tv3 = new TextView(this);
-				tv3.setTextSize(12);
+				tv3.setTextSize(20);
 				tv3.setTypeface(fontch);
 				tv3.setTextColor(Color.BLACK);
+				tv3.setText("已賣出" + sellNumber + "份");
+				row.addView(tv3, 0);
+				favourite = new Button(this);
+				favourite.setBackgroundResource(R.drawable.fav);
+				favourite.setLayoutParams(rowSpanLayout2);
+				favourite.setId(i);
+				favourite.setOnClickListener(ff); // 購買動作
+				row.addView(favourite, 1);
+				break;
+			case 3: // 說明
+				TextView tv4 = new TextView(this);
+				tv4.setTextSize(12);
+				tv4.setTypeface(fontch);
+				tv4.setTextColor(Color.BLACK);
 				try {
 					String showSi = "";
 					String[] siSplit = si.split(":");
@@ -126,17 +147,17 @@ public class ListCommodity extends FragmentActivity {
 						showSi = showSi + siSplit[k] + "\n";
 					}
 
-					tv3.setText(showSi);
-					row.addView(tv3, 0);
+					tv4.setText(showSi);
+					row.addView(tv4, 0);
 				} catch (Exception e) {
 
 				}
 				break;
-			case 3:
-				TextView tv4 = new TextView(this);
-				tv4.setTextSize(20);
-				tv4.setTypeface(fontch);
-				tv4.setTextColor(Color.BLACK);
+			case 4: // 價格
+				TextView tv5 = new TextView(this);
+				tv5.setTextSize(20);
+				tv5.setTypeface(fontch);
+				tv5.setTextColor(Color.BLACK);
 				String oprl = Integer.toString(opr);
 				String prl = Integer.toString(pr);
 				String ss = "原價:NT$" + oprl + "\n團購價:NT$" + prl;
@@ -152,26 +173,24 @@ public class ListCommodity extends FragmentActivity {
 						new StyleSpan(android.graphics.Typeface.BOLD_ITALIC),
 						14 + oprl.length(), 14 + oprl.length() + prl.length(),
 						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); // 斜字體
-				tv4.setText(msp);
-				row.addView(tv4, 0);
+				tv5.setText(msp);
+				row.addView(tv5, 0);
 				break;
-			case 4:
+			case 5:
 				buyButton = new Button(this);
 				buyButton.setTypeface(fontch);
 				buyButton.setTextColor(Color.BLACK);
-				buyButton
-						.setBackgroundResource(R.drawable.btn_lightblue_glossy);
-				buyButton.setText("NT$"+pr+" 馬上加入優惠");
+				buyButton.setBackgroundResource(R.drawable.list_commodity);
+				buyButton.setText("NT$" + pr + " 馬上加入優惠");
 				buyButton.setId(i);
 				buyButton.setOnClickListener(bb); // 購買動作
 				row.addView(buyButton, 0);
 				break;
-			case 5:
+			case 6:
 				recommend = new Button(this);
 				recommend.setTypeface(fontch);
 				recommend.setTextColor(Color.BLACK);
-				recommend
-						.setBackgroundResource(R.drawable.btn_lightblue_glossy);
+				recommend.setBackgroundResource(R.drawable.list_commodity);
 				recommend.setText("推薦給好友");
 				recommend.setId(i);
 				recommend.setOnClickListener(rr); // 推薦動作
@@ -180,6 +199,82 @@ public class ListCommodity extends FragmentActivity {
 
 			}
 			t1.addView(row);
+		}
+
+	}
+
+	// 加入收藏
+	private OnClickListener ff = new OnClickListener() {
+		public void onClick(View v) {
+			addMyFavourite();
+		}
+	};
+
+	void addMyFavourite() {
+		objectId = ParseInstallation.getCurrentInstallation().getObjectId(); // 取出自己的id
+		favouriteKey = ParseInstallation.getCurrentInstallation().getInt(
+				"favouriteKey"); // 取得是否建立過指標
+		if (favouriteKey == 0) { // 第一次 建立 recommendList ObjectID
+			ParseObject myFavourite = new ParseObject("MyFavourite"); // 建立MyFavorite
+																		// table
+			myFavourite.put("installID", objectId); // 輸入installID
+			myFavourite.add("picNumber", Arrays.asList(pn));// 輸入圖片號碼
+			myFavourite.saveInBackground(); // 存入MyFavorite table
+
+			ParseInstallation.getCurrentInstallation().put("favouriteKey",
+					favouriteKey + 1);
+			ParseInstallation.getCurrentInstallation().saveInBackground();
+			Toast.makeText(getBaseContext(), "成功加入我的收藏!",
+					Toast.LENGTH_SHORT).show();
+		} else {
+
+			ParseQuery<ParseObject> query = ParseQuery.getQuery("MyFavourite");
+			query.whereEqualTo("installID", objectId);
+
+			// 判斷是否已加入過
+			try {
+				results = query.find();
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			ParseObject object = results.get(0);
+			JSONArray pic = object.getJSONArray("picNumber");
+			for (int i = 0; i < pic.length(); i++) {
+				String getPicNumber;
+				picIndex1=true;
+				try {
+					getPicNumber = pic.getString(i);// 取出數字
+					int gPN = Integer.parseInt(getPicNumber.replaceAll("[\\D]",
+							""));
+					if (pn == gPN) { // 有輸入過
+						picIndex1 = false;
+					}
+
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			//true:輸入;false:不輸入
+			if (picIndex1) {
+				query.getFirstInBackground(new GetCallback<ParseObject>() {
+					public void done(ParseObject myFavouriteList,
+							ParseException e) {
+						if (e == null) {
+							myFavouriteList.add("picNumber", Arrays.asList(pn));// 輸入圖片號碼
+							myFavouriteList.saveInBackground(); // 存入MyFavorite
+																// table
+
+						}
+					}
+				});
+				Toast.makeText(getBaseContext(), "成功加入我的收藏!",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(getBaseContext(), "此商品已在我的收藏!",
+						Toast.LENGTH_SHORT).show();
+			}
 		}
 
 	}

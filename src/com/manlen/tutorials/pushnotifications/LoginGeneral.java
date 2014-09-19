@@ -288,7 +288,7 @@ public class LoginGeneral extends FragmentActivity {
 		push.setMessage("您有一筆新的交易通知!!");
 		push.sendInBackground();
 		
-		Intent intent = new Intent(this, MainActivity.class);
+		Intent intent = new Intent(this, NavigationDrawer.class);
 		intent.putExtra("userTel", userTel); // 傳送使用者電話資料
 		startActivity(intent);
 	}

@@ -64,20 +64,21 @@
             </FrameLayout>
                     -->
 
-                    <TableLayout
+                    <LinearLayout
                         android:id="@+id/tab2"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:layout_gravity="center"
+                        android:layout_gravity="center_horizontal"
                         android:background="@drawable/wallpaper2"
-                        android:gravity="center" >
+                        android:gravity="center"
+                        android:orientation="vertical" >
 
                         <Button
                             android:id="@+id/openMap"
                             style="@style/ButtonText"
                             android:layout_width="200dp"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/btn_lightblue_glossy"
+                            android:layout_height="40dp"
+                            android:background="@drawable/tab2_1"
                             android:text="@string/openMap" />
 
                         <TextView
@@ -89,25 +90,34 @@
                             android:id="@+id/wheelWidget"
                             style="@style/ButtonText"
                             android:layout_width="200dp"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/btn_lightblue_glossy"
+                            android:layout_height="40dp"
+                            android:background="@drawable/tab2_2"
                             android:text="@string/wheelWidget" />
-                    </TableLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="" />
+                    </LinearLayout>
 
-                    <TableLayout
+                    <LinearLayout
                         android:id="@+id/tab3"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:layout_gravity="center_horizontal"
                         android:background="@drawable/wallpaper3"
-                        android:paddingTop="70dp" >
+                        android:gravity="center"
+                        android:orientation="vertical" >
 
                         <Button
                             android:id="@+id/scanner"
                             style="@style/ButtonText"
                             android:layout_width="200dp"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/btn_lightblue_glossy"
+                            android:layout_height="40dp"
+                            android:background="@drawable/tab3_1"
                             android:text="@string/scanner" />
 
                         <TextView
@@ -121,24 +131,36 @@
                             android:id="@+id/scanner2"
                             style="@style/ButtonText"
                             android:layout_width="200dp"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/btn_lightblue_glossy"
+                            android:layout_height="40dp"
+                            android:background="@drawable/tab3_2"
                             android:text="@string/scanner2" />
 
-                        <TextView
-                            android:id="@+id/info2"
+                        <ScrollView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=""
-                            android:textColor="#000" />
+                            android:layout_height="wrap_content" >
 
-                        <TextView
-                            android:id="@+id/info3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=""
-                            android:textColor="#000" />
-                    </TableLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:orientation="vertical" >
+
+                                <TextView
+                                    android:id="@+id/info2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textColor="#000" />
+
+                                <TextView
+                                    android:id="@+id/info3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textColor="#000" />
+                            </LinearLayout>
+                        </ScrollView>
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/tab4"
@@ -152,30 +174,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal" >
-
-                            <TableRow
-                                android:id="@+id/tableRow0"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" >
-
-                                <EditText
-                                    android:id="@+id/searchName"
-                                    android:layout_width="150dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_column="1"
-                                    android:ems="10"
-                                    android:hint="@string/searchName"
-                                    android:inputType="none" />
-
-                                <Button
-                                    android:id="@+id/searchButton"
-                                    style="@style/ButtonText"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="50dp"
-                                    android:layout_column="1"
-                                    android:background="@drawable/btn_lightblue_glossy"
-                                    android:text="@string/sendSearch" />
-                            </TableRow>
 
                             <ScrollView
                                 android:id="@+id/vs"
@@ -193,58 +191,56 @@
                         </TableLayout>
                     </LinearLayout>
 
-                    <TableLayout
+                    <LinearLayout
                         android:id="@+id/tab5"
-                        android:layout_width="200dp"
+                        android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:layout_gravity="center_horizontal"
+                        android:background="@drawable/wallpaper1"
+                        android:gravity="center"
+                        android:orientation="vertical"
                         android:paddingTop="70dp" >
-
-                        <CheckBox
-                            android:id="@+id/checkBox_service"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/service"
-                            android:textColor="#000" />
-
-                        <TextView
-                            android:id="@+id/output"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=""
-                            android:textColor="#000" />
 
                         <Button
                             android:id="@+id/shareButton"
                             style="@style/ButtonText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/btn_lightblue_glossy"
+                            android:layout_width="200dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/tab5_1"
                             android:text="@string/shareButton" />
 
-                        <TextView
-                            android:id="@+id/myRecommend"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=""
-                            android:textColor="#000" />
+                        <Button
+                            android:id="@+id/myRecommendButton"
+                            style="@style/ButtonText"
+                            android:layout_width="200dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/tab5_2"
+                            android:text="@string/myRecommendButton" />
+
 
                         <Button
                             android:id="@+id/keyRecommend"
                             style="@style/ButtonText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/btn_lightblue_glossy"
+                            android:layout_width="200dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/tab5_3"
                             android:text="@string/keyRecommedn" />
 
                         <Button
-                            android:id="@+id/logButton"
+                            android:id="@+id/lookMyRecommend"
                             style="@style/ButtonText"
+                            android:layout_width="200dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/tab5_4"
+                            android:text="@string/lookMyRecommend" />
+
+                        <TextView
+                            android:id="@+id/lookMyRecommendTV"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/btn_lightblue_glossy"
-                            android:text="@string/logCompany" />
-                    </TableLayout>
+                            android:text=""
+                            android:textColor="#000" />
+                    </LinearLayout>
                 </FrameLayout>
             </RelativeLayout>
         </TabHost>

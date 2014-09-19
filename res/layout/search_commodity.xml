@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/wallpaper4" >
+    android:layout_gravity="center_horizontal"
+    android:background="@drawable/wallpaper4"
+    android:gravity="center" >
 
-    <ScrollView
-        android:id="@+id/vs"
+    <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical" >
+        android:layout_gravity="center_horizontal" >
 
-        <TableLayout
-            android:id="@+id/tableSet"
-            android:layout_width="fill_parent"
+        <ScrollView
+            android:id="@+id/vs"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center" >
-        </TableLayout>
-    </ScrollView>
+            android:scrollbars="vertical" >
 
-</FrameLayout>
+            <TableLayout
+                android:id="@+id/tableSet"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center" >
+            </TableLayout>
+        </ScrollView>
+    </TableLayout>
+
+</LinearLayout>

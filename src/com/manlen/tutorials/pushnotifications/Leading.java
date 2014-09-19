@@ -24,15 +24,16 @@ import android.widget.TextView;
 public class Leading extends Activity {
 	private ViewPager myViewPager; // 頁卡內容
 	private List<View> list; // 存放頁卡
-	private TextView dot1, dot2, dot3, dot4, dot5; // 這些點都是文字
+	private TextView dot1, dot2, dot3, dot4, dot5, dot6; // 這些點都是文字
 	private Button startButton; // 按鈕，開始體驗
 	private int first;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.leading);
-		
+
 		/* 建立桌面捷徑 */
 		addShortcut();
 		initDot();
@@ -56,13 +57,14 @@ public class Leading extends Activity {
 		addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT"); // 安裝
 		getApplicationContext().sendBroadcast(addIntent); // 送出廣播
 	}
-	
+
 	private void initDot() {
 		dot1 = (TextView) this.findViewById(R.id.textView1); // 這些點都是文字
 		dot2 = (TextView) this.findViewById(R.id.textView2);
 		dot3 = (TextView) this.findViewById(R.id.textView3);
 		dot4 = (TextView) this.findViewById(R.id.textView4);
 		dot5 = (TextView) this.findViewById(R.id.textView5);
+		dot6 = (TextView) this.findViewById(R.id.textView6);
 	}
 
 	private void initViewPager() {
@@ -71,12 +73,13 @@ public class Leading extends Activity {
 
 		LayoutInflater inflater = getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.lay5, null); // 只是為了等下findviewbuid而獨立拿出來賦給view
+		View view = inflater.inflate(R.layout.lay6, null); // 只是為了等下findviewbuid而獨立拿出來賦給view
 
 		list.add(inflater.inflate(R.layout.lay1, null));
 		list.add(inflater.inflate(R.layout.lay2, null));
 		list.add(inflater.inflate(R.layout.lay3, null));
 		list.add(inflater.inflate(R.layout.lay4, null));
+		list.add(inflater.inflate(R.layout.lay5, null));
 		list.add(view);
 		try {
 			myViewPager.setAdapter(new MyPagerAdapter(list));
@@ -85,22 +88,23 @@ public class Leading extends Activity {
 		} catch (NullPointerException e) {
 		}
 		/* 字型 */
-		Typeface fontch = Typeface.createFromAsset(getAssets(), "fonts/wt001.ttf");
+		Typeface fontch = Typeface.createFromAsset(getAssets(),
+				"fonts/wt001.ttf");
 		startButton = (Button) view.findViewById(R.id.start); // 與上面對應，獲取這個按鈕
 		startButton.setTypeface(fontch);
-		
+
 		startButton.setOnClickListener(new OnClickListener() {
 
 			@SuppressLint("CommitPrefEdits")
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(Leading.this, MainActivity.class);
+				Intent intent = new Intent(Leading.this, NavigationDrawer.class);
 				SharedPreferences preferences = getApplicationContext()
 						.getSharedPreferences("Android",
 								android.content.Context.MODE_PRIVATE);
 				SharedPreferences.Editor editor = preferences.edit();
-				first =1;
-				editor.putInt("first", first); //儲存手機
+				first = 1;
+				editor.putInt("first", first); // 儲存手機
 				editor.commit();
 				startActivity(intent);
 
@@ -166,6 +170,7 @@ public class Leading extends Activity {
 				dot3.setTextColor(Color.BLACK);
 				dot4.setTextColor(Color.BLACK);
 				dot5.setTextColor(Color.BLACK);
+				dot6.setTextColor(Color.BLACK);
 				break;
 
 			case 1:
@@ -174,6 +179,7 @@ public class Leading extends Activity {
 				dot3.setTextColor(Color.BLACK);
 				dot4.setTextColor(Color.BLACK);
 				dot5.setTextColor(Color.BLACK);
+				dot6.setTextColor(Color.BLACK);
 				break;
 
 			case 2:
@@ -182,24 +188,34 @@ public class Leading extends Activity {
 				dot3.setTextColor(Color.WHITE);
 				dot4.setTextColor(Color.BLACK);
 				dot5.setTextColor(Color.BLACK);
+				dot6.setTextColor(Color.BLACK);
 				break;
-				
+
 			case 3:
 				dot1.setTextColor(Color.BLACK);
 				dot2.setTextColor(Color.BLACK);
 				dot3.setTextColor(Color.BLACK);
 				dot4.setTextColor(Color.WHITE);
 				dot5.setTextColor(Color.BLACK);
+				dot6.setTextColor(Color.BLACK);
 				break;
-				
+
 			case 4:
 				dot1.setTextColor(Color.BLACK);
 				dot2.setTextColor(Color.BLACK);
 				dot3.setTextColor(Color.BLACK);
 				dot4.setTextColor(Color.BLACK);
 				dot5.setTextColor(Color.WHITE);
+				dot6.setTextColor(Color.BLACK);
 				break;
-
+			case 5:
+				dot1.setTextColor(Color.BLACK);
+				dot2.setTextColor(Color.BLACK);
+				dot3.setTextColor(Color.BLACK);
+				dot4.setTextColor(Color.BLACK);
+				dot5.setTextColor(Color.BLACK);
+				dot6.setTextColor(Color.WHITE);
+				break;
 			}
 		}
 
