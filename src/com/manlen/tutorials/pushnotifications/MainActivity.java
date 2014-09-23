@@ -44,6 +44,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.parse.GetCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
@@ -53,30 +54,28 @@ import com.parse.ParseQuery;
 public class MainActivity extends Fragment {
 
 	/* tab1 */
-
-	/* tab2 */
 	private Button wheelWidget, openMap;
 	int spinnerNumber = 0; // 初次進map不使用下拉選單
 
-	/* tab3 */
+	/* tab2 */
 	private TextView info, info2, info3;
 	private Button scanner, scanner2;
 	private int scannerError = 0;
 	List<ParseObject> searchSc;
 
-	/* tab4 */
+	/* tab3 */
 	private String sn[], tableCommodity[][];
 	private ImageButton imgButton[];
 	public ProgressDialog dialog = null;
 	private int opr[], pr[], id, picNumber[];
 	List<ParseObject> Object;
 
-	/* tab5 */
+	/* tab4 */
 	private TextView lookMyRecommendTV;
-	private Button shareButton, myRecommendButton, keyRecommedn,
+	private Button shareButton, myRecommendButton, keyRecommend,
 			lookMyRecommend;
-	private int recommendFrequency;
-	private String objectId;
+	private int recommendFrequency, firstKey;
+	private String objectId, myRecommendNumber;
 
 	Typeface fontch;
 
@@ -138,7 +137,7 @@ public class MainActivity extends Fragment {
 				wheelWidget();
 			}
 		});
-		/* tab3 */
+		/* tab2 */
 		info = (TextView) view.findViewById(R.id.info);
 		info2 = (TextView) view.findViewById(R.id.info2);
 		info3 = (TextView) view.findViewById(R.id.info3);
@@ -150,6 +149,7 @@ public class MainActivity extends Fragment {
 		info3.setTypeface(fontch);
 		scanner.setTypeface(fontch);
 		scanner2.setTypeface(fontch);
+		objectId = ParseInstallation.getCurrentInstallation().getObjectId(); // 取出自己的id
 
 		scanner2.setOnClickListener(new Button.OnClickListener() {
 			@Override
@@ -205,7 +205,7 @@ public class MainActivity extends Fragment {
 			}
 		});
 
-		/* tab4 */
+		/* tab3 */
 
 		// 列出所有商品
 		try {
@@ -297,26 +297,64 @@ public class MainActivity extends Fragment {
 			}
 			t1.addView(row);
 		}
-		/* tab5 */
+		/* tab4 */
 
 		shareButton = (Button) view.findViewById(R.id.shareButton);
 		myRecommendButton = (Button) view.findViewById(R.id.myRecommendButton);
-		keyRecommedn = (Button) view.findViewById(R.id.keyRecommend);
+		keyRecommend = (Button) view.findViewById(R.id.keyRecommend);
 		lookMyRecommend = (Button) view.findViewById(R.id.lookMyRecommend);
-		lookMyRecommendTV = (TextView) view.findViewById(R.id.lookMyRecommendTV);
+		lookMyRecommendTV = (TextView) view
+				.findViewById(R.id.lookMyRecommendTV);
 
 		shareButton.setTypeface(fontch);
 		myRecommendButton.setTypeface(fontch);
-		keyRecommedn.setTypeface(fontch);
+		keyRecommend.setTypeface(fontch);
 		lookMyRecommend.setTypeface(fontch);
 		lookMyRecommendTV.setTypeface(fontch);
 		lookMyRecommendTV.setTextSize(20);
-		recommendFrequency = ParseInstallation.getCurrentInstallation().getInt(
-				"recommendFrequency");
-		objectId = ParseInstallation.getCurrentInstallation().getObjectId();
+
+		firstKey = ParseInstallation.getCurrentInstallation()
+				.getInt("firstKey");
+
+		if (firstKey == 0) { // 沒有產生過推薦碼
+			int randNumber = (int) (10 * Math.random())
+					+ (int) (100 * Math.random())
+					+ (int) (1000 * Math.random())
+					+ (int) (10000 * Math.random())
+					+ (int) (100000 * Math.random())
+					+ (int) (1000000 * Math.random());// 六碼推薦碼
+			myRecommendNumber = Integer.toString(randNumber);
+
+			ParseObject recommendList = new ParseObject("RecommendList"); // 建立recommendList
+																			// table
+			recommendList.put("installID", objectId); // 輸入installID
+			recommendList.put("myRecommendNumber", myRecommendNumber); // 輸入myRecommendNumber
+			recommendList.saveInBackground(); // 存入recommendList
+												// table
+			ParseInstallation.getCurrentInstallation().put("firstKey",
+					firstKey + 1);
+			ParseInstallation.getCurrentInstallation().saveInBackground();
+
+		}
+		// 取的我的推薦碼
+		ParseQuery<ParseObject> queryMyRecommend = ParseQuery
+				.getQuery("RecommendList");
+		queryMyRecommend.whereEqualTo("installID", objectId);
+		queryMyRecommend.getFirstInBackground(new GetCallback<ParseObject>() {
+			public void done(ParseObject object, ParseException e) {
+				if (e == null) {
+					myRecommendNumber = object.getString("myRecommendNumber");
+				} else {
+
+				}
+			}
+		});
+
 		// 顯示我推薦成功次數
 		myRecommendButton.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
+				recommendFrequency = ParseInstallation.getCurrentInstallation()
+						.getInt("recommendFrequency");
 				lookMyRecommendTV.setText("\n我推薦成功次數: " + recommendFrequency);
 			}
 		});
@@ -329,7 +367,7 @@ public class MainActivity extends Fragment {
 		});
 		// 輸入推薦碼 keyRecommendNumber
 
-		keyRecommedn.setOnClickListener(new Button.OnClickListener() {
+		keyRecommend.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				keyRecommendNumber();
 			}
@@ -337,7 +375,7 @@ public class MainActivity extends Fragment {
 		// 看自己的推薦碼
 		lookMyRecommend.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
-				lookMyRecommendTV.setText("\n我的推薦碼: " + objectId);
+				lookMyRecommendTV.setText("\n我的推薦碼: " + myRecommendNumber);
 			}
 		});
 
@@ -420,8 +458,6 @@ public class MainActivity extends Fragment {
 	}
 
 	/* tab1 */
-
-	/* tab2 */
 	void wheelWidget() {
 		progress();
 		Intent intent = new Intent(getActivity(), WheelWidget.class);
@@ -434,7 +470,7 @@ public class MainActivity extends Fragment {
 		startActivity(intent);
 	}
 
-	/* tab3 */
+	/* tab2 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -575,7 +611,7 @@ public class MainActivity extends Fragment {
 		}
 	}
 
-	/* tab4 */
+	/* tab3 */
 
 	private OnClickListener imgButtonListen = new OnClickListener() {
 		public void onClick(View v) {
@@ -612,14 +648,14 @@ public class MainActivity extends Fragment {
 		}).start();
 	}
 
-	/* tab5 */
+	/* tab4 */
 
 	// 分享app
 	void shareDialog() {
 
 		String shareText = "曼聯通優惠，讓您食衣住行育樂都省錢  "
 				+ "\n https://play.google.com/store/apps/details?id=com.manlen.tutorials.pushnotifications"
-				+ "\n輸入我的推薦碼" + objectId + "\n 將可獲得優惠";
+				+ "\n輸入我的推薦碼" + myRecommendNumber + "\n 將可獲得優惠";
 		// Uri imageUri = Uri.parse("android.resource://" + getPackageName() +
 		// "/drawable/" + "android");
 		// Log.i("imageUri:", imageUri + "");
@@ -667,8 +703,6 @@ public class MainActivity extends Fragment {
 		// Kill myself
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
-
-	/* tab3 */
 
 	@Override
 	public void onStart() {

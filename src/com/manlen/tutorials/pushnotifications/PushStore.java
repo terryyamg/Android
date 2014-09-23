@@ -42,7 +42,7 @@ public class PushStore extends FragmentActivity {
 				"location"); // 取的 我的位置
 		Log.i("location", location + "");
 		if (location == null) {
-			output.setText("抱歉，請先前往設定開啟特約商店主動通知"+"\n "+"取得您的位置");
+			output.setText("抱歉，請先前往設定開啟特約商店主動通知取得您的位置");
 		}
 		try {
 			ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(

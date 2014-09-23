@@ -114,79 +114,79 @@ public class MyFavourite extends Fragment {
 				// loop and add it to array or arraylist
 			}
 
-		} catch (ParseException e2) {
+			// 排版
+			TableLayout t1 = (TableLayout) view.findViewById(R.id.tablay2);
+			Log.i("tableSearch.length", tableSearch.length + "");
+			imgButton = new ImageButton[tableSearch.length];
+			delButton = new ImageButton[tableSearch.length];
+			for (int i = 0; i < (tableSearch.length - 1) * 2; i++) { // 列
+
+				TableRow row = new TableRow(getActivity());
+
+				// 第一列 圖片
+				if (i % 2 == 0) {
+					imgButton[i / 2] = new ImageButton(getActivity());
+					imgButton[i / 2].setImageResource(R.drawable.store
+							+ picNumber[i / 2]);
+					imgButton[i / 2].setBackgroundDrawable(null);
+					imgButton[i / 2].setId(i / 2);
+					imgButton[i / 2].setOnClickListener(imgButtonListen);
+					row.addView(imgButton[i / 2], 0);
+					// 第二列 商品名稱
+					TextView tv2 = new TextView(getActivity());
+					tv2.setTextSize(15);
+					tv2.setTypeface(fontch);
+					tv2.setTextColor(Color.BLACK);
+					tv2.setText(tableSearch[i / 2][0] + " ");
+
+					String namel = tableSearch[i / 2][0];
+					String oprl = tableSearch[i / 2][1];
+					String prl = tableSearch[i / 2][2];
+
+					String ss = namel + "\n" + "原價:NT$" + oprl + "\n"
+							+ "團購價:NT$" + prl;
+
+					namel.length();// 產品名長度
+					oprl.length(); // 原價數字長度
+					prl.length();// 團購數字長度
+					Spannable msp = new SpannableString(ss);
+					msp.setSpan(new StrikethroughSpan(), namel.length() + 7,
+							namel.length() + 7 + oprl.length(),
+							Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 刪除線
+					msp.setSpan(new RelativeSizeSpan(2.0f), namel.length() + 15
+							+ oprl.length(),
+							namel.length() + 15 + oprl.length() + prl.length(),
+							Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 兩倍大小
+					msp.setSpan(new StyleSpan(
+							android.graphics.Typeface.BOLD_ITALIC),
+							namel.length() + 15 + oprl.length(), namel.length()
+									+ 15 + oprl.length() + prl.length(),
+							Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); // 斜字體
+
+					tv2.setText(msp);
+					row.addView(tv2, 1);
+					// 移除按鈕
+					delButton[i / 2] = new ImageButton(getActivity());
+					delButton[i / 2].setImageResource(R.drawable.delete);
+					delButton[i / 2].setBackgroundDrawable(null);
+					delButton[i / 2].setId(i / 2);
+					delButton[i / 2].setOnClickListener(delButtonListen);
+					row.addView(delButton[i / 2], 2);
+				} else if (i % 2 == 1) {
+					ImageView iv = new ImageView(getActivity());
+					iv.setImageResource(R.drawable.dividers);
+					TableRow.LayoutParams rowSpanLayout = new TableRow.LayoutParams(
+							TableRow.LayoutParams.FILL_PARENT,
+							TableRow.LayoutParams.WRAP_CONTENT);
+					rowSpanLayout.span = 3;
+					row.addView(iv, rowSpanLayout);
+				}
+				t1.addView(row);
+			}
+		} catch (Exception e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		// 排版
-		TableLayout t1 = (TableLayout) view.findViewById(R.id.tablay2);
-		Log.i("tableSearch.length", tableSearch.length + "");
-		imgButton = new ImageButton[tableSearch.length];
-		delButton = new ImageButton[tableSearch.length];
-		for (int i = 0; i < (tableSearch.length - 1) * 2; i++) { // 列
-
-			TableRow row = new TableRow(getActivity());
-
-			// 第一列 圖片
-			if (i % 2 == 0) {
-				imgButton[i / 2] = new ImageButton(getActivity());
-				imgButton[i / 2].setImageResource(R.drawable.store
-						+ picNumber[i / 2]);
-				imgButton[i / 2].setBackgroundDrawable(null);
-				imgButton[i / 2].setId(i / 2);
-				imgButton[i / 2].setOnClickListener(imgButtonListen);
-				row.addView(imgButton[i / 2], 0);
-				// 第二列 商品名稱
-				TextView tv2 = new TextView(getActivity());
-				tv2.setTextSize(15);
-				tv2.setTypeface(fontch);
-				tv2.setTextColor(Color.BLACK);
-				tv2.setText(tableSearch[i / 2][0] + " ");
-
-				String namel = tableSearch[i / 2][0];
-				String oprl = tableSearch[i / 2][1];
-				String prl = tableSearch[i / 2][2];
-
-				String ss = namel + "\n" + "原價:NT$" + oprl + "\n" + "團購價:NT$"
-						+ prl;
-
-				namel.length();// 產品名長度
-				oprl.length(); // 原價數字長度
-				prl.length();// 團購數字長度
-				Spannable msp = new SpannableString(ss);
-				msp.setSpan(new StrikethroughSpan(), namel.length() + 7,
-						namel.length() + 7 + oprl.length(),
-						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 刪除線
-				msp.setSpan(new RelativeSizeSpan(2.0f), namel.length() + 15
-						+ oprl.length(), namel.length() + 15 + oprl.length()
-						+ prl.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 兩倍大小
-				msp.setSpan(
-						new StyleSpan(android.graphics.Typeface.BOLD_ITALIC),
-						namel.length() + 15 + oprl.length(), namel.length()
-								+ 15 + oprl.length() + prl.length(),
-						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); // 斜字體
-
-				tv2.setText(msp);
-				row.addView(tv2, 1);
-				// 移除按鈕
-				delButton[i / 2] = new ImageButton(getActivity());
-				delButton[i / 2].setImageResource(R.drawable.delete);
-				delButton[i / 2].setBackgroundDrawable(null);
-				delButton[i / 2].setId(i / 2);
-				delButton[i / 2].setOnClickListener(delButtonListen);
-				row.addView(delButton[i / 2], 2);
-			} else if (i % 2 == 1) {
-				ImageView iv = new ImageView(getActivity());
-				iv.setImageResource(R.drawable.dividers);
-				TableRow.LayoutParams rowSpanLayout = new TableRow.LayoutParams(
-						TableRow.LayoutParams.FILL_PARENT,
-						TableRow.LayoutParams.WRAP_CONTENT);
-				rowSpanLayout.span = 3;
-				row.addView(iv, rowSpanLayout);
-			}
-			t1.addView(row);
-		}
-
 		return view;
 	}
 
@@ -264,15 +264,17 @@ public class MyFavourite extends Fragment {
 				}
 			});
 
-			Toast.makeText(getActivity().getBaseContext(), "移除" + id + "!!",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity().getBaseContext(),
+					"移除" + tableSearch[id][0] + "!!", Toast.LENGTH_SHORT)
+					.show();
 			delCommodity();
 
 		}
 	};
 
 	void delCommodity() {
-		Intent intent = new Intent(getActivity(), MyFavourite.class);
+		progress();
+		Intent intent = new Intent(getActivity(), NavigationDrawer.class);
 		startActivity(intent);
 	}
 

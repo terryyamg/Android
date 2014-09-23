@@ -1,8 +1,15 @@
 package com.manlen.tutorials.pushnotifications;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -21,9 +28,9 @@ public class KeyInRecommendNumber extends FragmentActivity {
 	private Button close, confime;
 	private TextView say;
 	private EditText recommendNumber;
-	private String objectId, gRecommend;
-	private int firstKey, number, recommendCol;
-	private boolean determine;
+	private String objectId, gRecommend, myRecommendNumber;
+	private boolean determine = true;
+	List<ParseObject> results;
 	Typeface fontch;
 
 	@Override
@@ -42,6 +49,21 @@ public class KeyInRecommendNumber extends FragmentActivity {
 		say.setTypeface(fontch);
 		recommendNumber.setTypeface(fontch);
 
+		objectId = ParseInstallation.getCurrentInstallation().getObjectId(); // 取出自己的ID
+		Log.i("objectId:::::::", objectId + "");
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("RecommendList");
+		query.whereEqualTo("installID", objectId);
+		query.getFirstInBackground(new GetCallback<ParseObject>() {
+			public void done(ParseObject object, ParseException e) {
+				if (e == null) {
+					myRecommendNumber = object.getString("myRecommendNumber"); // 取的我的推薦碼
+					Log.i("myRecommendNumber111111", myRecommendNumber + "");
+				} else {
+
+				}
+			}
+		});
+		
 		confime.setOnClickListener(new Button.OnClickListener() { // 確認輸入
 			public void onClick(View v) {
 				confimeRecommend();
@@ -53,97 +75,107 @@ public class KeyInRecommendNumber extends FragmentActivity {
 
 	/* 輸入驗證 */
 	void confimeRecommend() {
-		recommendCol = 10; // user column 數
-		gRecommend = recommendNumber.getText().toString(); // 輸入的推薦碼
-		ParseQuery<ParseObject> query = ParseQuery.getQuery("_Installation");
-		objectId = ParseInstallation.getCurrentInstallation().getObjectId(); // 取出自己的推薦碼
-		firstKey = ParseInstallation.getCurrentInstallation()
-				.getInt("firstKey");
 
-		if (gRecommend.equals(objectId)) {
+		gRecommend = recommendNumber.getText().toString(); // 輸入的推薦碼
+		Log.i("gRecommend:::::::::", gRecommend + "");
+		Log.i("myRecommendNumber::", myRecommendNumber + "");
+		if (gRecommend.equals(myRecommendNumber)) {
 			say.setText("抱歉，您輸入的為自己的推薦碼");
 		} else {
-			query.getInBackground(gRecommend, new GetCallback<ParseObject>() {
+			ParseQuery<ParseObject> queryOther = ParseQuery // 搜尋有無此推薦碼
+					.getQuery("RecommendList");
+			queryOther.whereEqualTo("myRecommendNumber", gRecommend);
+			queryOther.getFirstInBackground(new GetCallback<ParseObject>() {
 				public void done(ParseObject object, ParseException e) {
 					if (object == null) {
 						say.setText("抱歉，您輸入的為無效推薦碼");
 
 					} else {
-						if (firstKey == 0) { // 第一次 建立 recommendList ObjectID
-							ParseObject recommendList = new ParseObject(
-									"RecommendList"); // 建立recommendList table
-							number = recommendList.getInt("number"); // 輸入了幾次
-							recommendList.put("installID", objectId); // 輸入installID
-							recommendList.put("number", number + 1); // 輸入次數+1
-							recommendList.put("user" + number, gRecommend); // 建立一個user
-																			// column紀錄輸入的推薦碼
-							recommendList.saveInBackground(); // 存入recommendList
-																// table
-							ParseInstallation.getCurrentInstallation().put(
-									"firstKey", firstKey + 1);
-							ParseInstallation.getCurrentInstallation()
-									.saveInBackground();
 
-						} else {
-							ParseQuery<ParseObject> query = ParseQuery
-									.getQuery("RecommendList");
-							query.whereEqualTo("installID", objectId);
-							query.getFirstInBackground(new GetCallback<ParseObject>() {
-								public void done(ParseObject recommendList,
-										ParseException e) {
-									if (e == null) {
+						ParseQuery<ParseObject> queryMyself = ParseQuery
+								.getQuery("RecommendList"); // 搜尋自己輸入過的推薦碼
+						queryMyself.whereEqualTo("installID", objectId);
 
-										for (int i = 0; i < recommendCol; i++) {
-											if (gRecommend.equals(recommendList
-													.get("user" + i))) {
-												say.setText("抱歉，您已經推薦過此推薦碼");
-												determine = false;
-												break;
-											} else {
-												determine = true;
-											}
-										}
-										if (determine) { // true執行;false重複推薦,不執行
-											number = recommendList
-													.getInt("number"); // 輸入了幾次
-											recommendList.put("number",
-													number + 1); // 輸入次數+1
-											recommendList.put("user" + number,
-													gRecommend); // 紀錄輸入的推薦碼
-											recommendList.saveInBackground(); // 存入recommendList
-																				// table
-										}
+						// 判斷是否已加入過
+						try {
+							results = queryMyself.find();
+						} catch (ParseException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						ParseObject object2 = results.get(0);
+						JSONArray number = object2
+								.getJSONArray("recommendUser");
+
+						/* 第一次輸入沒值 */
+						/* 第一次輸入沒值 */
+						/* 第一次輸入沒值 */
+						if (number != null) {
+							Log.i("number", number + "");
+							for (int i = 0; i < number.length(); i++) {
+								String getNumber;
+								try {
+									getNumber = number.getString(i);// 取出數字
+									String gPN = getNumber.replaceAll("[\\D]",
+											"");
+									Log.i("gPN", gPN + "");
+									if (gRecommend.equals(gPN)) {
+										// 驗證已經輸入過
+										say.setText("抱歉，您已經推薦過此推薦碼");
+										determine = false;
 									}
-								}
-							});
 
+								} catch (JSONException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							}
 						}
 						if (determine) {// true執行;false重複推薦,不執行
-							int recommendFrequency = object
-									.getInt("recommendFrequency");
+							queryMyself
+									.getFirstInBackground(new GetCallback<ParseObject>() {
+										public void done(ParseObject object,
+												ParseException e) {
+											if (e == null) {
+												object.add(
+														"recommendUser",
+														Arrays.asList(gRecommend));// 輸入推薦號碼
+												object.saveInBackground();
+
+											}
+										}
+									});
+
+							int recommendFrequency = ParseInstallation
+									.getCurrentInstallation().getInt(
+											"recommendFrequency");
 
 							recommendFrequency++; // 累計一次
-							object.put("recommendFrequency", recommendFrequency); // 存入對方的推薦次數
-							object.saveInBackground(new SaveCallback() {
-								@Override
-								public void done(ParseException e) {
-									if (e == null) {
-										Toast toast = Toast.makeText(
-												getApplicationContext(),
-												R.string.confime_success,
-												Toast.LENGTH_SHORT);
-										toast.show();
-									} else {
-										e.printStackTrace();
+							ParseInstallation.getCurrentInstallation().put(
+									"recommendFrequency", recommendFrequency); // 存入推薦次數
+							ParseInstallation.getCurrentInstallation()
+									.saveInBackground(new SaveCallback() {
+										@Override
+										public void done(ParseException e) {
+											if (e == null) {
+												Toast toast = Toast
+														.makeText(
+																getApplicationContext(),
+																R.string.confime_success,
+																Toast.LENGTH_SHORT);
+												toast.show();
+											} else {
+												e.printStackTrace();
 
-										Toast toast = Toast.makeText(
-												getApplicationContext(),
-												R.string.confime_failed,
-												Toast.LENGTH_SHORT);
-										toast.show();
-									}
-								}
-							});
+												Toast toast = Toast
+														.makeText(
+																getApplicationContext(),
+																R.string.confime_failed,
+																Toast.LENGTH_SHORT);
+												toast.show();
+											}
+										}
+									});
 							close.performClick(); // 關閉視窗
 						}
 					}

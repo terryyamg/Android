@@ -216,22 +216,7 @@ public class NavigationDrawer extends Activity {
 		}
 	}
 
-	void progress() {
-		dialog = ProgressDialog.show(this, "讀取中", "請稍後...", true);
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(5000);
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					dialog.dismiss();
-				}
-			}
-		}).start();
-	}
-
+	
 	// ================================================================================
 	// 側選單點選事件
 	// ================================================================================
@@ -240,6 +225,7 @@ public class NavigationDrawer extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
+			progress();
 			selectItem(position);
 		}
 	}
@@ -249,23 +235,18 @@ public class NavigationDrawer extends Activity {
 
 		switch (position) {
 		case 0:
-			progress();
 			fragment = new MainActivity();
 			break;
 		case 1:
-			progress();
 			fragment = new MyShopList();
 			break;
-
 		case 2:
 			fragment = new SetUp();
 			break;
-
 		case 3:
 			fragment = new Advertising();
 			break;
-		case 4:
-			progress();
+		case 4:	
 			fragment = new MyFavourite();
 			break;
 		case 5:
@@ -321,6 +302,22 @@ public class NavigationDrawer extends Activity {
 		if (stackCount == 0) {
 			this.finish();
 		}
+	}
+	
+	void progress() {
+		dialog = ProgressDialog.show(this, "讀取中", "請稍後...", true);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(5000);
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					dialog.dismiss();
+				}
+			}
+		}).start();
 	}
 
 }

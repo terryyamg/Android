@@ -36,7 +36,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 public class ListCommodity extends FragmentActivity {
-	private Button buyButton, recommend, favourite;
+	private Button buyButton, recommend, more, favourite;
 	private ImageView img;
 	private int opr, pr, pn, sellNumber, favouriteKey;
 	private String store, userTel, myTel, sn, si, storeClass, objectId;
@@ -96,8 +96,9 @@ public class ListCommodity extends FragmentActivity {
 		// 排版
 		buyButton = new Button(this);
 		recommend = new Button(this);
+		more = new Button(this);
 		favourite = new Button(this);
-		for (int i = 0; i < 7; i++) { // 列
+		for (int i = 0; i < 8; i++) { // 列
 			TableRow row = new TableRow(this);
 			TableRow.LayoutParams rowSpanLayout = new TableRow.LayoutParams(
 					200, 200);
@@ -196,6 +197,16 @@ public class ListCommodity extends FragmentActivity {
 				recommend.setOnClickListener(rr); // 推薦動作
 				row.addView(recommend, 0);
 				break;
+			case 7:
+				more = new Button(this);
+				more.setTypeface(fontch);
+				more.setTextColor(Color.BLACK);
+				more.setBackgroundResource(R.drawable.list_commodity);
+				more.setText("觀看更多店家商品");
+				more.setId(i);
+				more.setOnClickListener(mm); // 推薦動作
+				row.addView(more, 0);
+				break;
 
 			}
 			t1.addView(row);
@@ -224,8 +235,8 @@ public class ListCommodity extends FragmentActivity {
 			ParseInstallation.getCurrentInstallation().put("favouriteKey",
 					favouriteKey + 1);
 			ParseInstallation.getCurrentInstallation().saveInBackground();
-			Toast.makeText(getBaseContext(), "成功加入我的收藏!",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getBaseContext(), "成功加入我的收藏!", Toast.LENGTH_SHORT)
+					.show();
 		} else {
 
 			ParseQuery<ParseObject> query = ParseQuery.getQuery("MyFavourite");
@@ -242,7 +253,7 @@ public class ListCommodity extends FragmentActivity {
 			JSONArray pic = object.getJSONArray("picNumber");
 			for (int i = 0; i < pic.length(); i++) {
 				String getPicNumber;
-				picIndex1=true;
+				picIndex1 = true;
 				try {
 					getPicNumber = pic.getString(i);// 取出數字
 					int gPN = Integer.parseInt(getPicNumber.replaceAll("[\\D]",
@@ -256,7 +267,7 @@ public class ListCommodity extends FragmentActivity {
 					e1.printStackTrace();
 				}
 			}
-			//true:輸入;false:不輸入
+			// true:輸入;false:不輸入
 			if (picIndex1) {
 				query.getFirstInBackground(new GetCallback<ParseObject>() {
 					public void done(ParseObject myFavouriteList,
@@ -299,6 +310,12 @@ public class ListCommodity extends FragmentActivity {
 	private OnClickListener rr = new OnClickListener() {
 		public void onClick(View v) {
 			shareDialog();
+		}
+	};
+	// 觀看更多店家商品
+	private OnClickListener mm = new OnClickListener() {
+		public void onClick(View v) {
+
 		}
 	};
 
