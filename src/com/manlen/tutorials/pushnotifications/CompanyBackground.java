@@ -185,7 +185,7 @@ public class CompanyBackground extends FragmentActivity {
 							complete[i].setTypeface(fontch);
 							complete[i].setTextColor(Color.BLACK);
 							complete[i]
-									.setBackgroundResource(R.drawable.btn_lightblue_glossy);
+									.setBackgroundResource(R.drawable.list_commodity);
 							complete[i].setText("未完成");
 							complete[i].setId(i);
 							complete[i].setOnClickListener(cc); // 取消訂單

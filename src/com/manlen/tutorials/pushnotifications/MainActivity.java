@@ -62,7 +62,7 @@ public class MainActivity extends Fragment {
 	private Button scanner, scanner2;
 	private int scannerError = 0;
 	List<ParseObject> searchSc;
-
+	String setResult[] = { "99度a", "少那之" }; // QRcode掃描特約商店店名
 	/* tab3 */
 	private String sn[], tableCommodity[][];
 	private ImageButton imgButton[];
@@ -168,7 +168,7 @@ public class MainActivity extends Fragment {
 						int scannerNumberInfo1 = (int) search
 								.getInt("scannerNumber" + 1);
 						int sumOfUse = scannerNumberInfo0 + scannerNumberInfo1;
-						String setResult[] = { "99度a", "少那之" };
+						
 						info2.setText("您總共已經使用"
 								+ Integer.valueOf(sumOfUse).toString()
 								+ "次優惠方案 \n");
@@ -241,7 +241,7 @@ public class MainActivity extends Fragment {
 		}
 		// 排版
 		TableLayout t1 = (TableLayout) view.findViewById(R.id.tableSet);
-
+		
 		imgButton = new ImageButton[tableCommodity.length];
 		// 排版
 		for (int i = 0; i < (tableCommodity.length - 1) * 2; i++) { // 列
@@ -250,7 +250,7 @@ public class MainActivity extends Fragment {
 			// 第一列 圖片
 			if (i % 2 == 0) {
 				imgButton[i / 2] = new ImageButton(getActivity());
-				imgButton[i / 2].setImageResource(R.drawable.store
+				imgButton[i / 2].setImageResource(R.drawable.storem
 						+ picNumber[i / 2]);
 				imgButton[i / 2].setBackgroundDrawable(null);
 				imgButton[i / 2].setId(i / 2);
@@ -266,23 +266,23 @@ public class MainActivity extends Fragment {
 				String oprl = tableCommodity[i / 2][1];
 				String prl = tableCommodity[i / 2][2];
 
-				String ss = namel + "\n" + "原價:NT$" + oprl + "\n" + "團購價:NT$"
+				String ss = namel + "\n" + "原價:"+ "\n" +"NT$" + oprl + "\n" + "團購價:"+ "\n" +"NT$"
 						+ prl;
 
 				namel.length();// 產品名長度
 				oprl.length(); // 原價數字長度
 				prl.length();// 團購數字長度
 				Spannable msp = new SpannableString(ss);
-				msp.setSpan(new StrikethroughSpan(), namel.length() + 7,
-						namel.length() + 7 + oprl.length(),
+				msp.setSpan(new StrikethroughSpan(), namel.length() + 8,
+						namel.length() + 8 + oprl.length(),
 						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 刪除線
-				msp.setSpan(new RelativeSizeSpan(2.0f), namel.length() + 15
-						+ oprl.length(), namel.length() + 15 + oprl.length()
+				msp.setSpan(new RelativeSizeSpan(2.0f), namel.length() + 17
+						+ oprl.length(), namel.length() + 17 + oprl.length()
 						+ prl.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 兩倍大小
 				msp.setSpan(
 						new StyleSpan(android.graphics.Typeface.BOLD_ITALIC),
-						namel.length() + 15 + oprl.length(), namel.length()
-								+ 15 + oprl.length() + prl.length(),
+						namel.length() + 17 + oprl.length(), namel.length()
+								+ 17 + oprl.length() + prl.length(),
 						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); // 斜字體
 				tv2.setText(msp);
 				row.addView(tv2, 1);
@@ -353,8 +353,18 @@ public class MainActivity extends Fragment {
 		// 顯示我推薦成功次數
 		myRecommendButton.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
-				recommendFrequency = ParseInstallation.getCurrentInstallation()
-						.getInt("recommendFrequency");
+				ParseQuery<ParseObject> queryMyRecommend = ParseQuery
+						.getQuery("RecommendList");
+				queryMyRecommend.whereEqualTo("installID", objectId);
+				queryMyRecommend.getFirstInBackground(new GetCallback<ParseObject>() {
+					public void done(ParseObject object, ParseException e) {
+						if (e == null) {
+							recommendFrequency= object.getInt("recommendFrequency");
+						} else {
+
+						}
+					}
+				});
 				lookMyRecommendTV.setText("\n我推薦成功次數: " + recommendFrequency);
 			}
 		});
@@ -405,29 +415,24 @@ public class MainActivity extends Fragment {
 		TabHost tabHost = (TabHost) view.findViewById(R.id.tabHost);
 		tabHost.setup();
 
-		// TabSpec spec = tabHost.newTabSpec("tab1");
-		// spec.setContent(R.id.tab1);
-		// spec.setIndicator("", getResources().getDrawable(R.drawable.tab1));
-		// tabHost.addTab(spec);
-
-		TabSpec spec = tabHost.newTabSpec("tab2");
+		TabSpec spec = tabHost.newTabSpec("tab1");
 		spec.setIndicator("", getResources().getDrawable(R.drawable.tab2));
+		spec.setContent(R.id.tab1);
+		tabHost.addTab(spec);
+
+		spec = tabHost.newTabSpec("tab2");
+		spec.setIndicator("", getResources().getDrawable(R.drawable.tab3));
 		spec.setContent(R.id.tab2);
 		tabHost.addTab(spec);
 
 		spec = tabHost.newTabSpec("tab3");
-		spec.setIndicator("", getResources().getDrawable(R.drawable.tab3));
+		spec.setIndicator("", getResources().getDrawable(R.drawable.tab4));
 		spec.setContent(R.id.tab3);
 		tabHost.addTab(spec);
 
 		spec = tabHost.newTabSpec("tab4");
-		spec.setIndicator("", getResources().getDrawable(R.drawable.tab4));
-		spec.setContent(R.id.tab4);
-		tabHost.addTab(spec);
-
-		spec = tabHost.newTabSpec("tab5");
 		spec.setIndicator("", getResources().getDrawable(R.drawable.tab5));
-		spec.setContent(R.id.tab5);
+		spec.setContent(R.id.tab4);
 		tabHost.addTab(spec);
 
 		tabHost.setCurrentTab(0);

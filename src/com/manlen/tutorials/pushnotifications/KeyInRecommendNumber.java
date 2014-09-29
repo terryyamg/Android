@@ -63,7 +63,7 @@ public class KeyInRecommendNumber extends FragmentActivity {
 				}
 			}
 		});
-		
+
 		confime.setOnClickListener(new Button.OnClickListener() { // 確認輸入
 			public void onClick(View v) {
 				confimeRecommend();
@@ -107,9 +107,6 @@ public class KeyInRecommendNumber extends FragmentActivity {
 						JSONArray number = object2
 								.getJSONArray("recommendUser");
 
-						/* 第一次輸入沒值 */
-						/* 第一次輸入沒值 */
-						/* 第一次輸入沒值 */
 						if (number != null) {
 							Log.i("number", number + "");
 							for (int i = 0; i < number.length(); i++) {
@@ -134,48 +131,26 @@ public class KeyInRecommendNumber extends FragmentActivity {
 						if (determine) {// true執行;false重複推薦,不執行
 							queryMyself
 									.getFirstInBackground(new GetCallback<ParseObject>() {
-										public void done(ParseObject object,
+										public void done(
+												ParseObject objectMyself,
 												ParseException e) {
 											if (e == null) {
-												object.add(
+												objectMyself.add(
 														"recommendUser",
 														Arrays.asList(gRecommend));// 輸入推薦號碼
-												object.saveInBackground();
+												objectMyself.saveInBackground();
 
 											}
 										}
 									});
-
-							int recommendFrequency = ParseInstallation
-									.getCurrentInstallation().getInt(
-											"recommendFrequency");
-
-							recommendFrequency++; // 累計一次
-							ParseInstallation.getCurrentInstallation().put(
-									"recommendFrequency", recommendFrequency); // 存入推薦次數
-							ParseInstallation.getCurrentInstallation()
-									.saveInBackground(new SaveCallback() {
-										@Override
-										public void done(ParseException e) {
-											if (e == null) {
-												Toast toast = Toast
-														.makeText(
-																getApplicationContext(),
-																R.string.confime_success,
-																Toast.LENGTH_SHORT);
-												toast.show();
-											} else {
-												e.printStackTrace();
-
-												Toast toast = Toast
-														.makeText(
-																getApplicationContext(),
-																R.string.confime_failed,
-																Toast.LENGTH_SHORT);
-												toast.show();
-											}
-										}
-									});
+							int recommendFrequency = object
+									.getInt("recommendFrequency");
+							Log.i("recommendFrequency", recommendFrequency + "");
+							recommendFrequency++;
+							object.put("recommendFrequency", recommendFrequency);// 存入推薦次數在對方資料庫
+							object.saveInBackground();
+							Toast.makeText(getBaseContext(), R.string.confime_success,
+									Toast.LENGTH_SHORT).show();
 							close.performClick(); // 關閉視窗
 						}
 					}

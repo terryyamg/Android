@@ -1,5 +1,6 @@
 package com.manlen.tutorials.pushnotifications;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -10,7 +11,11 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,6 +34,9 @@ public class GoToGoogleMap extends FragmentActivity implements
 	private Button pushStore;
 	LatLng latLng;
 	int spinnerNumber = 0; // 初次進map不使用下拉選單
+	LatLng[] p00, p10, p20, p30, p40, p50, p60, p70, p80, p90, p100, p110,
+			p120, p130, p140, p150, p160, p170, p180, p190;// 食
+	LatLng[] p65;
 	private float coordinate[][][][] = { // [縣市][食衣住行育樂][店家][座標]
 			{
 					{
@@ -260,7 +268,8 @@ public class GoToGoogleMap extends FragmentActivity implements
 					{ { 6, 2, (float) 24.1260010, (float) 120.6628070 } },
 					{ { 6, 3, (float) 24.1260010, (float) 120.6628070 } },
 					{ { 6, 4, (float) 24.1260010, (float) 120.6628070 } },
-					{ { 6, 5, (float) 24.4928170, (float) 120.6736930 } } },
+					{ { 6, 5, (float) 24.4928170, (float) 120.6736930 } } // 苗栗樂
+			},
 			{
 					{
 							{ 7, 0, (float) 24.1593040, (float) 120.6798110 },// 台中食
@@ -505,14 +514,20 @@ public class GoToGoogleMap extends FragmentActivity implements
 					{ { 20, 5, (float) 24.1260010, (float) 120.6628070 } } } };
 	private int no1, no2, no3;
 	Typeface fontch;
-	
+
+	// 下拉選單
+	private String[] type = new String[] { "全部", "食", "衣", "住", "行", "育", "樂" };
+	private Spinner sp;// 第一個下拉選單
+	private Context context;
+	ArrayAdapter<String> adapter;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.go_to_googlemap);
 		/* 字型 */
 		fontch = Typeface.createFromAsset(getAssets(), "fonts/wt001.ttf");
-		
+
 		// 取的滾輪選擇項目
 		Intent intent = getIntent();
 		String check = intent.getStringExtra("check");
@@ -530,344 +545,470 @@ public class GoToGoogleMap extends FragmentActivity implements
 		});
 		// google map
 		try {
-		map = ((SupportMapFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.map)).getMap();
+			map = ((SupportMapFragment) getSupportFragmentManager()
+					.findFragmentById(R.id.map)).getMap();
 
-		LatLng[] p00 = new LatLng[coordinate[0][0].length];
-		LatLng[] p10 = new LatLng[coordinate[1][0].length];
-		LatLng[] p20 = new LatLng[coordinate[2][0].length];
-		LatLng[] p30 = new LatLng[coordinate[3][0].length];
-		LatLng[] p40 = new LatLng[coordinate[4][0].length];
-		LatLng[] p50 = new LatLng[coordinate[5][0].length];
-		LatLng[] p60 = new LatLng[coordinate[6][0].length];
-		LatLng[] p65 = new LatLng[coordinate[6][5].length];
-		LatLng[] p70 = new LatLng[coordinate[7][0].length];
-		LatLng[] p80 = new LatLng[coordinate[8][0].length];
-		LatLng[] p90 = new LatLng[coordinate[9][0].length];
-		LatLng[] p100 = new LatLng[coordinate[10][0].length];
-		LatLng[] p110 = new LatLng[coordinate[11][0].length];
-		LatLng[] p120 = new LatLng[coordinate[12][0].length];
-		LatLng[] p130 = new LatLng[coordinate[13][0].length];
-		LatLng[] p140 = new LatLng[coordinate[14][0].length];
-		LatLng[] p150 = new LatLng[coordinate[15][0].length];
-		LatLng[] p160 = new LatLng[coordinate[16][0].length];
-		LatLng[] p170 = new LatLng[coordinate[17][0].length];
-		LatLng[] p180 = new LatLng[coordinate[18][0].length];
-		LatLng[] p190 = new LatLng[coordinate[19][0].length];
+			p00 = new LatLng[coordinate[0][0].length];
+			p10 = new LatLng[coordinate[1][0].length];
+			p20 = new LatLng[coordinate[2][0].length];
+			p30 = new LatLng[coordinate[3][0].length];
+			p40 = new LatLng[coordinate[4][0].length];
+			p50 = new LatLng[coordinate[5][0].length];
+			p60 = new LatLng[coordinate[6][0].length]; // 苗栗食
+			p65 = new LatLng[coordinate[6][5].length]; // 苗栗樂
+			p70 = new LatLng[coordinate[7][0].length];
+			p80 = new LatLng[coordinate[8][0].length];
+			p90 = new LatLng[coordinate[9][0].length];
+			p100 = new LatLng[coordinate[10][0].length];
+			p110 = new LatLng[coordinate[11][0].length];
+			p120 = new LatLng[coordinate[12][0].length];
+			p130 = new LatLng[coordinate[13][0].length];
+			p140 = new LatLng[coordinate[14][0].length];
+			p150 = new LatLng[coordinate[15][0].length];
+			p160 = new LatLng[coordinate[16][0].length];
+			p170 = new LatLng[coordinate[17][0].length];
+			p180 = new LatLng[coordinate[18][0].length];
+			p190 = new LatLng[coordinate[19][0].length];
 
-		for (int i = 0; i < coordinate[0][0].length; i++) {
-			p00[i] = new LatLng(coordinate[0][0][i][2], coordinate[0][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[1][0].length; i++) {
-			p10[i] = new LatLng(coordinate[1][0][i][2], coordinate[1][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[2][0].length; i++) {
-			p20[i] = new LatLng(coordinate[2][0][i][2], coordinate[2][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[3][0].length; i++) {
-			p30[i] = new LatLng(coordinate[3][0][i][2], coordinate[3][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[4][0].length; i++) {
-			p40[i] = new LatLng(coordinate[4][0][i][2], coordinate[4][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[5][0].length; i++) {
-			p50[i] = new LatLng(coordinate[5][0][i][2], coordinate[5][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[6][0].length; i++) {
-			p60[i] = new LatLng(coordinate[6][0][i][2], coordinate[6][0][i][3]);
-		}
-		for (int i = 0; i < coordinate[6][5].length; i++) {
-			p65[i] = new LatLng(coordinate[6][5][i][2], coordinate[6][5][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[7][0].length; i++) {
-			p70[i] = new LatLng(coordinate[7][0][i][2], coordinate[7][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[8][0].length; i++) {
-			p80[i] = new LatLng(coordinate[8][0][i][2], coordinate[8][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[9][0].length; i++) {
-			p90[i] = new LatLng(coordinate[9][0][i][2], coordinate[9][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[10][0].length; i++) {
-			p100[i] = new LatLng(coordinate[10][0][i][2],
-					coordinate[10][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[11][0].length; i++) {
-			p110[i] = new LatLng(coordinate[11][0][i][2],
-					coordinate[11][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[12][0].length; i++) {
-			p120[i] = new LatLng(coordinate[12][0][i][2],
-					coordinate[12][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[13][0].length; i++) {
-			p130[i] = new LatLng(coordinate[13][0][i][2],
-					coordinate[13][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[14][0].length; i++) {
-			p140[i] = new LatLng(coordinate[14][0][i][2],
-					coordinate[14][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[15][0].length; i++) {
-			p150[i] = new LatLng(coordinate[15][0][i][2],
-					coordinate[15][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[16][0].length; i++) {
-			p160[i] = new LatLng(coordinate[16][0][i][2],
-					coordinate[16][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[17][0].length; i++) {
-			p170[i] = new LatLng(coordinate[17][0][i][2],
-					coordinate[17][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[18][0].length; i++) {
-			p180[i] = new LatLng(coordinate[18][0][i][2],
-					coordinate[18][0][i][3]);
-		}
-
-		for (int i = 0; i < coordinate[19][0].length; i++) {
-			p190[i] = new LatLng(coordinate[19][0][i][2],
-					coordinate[19][0][i][3]);
-		}
-
-		if (map != null) {
-			map.setOnMarkerClickListener(this);
-			// google mark
-			// 0基隆
 			for (int i = 0; i < coordinate[0][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p00[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
+				p00[i] = new LatLng(coordinate[0][0][i][2],
+						coordinate[0][0][i][3]);
 			}
 
-			// 1台北
 			for (int i = 0; i < coordinate[1][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p10[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
+				p10[i] = new LatLng(coordinate[1][0][i][2],
+						coordinate[1][0][i][3]);
 			}
 
-			// 2新北
 			for (int i = 0; i < coordinate[2][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p20[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
+				p20[i] = new LatLng(coordinate[2][0][i][2],
+						coordinate[2][0][i][3]);
 			}
 
-			// 3桃園
 			for (int i = 0; i < coordinate[3][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p30[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
+				p30[i] = new LatLng(coordinate[3][0][i][2],
+						coordinate[3][0][i][3]);
 			}
 
-			// 4新竹市
 			for (int i = 0; i < coordinate[4][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p40[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
+				p40[i] = new LatLng(coordinate[4][0][i][2],
+						coordinate[4][0][i][3]);
 			}
 
-			// 5新竹縣
 			for (int i = 0; i < coordinate[5][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p50[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
+				p50[i] = new LatLng(coordinate[5][0][i][2],
+						coordinate[5][0][i][3]);
 			}
-
-			// 6苗栗
 
 			for (int i = 0; i < coordinate[6][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p60[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
+				p60[i] = new LatLng(coordinate[6][0][i][2],
+						coordinate[6][0][i][3]);
+			}
+			for (int i = 0; i < coordinate[6][5].length; i++) {
+				p65[i] = new LatLng(coordinate[6][5][i][2],
+						coordinate[6][5][i][3]);
 			}
 
-			map.addMarker(new MarkerOptions()
-					.position(p65[0])
-					.title("通霄海水浴場")
-					.icon(BitmapDescriptorFactory
-							.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-					.snippet("通霄海水浴場"));
-
-			// 7台中
 			for (int i = 0; i < coordinate[7][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p70[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
+				p70[i] = new LatLng(coordinate[7][0][i][2],
+						coordinate[7][0][i][3]);
 			}
-			// 8南投縣市
+
 			for (int i = 0; i < coordinate[8][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p80[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
+				p80[i] = new LatLng(coordinate[8][0][i][2],
+						coordinate[8][0][i][3]);
 			}
-			// 9彰化縣市
+
 			for (int i = 0; i < coordinate[9][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p90[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
+				p90[i] = new LatLng(coordinate[9][0][i][2],
+						coordinate[9][0][i][3]);
 			}
-			// 10雲林縣市
+
 			for (int i = 0; i < coordinate[10][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p100[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
+				p100[i] = new LatLng(coordinate[10][0][i][2],
+						coordinate[10][0][i][3]);
 			}
-			// 11嘉義縣市
+
 			for (int i = 0; i < coordinate[11][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p110[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
+				p110[i] = new LatLng(coordinate[11][0][i][2],
+						coordinate[11][0][i][3]);
 			}
-			// 12 台南
+
 			for (int i = 0; i < coordinate[12][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p120[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
+				p120[i] = new LatLng(coordinate[12][0][i][2],
+						coordinate[12][0][i][3]);
 			}
 
-			// 13 高雄
-			for (int i = 0; i < coordinate[13][0].length - 1; i++) {
-
-				map.addMarker(new MarkerOptions()
-						.position(p130[i])
-						.title("99度a高雄高醫大店")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
+			for (int i = 0; i < coordinate[13][0].length; i++) {
+				p130[i] = new LatLng(coordinate[13][0][i][2],
+						coordinate[13][0][i][3]);
 			}
 
-			map.addMarker(new MarkerOptions()
-					.position(p130[14])
-					.title("少那之高雄中正門市")
-					.icon(BitmapDescriptorFactory
-							.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
-					.snippet("少那之"));
-			// 14屏東縣市
 			for (int i = 0; i < coordinate[14][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p140[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
+				p140[i] = new LatLng(coordinate[14][0][i][2],
+						coordinate[14][0][i][3]);
 			}
-			// 15台東縣市
-			for (int i = 0; i < coordinate[15][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p150[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-			// 16花蓮縣市
-			for (int i = 0; i < coordinate[16][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p160[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-			// 17宜蘭縣市
-			for (int i = 0; i < coordinate[17][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p170[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-			// 18澎湖縣
-			for (int i = 0; i < coordinate[18][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p180[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-			// 19金門縣
-			for (int i = 0; i < coordinate[19][0].length; i++) {
-				map.addMarker(new MarkerOptions()
-						.position(p190[i])
-						.title("99度a")
-						.icon(BitmapDescriptorFactory
-								.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-						.snippet("99度a"));
-			}
-			// google location
-			setUpMap();
-		}
 
-		 } catch (NullPointerException e) {
-		// Log.i("map", "NullPointException");
-		 }
+			for (int i = 0; i < coordinate[15][0].length; i++) {
+				p150[i] = new LatLng(coordinate[15][0][i][2],
+						coordinate[15][0][i][3]);
+			}
+
+			for (int i = 0; i < coordinate[16][0].length; i++) {
+				p160[i] = new LatLng(coordinate[16][0][i][2],
+						coordinate[16][0][i][3]);
+			}
+
+			for (int i = 0; i < coordinate[17][0].length; i++) {
+				p170[i] = new LatLng(coordinate[17][0][i][2],
+						coordinate[17][0][i][3]);
+			}
+
+			for (int i = 0; i < coordinate[18][0].length; i++) {
+				p180[i] = new LatLng(coordinate[18][0][i][2],
+						coordinate[18][0][i][3]);
+			}
+
+			for (int i = 0; i < coordinate[19][0].length; i++) {
+				p190[i] = new LatLng(coordinate[19][0][i][2],
+						coordinate[19][0][i][3]);
+			}
+
+			if (map != null) {
+
+				// google location
+				setUpMap();
+			}
+
+		} catch (NullPointerException e) {
+			// Log.i("map", "NullPointException");
+		}
 
 		if (check != null) {
 			setMapLocation();
 			Log.i("check", check + "");
 		}
-		
+
+		// 下拉選單
+		context = this;
+
+		// 程式剛啟始時載入第一個下拉選單
+		adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, type);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		sp = (Spinner) findViewById(R.id.type);
+		sp.setAdapter(adapter);
+		sp.setOnItemSelectedListener(selectListener);
+
+	}
+
+	private OnItemSelectedListener selectListener = new OnItemSelectedListener() {
+		public void onItemSelected(AdapterView<?> parent, View v, int position,
+				long id) {
+			// 動作
+			classification();
+		}
+
+		public void onNothingSelected(AdapterView<?> arg0) {
+
+		}
+
+	};
+
+	// 選取後動作
+	void classification() {
+		int iSelect1 = sp.getSelectedItemPosition(); // 第一個下拉選單被選到的第幾個項目
+		boolean[] vis = new boolean[6];
+		switch (iSelect1) {
+		case 0: // 全部
+			vis[0] = true;
+			vis[1] = true;
+			vis[2] = true;
+			vis[3] = true;
+			vis[4] = true;
+			vis[5] = true;
+			break;
+		case 1: // 食
+			vis[0] = true;
+			vis[1] = false;
+			vis[2] = false;
+			vis[3] = false;
+			vis[4] = false;
+			vis[5] = false;
+			break;
+		case 2:// 衣
+			vis[0] = false;
+			vis[1] = true;
+			vis[2] = false;
+			vis[3] = false;
+			vis[4] = false;
+			vis[5] = false;
+			break;
+		case 3:// 住
+			vis[0] = false;
+			vis[1] = false;
+			vis[2] = true;
+			vis[3] = false;
+			vis[4] = false;
+			vis[5] = false;
+			break;
+		case 4:// 行
+			vis[0] = false;
+			vis[1] = false;
+			vis[2] = false;
+			vis[3] = true;
+			vis[4] = false;
+			vis[5] = false;
+			break;
+		case 5:// 育
+			vis[0] = false;
+			vis[1] = false;
+			vis[2] = false;
+			vis[3] = false;
+			vis[4] = true;
+			vis[5] = false;
+			break;
+		case 6:// 樂
+			vis[0] = false;
+			vis[1] = false;
+			vis[2] = false;
+			vis[3] = false;
+			vis[4] = false;
+			vis[5] = true;
+			break;
+		}
+		Log.i("iSelect1", iSelect1 + "");
+		Log.i("vis[[[[[]]]]]", vis[0] + "-"+vis[1] + "-"+vis[2] + "-"+vis[3] + "-"+vis[4] + "-"+vis[5]);
+		map.clear();
+		map.setOnMarkerClickListener(this);
+		// google mark
+		// 0基隆
+		for (int i = 0; i < coordinate[0][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p00[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+
+		// 1台北
+		for (int i = 0; i < coordinate[1][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p10[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+
+		// 2新北
+		for (int i = 0; i < coordinate[2][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p20[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+
+		// 3桃園
+		for (int i = 0; i < coordinate[3][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p30[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+
+		// 4新竹市
+		for (int i = 0; i < coordinate[4][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p40[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+
+		// 5新竹縣
+		for (int i = 0; i < coordinate[5][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p50[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+
+		// 6苗栗
+
+		for (int i = 0; i < coordinate[6][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p60[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+		// 苗栗樂
+		map.addMarker(new MarkerOptions()
+				.visible(vis[5])
+				.position(p65[0])
+				.title("通霄海水浴場")
+				.icon(BitmapDescriptorFactory
+						.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+				.snippet("通霄海水浴場"));
+
+		// 7台中
+		for (int i = 0; i < coordinate[7][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p70[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+		// 8南投縣市
+		for (int i = 0; i < coordinate[8][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p80[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+		// 9彰化縣市
+		for (int i = 0; i < coordinate[9][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p90[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+		// 10雲林縣市
+		for (int i = 0; i < coordinate[10][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p100[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+		// 11嘉義縣市
+		for (int i = 0; i < coordinate[11][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p110[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+		// 12 台南
+		for (int i = 0; i < coordinate[12][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p120[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+
+		// 13 高雄
+		for (int i = 0; i < coordinate[13][0].length - 1; i++) {
+
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p130[i])
+					.title("99度a高雄高醫大店")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+
+		map.addMarker(new MarkerOptions()
+				.visible(vis[0])
+				.position(p130[14])
+				.title("少那之高雄中正門市")
+				.icon(BitmapDescriptorFactory
+						.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
+				.snippet("少那之"));
+		// 14屏東縣市
+		for (int i = 0; i < coordinate[14][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p140[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+		// 15台東縣市
+		for (int i = 0; i < coordinate[15][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p150[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+		// 16花蓮縣市
+		for (int i = 0; i < coordinate[16][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p160[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+		// 17宜蘭縣市
+		for (int i = 0; i < coordinate[17][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p170[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+		// 18澎湖縣
+		for (int i = 0; i < coordinate[18][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p180[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+		// 19金門縣
+		for (int i = 0; i < coordinate[19][0].length; i++) {
+			map.addMarker(new MarkerOptions()
+					.visible(vis[0])
+					.position(p190[i])
+					.title("99度a")
+					.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+					.snippet("99度a"));
+		}
+
 	}
 
 	private void setUpMap() {
@@ -967,9 +1108,9 @@ public class GoToGoogleMap extends FragmentActivity implements
 		}
 	}
 
-	void pushStore(){
+	void pushStore() {
 		Intent intent = new Intent(this, PushStore.class);
 		startActivity(intent);
 	}
-	
+
 }

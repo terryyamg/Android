@@ -133,7 +133,7 @@ public class MyShopList extends Fragment {
 						cancel[i].setTypeface(fontch);
 						cancel[i].setTextColor(Color.BLACK);
 						cancel[i]
-								.setBackgroundResource(R.drawable.btn_lightblue_glossy);
+								.setBackgroundResource(R.drawable.list_commodity);
 						cancel[i].setText("取消");
 						cancel[i].setId(i);
 						cancel[i].setOnClickListener(cc); // 取消訂單
