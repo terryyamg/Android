@@ -34,7 +34,7 @@ public class LoginGeneral extends FragmentActivity {
 	private RadioGroup genderRadioGroup;
 	private RadioButton gender_male_button, gender_female_button;
 	private String store, commodityName, arrivalDate, arrivalTime, userName,
-			userTel, userAdd, gender, myName, myTel, myAdd, storeClass, email;
+			userTel, userAdd, gender, myName, myTel, myAdd, storeClass, email,subject,text;
 	private int numberIndex, totalPrice;
 	private boolean telboolean, myTelboolean;
 	public ProgressDialog dialog = null;
@@ -81,6 +81,21 @@ public class LoginGeneral extends FragmentActivity {
 		storeClass = intent.getStringExtra("storeClass"); // 取的店家頻道
 
 		/* 登入資訊 */
+		//抓取特約商店店家email
+				ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(
+						"CompanyAccount"); // 哪個table
+				query.whereEqualTo("channels", storeClass); // 條件
+				query.getFirstInBackground(new GetCallback<ParseObject>() {
+					public void done(ParseObject object, ParseException e) {
+						if (e == null) {
+							// 取得email資料
+							email = object.getString("email"); // 抓取email
+							Log.i("email", email + "");
+						}
+					}
+				});
+				
+		
 		// 姓名
 		try {
 			SharedPreferences preferences = getApplicationContext()
@@ -290,32 +305,30 @@ public class LoginGeneral extends FragmentActivity {
 		push.setMessage("您有一筆新的交易通知!!");
 		push.sendInBackground();
 		// 發送email給店家
-		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(
-				"CompanyAccount"); // 哪個table
-		query.whereEqualTo("channels", storeClass); // 條件
-		query.getFirstInBackground(new GetCallback<ParseObject>() {
-			public void done(ParseObject object, ParseException e) {
-				if (e == null) {
-					// 取得email資料
-					email = object.getString("email"); // 抓取密碼
-					Log.i("email", email + "");
+		
+		try {
+					// 信件標題
+					subject = "您有一筆新的交易通知!!";
+					// 信件內容
+					if(userName == null){
+						text = "來自" + myName + "(" + gender + ")的交易通知" + "\n連絡電話:"
+								+ myTel + "\n聯絡地址:" + myAdd + "\n購買了商品名稱:" + commodityName
+								+ "\n商品數量:" + numberIndex + "\n商品總價:" + totalPrice + "\n取貨時段:"
+								+ arrivalDate + "的" + arrivalTime + "\n煩請特約商家連絡確認詳細事宜";
+					}else{
+					text = "來自" + userName + "(" + gender + ")的交易通知" + "\n連絡電話:"
+							+ userTel + "\n聯絡地址:" + userAdd + "\n購買了商品名稱:" + commodityName
+							+ "\n商品數量:" + numberIndex + "\n商品總價:" + totalPrice + "\n取貨時段:"
+							+ arrivalDate + "的" + arrivalTime + "\n煩請特約商家連絡確認詳細事宜";
+					}
+					GMailSender sender = new GMailSender("manlenapp@gmail.com",
+							"manlen123");
+					sender.sendMail(subject, text, "manlenapp@gmail.com",email);
+				} catch (Exception e) {
+					Log.e("SendMail", e.getMessage(), e);
 				}
-			}
-		});
-
-		String[] recipients = { email }; // 可輸入多個email{"email1,email2"}
-		String subject = "您有一筆新的交易通知!!";
-		String text = "來自" + userName + "(" + gender + ")的交易通知" + "\n連絡電話:"
-				+ userTel + "\n聯絡地址:" + userAdd + "\n購買了商品名稱:" + commodityName
-				+ "\n商品數量:" + numberIndex + "\n商品總價:" + totalPrice + "\n取貨時段:"
-				+ arrivalDate + "的" + arrivalTime + "\n煩請特約商家連絡確認詳細事宜";
-		Intent intentSent = new Intent();
-		intentSent.setAction(Intent.ACTION_SEND);
-		intentSent.putExtra(Intent.EXTRA_EMAIL, recipients);
-		intentSent.putExtra(Intent.EXTRA_SUBJECT, subject);
-		intentSent.putExtra(Intent.EXTRA_TEXT, text);
-		startActivity(Intent.createChooser(intentSent, "發送中..."));
-
+	
+		
 		Intent intent = new Intent(this, NavigationDrawer.class);
 		intent.putExtra("userTel", userTel); // 傳送使用者電話資料
 		startActivity(intent);

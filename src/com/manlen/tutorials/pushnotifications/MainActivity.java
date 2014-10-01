@@ -117,7 +117,6 @@ public class MainActivity extends Fragment {
 
 		openMap = (Button) view.findViewById(R.id.openMap);
 		wheelWidget = (Button) view.findViewById(R.id.wheelWidget);
-
 		openMap.setTypeface(fontch);
 		wheelWidget.setTypeface(fontch);
 
@@ -137,6 +136,8 @@ public class MainActivity extends Fragment {
 				wheelWidget();
 			}
 		});
+		
+		
 		/* tab2 */
 		info = (TextView) view.findViewById(R.id.info);
 		info2 = (TextView) view.findViewById(R.id.info2);

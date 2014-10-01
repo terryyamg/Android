@@ -101,10 +101,10 @@ public class ListCommodity extends FragmentActivity {
 		for (int i = 0; i < 8; i++) { // 列
 			TableRow row = new TableRow(this);
 			TableRow.LayoutParams rowSpanLayout = new TableRow.LayoutParams(
-					200, 200);
+					400, 400);
 			rowSpanLayout.span = 2;
 			TableRow.LayoutParams rowSpanLayout2 = new TableRow.LayoutParams(
-					30, 30);
+					60, 60);
 			rowSpanLayout2.topMargin = 20;
 			// 第一列 圖片
 			switch (i) {
