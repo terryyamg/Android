@@ -40,7 +40,6 @@ public class NavigationDrawer extends Activity {
 	private EditText searchName;
 	private String searchObject;
 	private Button searchButton;
-	public ProgressDialog dialog = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -209,14 +208,13 @@ public class NavigationDrawer extends Activity {
 		if (searchObject == null) {
 
 		} else {
-			progress();
+
 			Intent intent = new Intent(this, SearchCommodity.class);
 			intent.putExtra("searchName", searchObject);
 			startActivity(intent);
 		}
 	}
 
-	
 	// ================================================================================
 	// 側選單點選事件
 	// ================================================================================
@@ -225,7 +223,7 @@ public class NavigationDrawer extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			progress();
+
 			selectItem(position);
 		}
 	}
@@ -246,7 +244,7 @@ public class NavigationDrawer extends Activity {
 		case 3:
 			fragment = new Advertising();
 			break;
-		case 4:	
+		case 4:
 			fragment = new MyFavourite();
 			break;
 		case 5:
@@ -302,22 +300,6 @@ public class NavigationDrawer extends Activity {
 		if (stackCount == 0) {
 			this.finish();
 		}
-	}
-	
-	void progress() {
-		dialog = ProgressDialog.show(this, "讀取中", "請稍後...", true);
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(5000);
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					dialog.dismiss();
-				}
-			}
-		}).start();
 	}
 
 }

@@ -28,6 +28,7 @@ public class LoginStore extends FragmentActivity {
 	private TextView textView1, textView2, say;
 	private Button confime;
 	private EditText storeAccount, storePassword;
+	private int logoNumber;
 	Typeface fontch;
 	List<ParseObject> searchObject;
 	public ProgressDialog dialog = null;
@@ -117,7 +118,8 @@ public class LoginStore extends FragmentActivity {
 							store = object.getString("store"); // 抓取團購店名
 							scannerName = object.getString("scannerName"); // 抓取特約商店店名
 							channels = object.getString("channels"); // 抓取頻道
-
+							logoNumber= object.getInt("logoNumber"); // 抓取pic號碼
+							
 							if (storePs.equals(password)) { // 密碼ok
 								checkOk();
 							} else {
@@ -140,6 +142,7 @@ public class LoginStore extends FragmentActivity {
 				NavigationDrawer.class);
 
 		Intent intent = new Intent(this, CompanyBackground.class);
+		intent.putExtra("logoNumber", logoNumber);
 		intent.putExtra("store", store);
 		intent.putExtra("scannerName", scannerName);
 		startActivity(intent);

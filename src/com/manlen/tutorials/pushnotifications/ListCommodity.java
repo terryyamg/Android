@@ -11,8 +11,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.DrawerLayout.LayoutParams;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -39,7 +41,7 @@ public class ListCommodity extends FragmentActivity {
 	private Button buyButton, recommend, more, favourite;
 	private ImageView img;
 	private int opr, pr, pn, sellNumber, favouriteKey;
-	private String store, userTel, myTel, sn, si, storeClass, objectId;
+	private String store, userTel, myTel, sn, si, storeClass, objectId,url;
 	public ProgressDialog dialog = null;
 	private boolean picIndex1;
 	List<ParseObject> searchObject, ob, results;
@@ -69,6 +71,7 @@ public class ListCommodity extends FragmentActivity {
 				store = (String) search.get("store"); // 店名
 				storeClass = (String) search.get("storeClass"); // 店家類別
 				sellNumber = (int) search.getInt("sellNumber"); // 賣出數量
+				url = (String) search.get("url"); // 商品網址
 			}
 
 			SharedPreferences preferences = getApplicationContext()
@@ -100,12 +103,14 @@ public class ListCommodity extends FragmentActivity {
 		favourite = new Button(this);
 		for (int i = 0; i < 8; i++) { // 列
 			TableRow row = new TableRow(this);
-			TableRow.LayoutParams rowSpanLayout = new TableRow.LayoutParams(
-					400, 400);
+			TableRow.LayoutParams rowSpanLayout = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 			rowSpanLayout.span = 2;
+			rowSpanLayout.topMargin=-40;
 			TableRow.LayoutParams rowSpanLayout2 = new TableRow.LayoutParams(
 					60, 60);
 			rowSpanLayout2.topMargin = 20;
+			TableRow.LayoutParams rowSpanLayout3 = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+			rowSpanLayout3.span = 2;
 			// 第一列 圖片
 			switch (i) {
 			case 0: // 第一列 商品圖片
@@ -184,6 +189,7 @@ public class ListCommodity extends FragmentActivity {
 				buyButton.setBackgroundResource(R.drawable.list_commodity);
 				buyButton.setText("NT$" + pr + " 馬上加入優惠");
 				buyButton.setId(i);
+				buyButton.setLayoutParams(rowSpanLayout3);
 				buyButton.setOnClickListener(bb); // 購買動作
 				row.addView(buyButton, 0);
 				break;
@@ -194,6 +200,7 @@ public class ListCommodity extends FragmentActivity {
 				recommend.setBackgroundResource(R.drawable.list_commodity);
 				recommend.setText("推薦給好友");
 				recommend.setId(i);
+				recommend.setLayoutParams(rowSpanLayout3);
 				recommend.setOnClickListener(rr); // 推薦動作
 				row.addView(recommend, 0);
 				break;
@@ -204,6 +211,7 @@ public class ListCommodity extends FragmentActivity {
 				more.setBackgroundResource(R.drawable.list_commodity);
 				more.setText("觀看更多店家商品");
 				more.setId(i);
+				more.setLayoutParams(rowSpanLayout3);
 				more.setOnClickListener(mm); // 推薦動作
 				row.addView(more, 0);
 				break;
@@ -315,7 +323,10 @@ public class ListCommodity extends FragmentActivity {
 	// 觀看更多店家商品
 	private OnClickListener mm = new OnClickListener() {
 		public void onClick(View v) {
-
+			Log.i("url::::::::", url+"");
+			Intent goWeb = new Intent(Intent.ACTION_VIEW,
+					Uri.parse(url));
+			startActivity(goWeb);
 		}
 	};
 

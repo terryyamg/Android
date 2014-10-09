@@ -31,7 +31,7 @@
                     android:layout_alignParentBottom="true"
                     android:gravity="center_horizontal" />
 
-               <FrameLayout
+                <FrameLayout
                     android:id="@android:id/tabcontent"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
@@ -42,7 +42,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 
-                   
                     <LinearLayout
                         android:id="@+id/tab1"
                         android:layout_width="fill_parent"
@@ -72,15 +71,16 @@
                             android:layout_height="40dp"
                             android:background="@drawable/tab2_2"
                             android:text="@string/wheelWidget" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="" />
- 
                     </LinearLayout>
 
                     <LinearLayout
@@ -91,7 +91,7 @@
                         android:background="@drawable/wallpaper3"
                         android:gravity="center"
                         android:orientation="vertical" >
-
+                       
                         <Button
                             android:id="@+id/scanner"
                             style="@style/ButtonText"
@@ -115,6 +115,14 @@
                             android:background="@drawable/tab3_2"
                             android:text="@string/scanner2" />
 
+                         <Button
+                            android:id="@+id/lottery"
+                            style="@style/ButtonText"
+                            android:layout_width="200dp"
+                            android:layout_height="40dp"
+                            android:text="@string/lottery" />
+                        
+                        
                         <ScrollView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" >
@@ -150,20 +158,21 @@
                         android:background="@drawable/wallpaper4"
                         android:gravity="center" >
 
-                            <ScrollView
-                                android:id="@+id/vs"
+                        <ScrollView
+                            android:id="@+id/vs"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:scrollbars="vertical" >
+
+                            <TableLayout
+                                android:id="@+id/tableSet"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:scrollbars="vertical" >
-
-                                <TableLayout
-                                    android:id="@+id/tableSet"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_horizontal" >
-                                </TableLayout>
-                            </ScrollView>
-
+                                android:gravity="center"
+                                android:stretchColumns="1" >
+                            </TableLayout>
+                        </ScrollView>
                     </TableLayout>
 
                     <LinearLayout
@@ -191,7 +200,6 @@
                             android:layout_height="40dp"
                             android:background="@drawable/tab5_2"
                             android:text="@string/myRecommendButton" />
-
 
                         <Button
                             android:id="@+id/keyRecommend"

@@ -19,6 +19,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v4.widget.DrawerLayout.LayoutParams;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -59,8 +60,9 @@ public class MainActivity extends Fragment {
 
 	/* tab2 */
 	private TextView info, info2, info3;
-	private Button scanner, scanner2;
-	private int scannerError = 0;
+	private Button scanner, scanner2, lottery;
+	private int scannerError = 0, sumOfUse;
+	private String scannerNextTime0, scannerNextTime1;
 	List<ParseObject> searchSc;
 	String setResult[] = { "99度a", "少那之" }; // QRcode掃描特約商店店名
 	/* tab3 */
@@ -136,55 +138,67 @@ public class MainActivity extends Fragment {
 				wheelWidget();
 			}
 		});
-		
-		
+
 		/* tab2 */
 		info = (TextView) view.findViewById(R.id.info);
 		info2 = (TextView) view.findViewById(R.id.info2);
 		info3 = (TextView) view.findViewById(R.id.info3);
 		scanner = (Button) view.findViewById(R.id.scanner);
 		scanner2 = (Button) view.findViewById(R.id.scanner2);
+		lottery = (Button) view.findViewById(R.id.lottery);
 
 		info.setTypeface(fontch); // 字型
 		info2.setTypeface(fontch);
 		info3.setTypeface(fontch);
 		scanner.setTypeface(fontch);
 		scanner2.setTypeface(fontch);
-		objectId = ParseInstallation.getCurrentInstallation().getObjectId(); // 取出自己的id
+		lottery.setTypeface(fontch);
 
+		objectId = ParseInstallation.getCurrentInstallation().getObjectId(); // 取出自己的id
+		try {
+			ParseQuery<ParseObject> query = ParseQuery.getQuery("Scanner");
+			query.whereEqualTo("installID", objectId);
+			searchSc = query.find();// 搜尋物件
+			for (ParseObject search : searchSc) {
+				// 取得資料
+				int scannerNumberInfo0 = (int) search
+						.getInt("scannerNumber" + 0);
+				int scannerNumberInfo1 = (int) search
+						.getInt("scannerNumber" + 1);
+				sumOfUse = scannerNumberInfo0 + scannerNumberInfo1;
+
+				scannerNextTime0 = (String) search.getString("scannerTime" + 0);
+				scannerNextTime1 = (String) search.getString("scannerTime" + 1);
+
+			}
+		} catch (ParseException e) {
+		}
+		sumOfUse=10;
+		if(sumOfUse<=10){
+			lottery.setVisibility(View.GONE);
+		}
+		//抽獎按鈕
+		lottery.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				// TODO Auto-generated method stub
+				lotteryGo();
+			}
+		});
+		
+		
 		scanner2.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 
 				// TODO Auto-generated method stub
-				try {
-					ParseQuery<ParseObject> query = ParseQuery
-							.getQuery("Scanner");
-					query.whereEqualTo("installID", objectId);
-					searchSc = query.find();// 搜尋物件
-					for (ParseObject search : searchSc) {
-						// 取得資料
-						int scannerNumberInfo0 = (int) search
-								.getInt("scannerNumber" + 0);
-						int scannerNumberInfo1 = (int) search
-								.getInt("scannerNumber" + 1);
-						int sumOfUse = scannerNumberInfo0 + scannerNumberInfo1;
-						
-						info2.setText("您總共已經使用"
-								+ Integer.valueOf(sumOfUse).toString()
-								+ "次優惠方案 \n");
+				info2.setText("您總共已經使用" + Integer.valueOf(sumOfUse).toString()
+						+ "次優惠方案 \n");
 
-						String scannerNextTime0 = (String) search
-								.getString("scannerTime" + 0);
-						String scannerNextTime1 = (String) search
-								.getString("scannerTime" + 1);
-						info3.setText("您下次可以使用" + setResult[0] + "優惠的時間為"
-								+ scannerNextTime0 + "\n" + "您下次可以使用"
-								+ setResult[1] + "優惠的時間為" + scannerNextTime1);
-					}
-				} catch (ParseException e) {
-				}
-
+				info3.setText("您下次可以使用" + setResult[0] + "優惠的時間為"
+						+ scannerNextTime0 + "\n" + "您下次可以使用" + setResult[1]
+						+ "優惠的時間為" + scannerNextTime1);
 			}
 		});
 		scanner.setOnClickListener(new Button.OnClickListener() {
@@ -242,12 +256,11 @@ public class MainActivity extends Fragment {
 		}
 		// 排版
 		TableLayout t1 = (TableLayout) view.findViewById(R.id.tableSet);
-		
+
 		imgButton = new ImageButton[tableCommodity.length];
 		// 排版
 		for (int i = 0; i < (tableCommodity.length - 1) * 2; i++) { // 列
 			TableRow row = new TableRow(getActivity());
-
 			// 第一列 圖片
 			if (i % 2 == 0) {
 				imgButton[i / 2] = new ImageButton(getActivity());
@@ -267,8 +280,8 @@ public class MainActivity extends Fragment {
 				String oprl = tableCommodity[i / 2][1];
 				String prl = tableCommodity[i / 2][2];
 
-				String ss = namel + "\n" + "原價:"+ "\n" +"NT$" + oprl + "\n" + "團購價:"+ "\n" +"NT$"
-						+ prl;
+				String ss = namel + "\n" + "\n" + "原價:NT$" + oprl + "\n"
+						+ "團購價:NT$" + prl;
 
 				namel.length();// 產品名長度
 				oprl.length(); // 原價數字長度
@@ -277,13 +290,13 @@ public class MainActivity extends Fragment {
 				msp.setSpan(new StrikethroughSpan(), namel.length() + 8,
 						namel.length() + 8 + oprl.length(),
 						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 刪除線
-				msp.setSpan(new RelativeSizeSpan(2.0f), namel.length() + 17
-						+ oprl.length(), namel.length() + 17 + oprl.length()
+				msp.setSpan(new RelativeSizeSpan(2.0f), namel.length() + 16
+						+ oprl.length(), namel.length() + 16 + oprl.length()
 						+ prl.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);// 兩倍大小
 				msp.setSpan(
 						new StyleSpan(android.graphics.Typeface.BOLD_ITALIC),
-						namel.length() + 17 + oprl.length(), namel.length()
-								+ 17 + oprl.length() + prl.length(),
+						namel.length() + 16 + oprl.length(), namel.length()
+								+ 16 + oprl.length() + prl.length(),
 						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); // 斜字體
 				tv2.setText(msp);
 				row.addView(tv2, 1);
@@ -357,15 +370,18 @@ public class MainActivity extends Fragment {
 				ParseQuery<ParseObject> queryMyRecommend = ParseQuery
 						.getQuery("RecommendList");
 				queryMyRecommend.whereEqualTo("installID", objectId);
-				queryMyRecommend.getFirstInBackground(new GetCallback<ParseObject>() {
-					public void done(ParseObject object, ParseException e) {
-						if (e == null) {
-							recommendFrequency= object.getInt("recommendFrequency");
-						} else {
+				queryMyRecommend
+						.getFirstInBackground(new GetCallback<ParseObject>() {
+							public void done(ParseObject object,
+									ParseException e) {
+								if (e == null) {
+									recommendFrequency = object
+											.getInt("recommendFrequency");
+								} else {
 
-						}
-					}
-				});
+								}
+							}
+						});
 				lookMyRecommendTV.setText("\n我推薦成功次數: " + recommendFrequency);
 			}
 		});
@@ -617,6 +633,12 @@ public class MainActivity extends Fragment {
 		}
 	}
 
+	void lotteryGo(){
+		progress();
+		Intent intent = new Intent(getActivity(), Lottery.class);
+		startActivity(intent);
+	}
+	
 	/* tab3 */
 
 	private OnClickListener imgButtonListen = new OnClickListener() {
