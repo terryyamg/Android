@@ -19,23 +19,18 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v4.widget.DrawerLayout.LayoutParams;
-import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TabHost;
@@ -61,7 +56,7 @@ public class MainActivity extends Fragment {
 	/* tab2 */
 	private TextView info, info2, info3;
 	private Button scanner, scanner2, lottery;
-	private int scannerError = 0, sumOfUse;
+	private int scannerError = 0, sumOfUse,lotteryUsed;
 	private String scannerNextTime0, scannerNextTime1;
 	List<ParseObject> searchSc;
 	String setResult[] = { "99度a", "少那之" }; // QRcode掃描特約商店店名
@@ -161,11 +156,10 @@ public class MainActivity extends Fragment {
 			searchSc = query.find();// 搜尋物件
 			for (ParseObject search : searchSc) {
 				// 取得資料
-				int scannerNumberInfo0 = (int) search
-						.getInt("scannerNumber" + 0);
-				int scannerNumberInfo1 = (int) search
-						.getInt("scannerNumber" + 1);
-				sumOfUse = scannerNumberInfo0 + scannerNumberInfo1;
+				int scannerNumberInfo0 = (int) search.getInt("scannerNumber" + 0);
+				int scannerNumberInfo1 = (int) search.getInt("scannerNumber" + 1);
+				sumOfUse = scannerNumberInfo0 + scannerNumberInfo1; //掃描次數總和
+				lotteryUsed = (int) search.getInt("lotteryUsed"); //取出已經抽獎過的次數
 
 				scannerNextTime0 = (String) search.getString("scannerTime" + 0);
 				scannerNextTime1 = (String) search.getString("scannerTime" + 1);
@@ -173,9 +167,10 @@ public class MainActivity extends Fragment {
 			}
 		} catch (ParseException e) {
 		}
-		sumOfUse=10;
-		if(sumOfUse<=10){
-			lottery.setVisibility(View.GONE);
+		int lotteryCan = sumOfUse/10; // 可抽獎次數
+
+		if(lotteryCan<=lotteryUsed){ // 可抽獎次數 <以抽的次數
+			lottery.setVisibility(View.GONE); //隱藏抽獎按鈕
 		}
 		//抽獎按鈕
 		lottery.setOnClickListener(new Button.OnClickListener() {
@@ -522,7 +517,7 @@ public class MainActivity extends Fragment {
 					} catch (ParseException e) {
 						scannerNumber[i] = 0;
 						scannerNextTime[i] = null;
-						Log.i("eeee", e + "");
+
 					}
 
 					SimpleDateFormat sdf = new SimpleDateFormat(
@@ -549,7 +544,6 @@ public class MainActivity extends Fragment {
 					if (scannerNextTime[i] == null) { // 初次掃描，scannerNextTime為空值
 						ParseObject scannerTable = new ParseObject("Scanner"); // 建立Scanner
 																				// table
-						Log.i("objectId", objectId + "");
 						scannerTable.put("installID", objectId); // 輸入installID
 						scannerNumber[i]++;
 						scannerTable.put("scannerNumber" + i, scannerNumber[i]); // 輸入scannerNumber
@@ -589,7 +583,7 @@ public class MainActivity extends Fragment {
 									search.saveInBackground(); // 儲存
 								}
 							} catch (ParseException e) {
-								Log.i("eeee", e + "");
+
 							}
 
 							info2.setText("您已經使用"

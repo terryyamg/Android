@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.manlen.tutorials.pushnotifications"
-    android:versionCode="16"
+    android:versionCode="17"
     android:versionName="1.0" >
 
     <uses-sdk
@@ -123,12 +123,14 @@
         <activity android:name=".MyFavourite" >
         </activity>
         <!-- MyShopList -->
-         <activity android:name=".MyShopList" >
+        <activity android:name=".MyShopList" >
         </activity>
         <!-- MyShopListDetail -->
         <activity android:name=".MyShopListDetail" >
         </activity>
-
+        <!-- Lottery -->
+        <activity android:name=".Lottery" >
+        </activity>
         <!-- ShareApp -->
 
         <intent-filter>

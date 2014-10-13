@@ -516,7 +516,7 @@ public class GoToGoogleMap extends FragmentActivity implements
 	Typeface fontch;
 
 	// 下拉選單
-	private String[] type = new String[] { "全部", "食", "衣", "住", "行", "育", "樂" };
+	private String[] type = new String[] { "全部分類", "食", "衣", "住", "行", "育", "樂" };
 	private Spinner sp;// 第一個下拉選單
 	private Context context;
 	ArrayAdapter<String> adapter;
@@ -537,6 +537,7 @@ public class GoToGoogleMap extends FragmentActivity implements
 
 		pushStore = (Button) findViewById(R.id.pushStore);
 		pushStore.setTypeface(fontch);
+		pushStore.setTextSize(15);
 		pushStore.setTextColor(Color.BLACK);
 		pushStore.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {

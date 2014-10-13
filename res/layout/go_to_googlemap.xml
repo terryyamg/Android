@@ -18,16 +18,17 @@
             <Button
                 android:id="@+id/pushStore"
                 style="@style/ButtonText"
-                android:layout_width="100dp"
-                android:layout_height="63dp"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
                 android:background="@drawable/push_store"
                 android:text="@string/pushStore" />
 
             <Spinner
                 android:id="@+id/type"
                 android:layout_width="100dp"
-                android:layout_height="63dp"
+                android:layout_height="50dp"
                 android:layout_alignParentRight="true"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/push_store"
                 android:drawSelectorOnTop="true" />
         </LinearLayout>

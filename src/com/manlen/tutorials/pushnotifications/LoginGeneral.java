@@ -78,7 +78,7 @@ public class LoginGeneral extends FragmentActivity {
 		totalPrice = intent.getIntExtra("totalPrice", 1); // 取得總價
 		arrivalDate = intent.getStringExtra("arrivalDate"); // 取得抵達日期
 		arrivalTime = intent.getStringExtra("arrivalTime"); // 取得抵達時段
-		storeClass = intent.getStringExtra("storeClass"); // 取的店家頻道
+		storeClass = intent.getStringExtra("storeClass"); // 取得店家頻道
 
 		/* 登入資訊 */
 		//抓取特約商店店家email
@@ -267,7 +267,7 @@ public class LoginGeneral extends FragmentActivity {
 
 					buyInfo.saveInBackground();
 					Toast.makeText(getBaseContext(), "恭喜您購買成功!",
-							Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_LONG).show();
 
 					goListCommodity();
 				}
@@ -330,7 +330,7 @@ public class LoginGeneral extends FragmentActivity {
 	
 		
 		Intent intent = new Intent(this, NavigationDrawer.class);
-		intent.putExtra("userTel", userTel); // 傳送使用者電話資料
+		//intent.putExtra("userTel", userTel); // 傳送使用者電話資料
 		startActivity(intent);
 	}
 
