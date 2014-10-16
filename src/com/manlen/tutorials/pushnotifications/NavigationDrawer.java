@@ -130,6 +130,11 @@ public class NavigationDrawer extends Activity {
 		mapValue6.put("icon", Integer.toString(R.drawable.list5));
 		mapValue6.put("title", drawer_menu[5]);
 		lstData.add(mapValue6);
+		// list7
+		HashMap<String, String> mapValue7 = new HashMap<String, String>();
+		mapValue7.put("icon", Integer.toString(R.drawable.list6));
+		mapValue7.put("title", drawer_menu[6]);
+		lstData.add(mapValue7);
 
 		SimpleAdapter adapter = new SimpleAdapter(this, lstData,
 				R.layout.drawer_list_item2, new String[] { "icon", "title" },
@@ -252,6 +257,9 @@ public class NavigationDrawer extends Activity {
 					Uri.parse("https://www.facebook.com/lifetoneplus?fref=ts"));
 			startActivity(goWeb);
 			break;
+		case 6:
+			fragment = new About();
+			break;
 		default:
 			// 還沒製作的選項，fragment 是 null，直接返回
 			return;
@@ -297,7 +305,7 @@ public class NavigationDrawer extends Activity {
 		super.onBackPressed();
 		FragmentManager fragmentManager = this.getFragmentManager();
 		int stackCount = fragmentManager.getBackStackEntryCount();
-		Log.i("stackCount", stackCount+"");
+		Log.i("stackCount", stackCount + "");
 		if (stackCount == 0) {
 			this.finish();
 		}

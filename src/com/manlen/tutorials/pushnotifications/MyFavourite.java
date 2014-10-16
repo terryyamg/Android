@@ -126,7 +126,7 @@ public class MyFavourite extends Fragment {
 				// 第一列 圖片
 				if (i % 2 == 0) {
 					imgButton[i / 2] = new ImageButton(getActivity());
-					imgButton[i / 2].setImageResource(R.drawable.store
+					imgButton[i / 2].setImageResource(R.drawable.storem
 							+ picNumber[i / 2]);
 					imgButton[i / 2].setBackgroundDrawable(null);
 					imgButton[i / 2].setId(i / 2);
@@ -250,16 +250,19 @@ public class MyFavourite extends Fragment {
 				public void done(ParseObject myFavouriteList, ParseException e) {
 					if (e == null) {
 						myFavouriteList.remove("picNumber"); // 移除所有
+						Log.i("temporary.length1", temporary.length + "");
 						for (int i = 0; i < temporary.length; i++) {
-							Log.i("temporary.length", temporary.length + "");
+							Log.i("temporary.length2", temporary.length + "");
 							Log.i("temporary[i]", temporary[i] + "");
 
 							myFavouriteList.add("picNumber",
 									Arrays.asList(temporary[i]));// 輸入圖片號碼
-							myFavouriteList.saveInBackground(); // 存入MyFavorite
-																// table
-						}
 
+						}
+						myFavouriteList.saveInBackground(); // 存入MyFavorite
+						// table
+					} else {
+						Log.i("eeeeeeeeeeeee", e + "");
 					}
 				}
 			});

@@ -2,21 +2,16 @@ package com.manlen.tutorials.pushnotifications;
 
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.parse.ParseException;
@@ -24,9 +19,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 public class MyShopList extends Fragment {
-	private Button cancel[];
-	private int opr, pr, pn, id;
-	private String userTel, myTel, sn, tableData[][];
+
+	private String userTel, myTel, tableData[][];
 
 	List<ParseObject> ob;
 	ArrayAdapter<String> MyArrayAdapter;
@@ -43,9 +37,7 @@ public class MyShopList extends Fragment {
 		if (myTel == null) {
 			myTel = "0"; // 抓不到手機號碼
 		}
-		
-		
-				
+
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

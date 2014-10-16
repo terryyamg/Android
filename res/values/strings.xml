@@ -69,6 +69,7 @@
         <item>精選/廣告推撥</item>
         <item>我的收藏</item>
         <item>粉絲團專頁</item>
+        <item>關於我們</item>
     </string-array>
 
     <string name="action_search">團購搜尋</string>

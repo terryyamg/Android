@@ -41,7 +41,7 @@ public class ListCommodity extends FragmentActivity {
 	private Button buyButton, recommend, more, favourite;
 	private ImageView img;
 	private int opr, pr, pn, sellNumber, favouriteKey;
-	private String store, userTel, myTel, sn, si, storeClass, objectId,url;
+	private String store, userTel, myTel, sn, si, storeClass, objectId, url;
 	public ProgressDialog dialog = null;
 	private boolean picIndex1;
 	List<ParseObject> searchObject, ob, results;
@@ -103,13 +103,15 @@ public class ListCommodity extends FragmentActivity {
 		favourite = new Button(this);
 		for (int i = 0; i < 8; i++) { // 列
 			TableRow row = new TableRow(this);
-			TableRow.LayoutParams rowSpanLayout = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+			TableRow.LayoutParams rowSpanLayout = new TableRow.LayoutParams(
+					LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 			rowSpanLayout.span = 2;
-			rowSpanLayout.topMargin=-40;
+			rowSpanLayout.topMargin = -40;
 			TableRow.LayoutParams rowSpanLayout2 = new TableRow.LayoutParams(
-					60, 60);
+					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			rowSpanLayout2.topMargin = 20;
-			TableRow.LayoutParams rowSpanLayout3 = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+			TableRow.LayoutParams rowSpanLayout3 = new TableRow.LayoutParams(
+					LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 			rowSpanLayout3.span = 2;
 			// 第一列 圖片
 			switch (i) {
@@ -259,21 +261,28 @@ public class ListCommodity extends FragmentActivity {
 			}
 			ParseObject object = results.get(0);
 			JSONArray pic = object.getJSONArray("picNumber");
-			for (int i = 0; i < pic.length(); i++) {
-				String getPicNumber;
-				picIndex1 = true;
-				try {
-					getPicNumber = pic.getString(i);// 取出數字
-					int gPN = Integer.parseInt(getPicNumber.replaceAll("[\\D]",
-							""));
-					if (pn == gPN) { // 有輸入過
-						picIndex1 = false;
-					}
+			
+			try { 
 
-				} catch (JSONException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				for (int i = 0; i < pic.length(); i++) {
+					String getPicNumber;
+					picIndex1 = true;
+					try {
+						getPicNumber = pic.getString(i);// 取出數字
+						int gPN = Integer.parseInt(getPicNumber.replaceAll(
+								"[\\D]", ""));
+						if (pn == gPN) { // 有輸入過
+							picIndex1 = false;
+						}
+
+					} catch (JSONException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
+			} catch (NullPointerException e) {
+				// 有加入過我的收藏，但全移除
+				picIndex1 = true;
 			}
 			// true:輸入;false:不輸入
 			if (picIndex1) {
@@ -323,9 +332,8 @@ public class ListCommodity extends FragmentActivity {
 	// 觀看更多店家商品
 	private OnClickListener mm = new OnClickListener() {
 		public void onClick(View v) {
-			Log.i("url::::::::", url+"");
-			Intent goWeb = new Intent(Intent.ACTION_VIEW,
-					Uri.parse(url));
+			Log.i("url::::::::", url + "");
+			Intent goWeb = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 			startActivity(goWeb);
 		}
 	};
